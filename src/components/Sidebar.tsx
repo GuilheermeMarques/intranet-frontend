@@ -15,6 +15,7 @@ import {
   Box,
   Collapse,
   Drawer,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -248,10 +249,9 @@ export function Sidebar({
                 Sistema Corporativo
               </Typography>
             </Box>
-            <ListItemButton
+            <IconButton
               onClick={onToggle}
               sx={{
-                minWidth: 0,
                 p: 1,
                 borderRadius: 1,
                 '&:hover': {
@@ -260,7 +260,7 @@ export function Sidebar({
               }}
             >
               <Menu />
-            </ListItemButton>
+            </IconButton>
           </>
         ) : (
           <Box

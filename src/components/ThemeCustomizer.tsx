@@ -107,7 +107,7 @@ export function ThemeCustomizer({ open, onClose }: ThemeCustomizerProps) {
       fullWidth
       PaperProps={{
         sx: {
-          background: theme.palette.mode === 'dark' ? '#1e1e1e' : '#ffffff',
+          background: theme.palette.mode === 'dark' ? '#44475a' : '#ffffff', // Dracula selection
           borderRadius: 2,
         },
       }}

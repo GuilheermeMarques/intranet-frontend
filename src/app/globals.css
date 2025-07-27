@@ -14,8 +14,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #282a36; /* Dracula bg */
+    --foreground: #f8f8f2; /* Dracula foreground */
   }
 }
 

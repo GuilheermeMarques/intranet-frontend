@@ -22,14 +22,14 @@ export const getTheme = (mode: PaletteMode, colorScheme: ColorScheme) =>
         contrastText: '#ffffff',
       },
       background: {
-        default: mode === 'light' ? '#f5f5f5' : '#121212',
-        paper: mode === 'light' ? '#ffffff' : '#1e1e1e',
+        default: mode === 'light' ? '#f5f5f5' : '#282a36', // Dracula bg
+        paper: mode === 'light' ? '#ffffff' : '#44475a', // Dracula selection
       },
       text: {
-        primary: mode === 'light' ? '#2c3e50' : '#ffffff',
-        secondary: mode === 'light' ? '#7f8c8d' : '#b0b0b0',
+        primary: mode === 'light' ? '#2c3e50' : '#f8f8f2', // Dracula foreground
+        secondary: mode === 'light' ? '#7f8c8d' : '#6272a4', // Dracula comment
       },
-      divider: mode === 'light' ? '#e0e0e0' : '#333333',
+      divider: mode === 'light' ? '#e0e0e0' : '#44475a', // Dracula selection
     },
     typography: {
       fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
@@ -71,15 +71,15 @@ export const getTheme = (mode: PaletteMode, colorScheme: ColorScheme) =>
           root: {
             boxShadow:
               mode === 'light' ? '0 8px 32px rgba(0, 0, 0, 0.1)' : '0 8px 32px rgba(0, 0, 0, 0.3)',
-            backgroundColor: mode === 'light' ? '#ffffff' : '#1e1e1e',
+            backgroundColor: mode === 'light' ? '#ffffff' : '#44475a', // Dracula selection
           },
         },
       },
       MuiAppBar: {
         styleOverrides: {
           root: {
-            backgroundColor: mode === 'light' ? '#ffffff' : '#1e1e1e',
-            color: mode === 'light' ? '#2c3e50' : '#ffffff',
+            backgroundColor: mode === 'light' ? '#ffffff' : '#44475a', // Dracula selection
+            color: mode === 'light' ? '#2c3e50' : '#f8f8f2', // Dracula foreground
             boxShadow: mode === 'light' ? '0 2px 8px rgba(0,0,0,0.1)' : '0 2px 8px rgba(0,0,0,0.3)',
           },
         },
@@ -87,8 +87,8 @@ export const getTheme = (mode: PaletteMode, colorScheme: ColorScheme) =>
       MuiDrawer: {
         styleOverrides: {
           paper: {
-            backgroundColor: mode === 'light' ? '#ffffff' : '#1e1e1e',
-            borderRight: mode === 'light' ? '1px solid #e0e0e0' : '1px solid #333333',
+            backgroundColor: mode === 'light' ? '#ffffff' : '#44475a', // Dracula selection
+            borderRight: mode === 'light' ? '1px solid #e0e0e0' : '1px solid #44475a', // Dracula selection
           },
         },
       },

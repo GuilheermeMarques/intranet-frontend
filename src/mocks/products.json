@@ -1,0 +1,1004 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "codigoProduto": "PROD001",
+      "nomeProduto": "Notebook Dell Inspiron",
+      "descricaoProduto": "Notebook Dell Inspiron 15 polegadas, Intel i5, 8GB RAM, 256GB SSD",
+      "preco": 3499.99,
+      "quantidadeEstoque": 15,
+      "ultimaDataVenda": "2024-01-15",
+      "fornecedor": "Dell Brasil"
+    },
+    {
+      "id": 2,
+      "codigoProduto": "PROD002",
+      "nomeProduto": "Mouse Logitech MX Master",
+      "descricaoProduto": "Mouse sem fio Logitech MX Master 3, sensor Darkfield",
+      "preco": 299.99,
+      "quantidadeEstoque": 45,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "Logitech"
+    },
+    {
+      "id": 3,
+      "codigoProduto": "PROD003",
+      "nomeProduto": "Teclado Mecânico Corsair",
+      "descricaoProduto": "Teclado mecânico Corsair K70 RGB, switches Cherry MX Red",
+      "preco": 599.99,
+      "quantidadeEstoque": 8,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "Corsair"
+    },
+    {
+      "id": 4,
+      "codigoProduto": "PROD004",
+      "nomeProduto": "Monitor LG 27\"",
+      "descricaoProduto": "Monitor LG 27 polegadas, Full HD, IPS, 75Hz",
+      "preco": 899.99,
+      "quantidadeEstoque": 12,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "LG Electronics"
+    },
+    {
+      "id": 5,
+      "codigoProduto": "PROD005",
+      "nomeProduto": "SSD Samsung 1TB",
+      "descricaoProduto": "SSD Samsung 970 EVO Plus 1TB, NVMe M.2",
+      "preco": 449.99,
+      "quantidadeEstoque": 25,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "Samsung"
+    },
+    {
+      "id": 6,
+      "codigoProduto": "PROD006",
+      "nomeProduto": "Placa de Vídeo RTX 3060",
+      "descricaoProduto": "Placa de vídeo NVIDIA GeForce RTX 3060, 12GB GDDR6",
+      "preco": 2499.99,
+      "quantidadeEstoque": 3,
+      "ultimaDataVenda": "2024-01-21",
+      "fornecedor": "NVIDIA"
+    },
+    {
+      "id": 7,
+      "codigoProduto": "PROD007",
+      "nomeProduto": "Headset HyperX Cloud II",
+      "descricaoProduto": "Headset gamer HyperX Cloud II, som surround 7.1",
+      "preco": 399.99,
+      "quantidadeEstoque": 18,
+      "ultimaDataVenda": "2024-01-17",
+      "fornecedor": "HyperX"
+    },
+    {
+      "id": 8,
+      "codigoProduto": "PROD008",
+      "nomeProduto": "Webcam Logitech C920",
+      "descricaoProduto": "Webcam Logitech C920 Pro, Full HD 1080p, autofoco",
+      "preco": 199.99,
+      "quantidadeEstoque": 30,
+      "ultimaDataVenda": "2024-01-23",
+      "fornecedor": "Logitech"
+    },
+    {
+      "id": 9,
+      "codigoProduto": "PROD009",
+      "nomeProduto": "Processador Intel i7",
+      "descricaoProduto": "Processador Intel Core i7-11700K, 8 cores, 16 threads",
+      "preco": 1899.99,
+      "quantidadeEstoque": 7,
+      "ultimaDataVenda": "2024-01-16",
+      "fornecedor": "Intel"
+    },
+    {
+      "id": 10,
+      "codigoProduto": "PROD010",
+      "nomeProduto": "Memória RAM Corsair 16GB",
+      "descricaoProduto": "Memória RAM Corsair Vengeance LPX 16GB (2x8GB) DDR4 3200MHz",
+      "preco": 299.99,
+      "quantidadeEstoque": 22,
+      "ultimaDataVenda": "2024-01-24",
+      "fornecedor": "Corsair"
+    },
+    {
+      "id": 11,
+      "codigoProduto": "PROD011",
+      "nomeProduto": "Placa-mãe ASUS ROG",
+      "descricaoProduto": "Placa-mãe ASUS ROG Strix B550-F Gaming, AMD AM4",
+      "preco": 899.99,
+      "quantidadeEstoque": 5,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "ASUS"
+    },
+    {
+      "id": 12,
+      "codigoProduto": "PROD012",
+      "nomeProduto": "Fonte Corsair 750W",
+      "descricaoProduto": "Fonte Corsair RM750x, 750W, 80 Plus Gold, modular",
+      "preco": 599.99,
+      "quantidadeEstoque": 9,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "Corsair"
+    },
+    {
+      "id": 13,
+      "codigoProduto": "PROD013",
+      "nomeProduto": "Gabinete NZXT H510",
+      "descricaoProduto": "Gabinete NZXT H510, ATX, preto, com ventiladores incluídos",
+      "preco": 399.99,
+      "quantidadeEstoque": 14,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "NZXT"
+    },
+    {
+      "id": 14,
+      "codigoProduto": "PROD014",
+      "nomeProduto": "Cooler Noctua NH-D15",
+      "descricaoProduto": "Cooler Noctua NH-D15, duplo ventilador, compatível Intel/AMD",
+      "preco": 499.99,
+      "quantidadeEstoque": 6,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "Noctua"
+    },
+    {
+      "id": 15,
+      "codigoProduto": "PROD015",
+      "nomeProduto": "HD Seagate 2TB",
+      "descricaoProduto": "HD Seagate Barracuda 2TB, 7200RPM, SATA III",
+      "preco": 249.99,
+      "quantidadeEstoque": 35,
+      "ultimaDataVenda": "2024-01-21",
+      "fornecedor": "Seagate"
+    },
+    {
+      "id": 16,
+      "codigoProduto": "PROD016",
+      "nomeProduto": "Monitor Samsung 32\"",
+      "descricaoProduto": "Monitor Samsung 32 polegadas, Curvo, Full HD, 144Hz",
+      "preco": 1299.99,
+      "quantidadeEstoque": 8,
+      "ultimaDataVenda": "2024-01-17",
+      "fornecedor": "Samsung"
+    },
+    {
+      "id": 17,
+      "codigoProduto": "PROD017",
+      "nomeProduto": "Mousepad SteelSeries",
+      "descricaoProduto": "Mousepad SteelSeries QcK, 450x400mm, tecido de alta qualidade",
+      "preco": 89.99,
+      "quantidadeEstoque": 50,
+      "ultimaDataVenda": "2024-01-23",
+      "fornecedor": "SteelSeries"
+    },
+    {
+      "id": 18,
+      "codigoProduto": "PROD018",
+      "nomeProduto": "Teclado Razer BlackWidow",
+      "descricaoProduto": "Teclado mecânico Razer BlackWidow V3 Pro, switches Green",
+      "preco": 799.99,
+      "quantidadeEstoque": 4,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "Razer"
+    },
+    {
+      "id": 19,
+      "codigoProduto": "PROD019",
+      "nomeProduto": "Mouse Razer DeathAdder",
+      "descricaoProduto": "Mouse Razer DeathAdder V3 Pro, sensor óptico 30K DPI",
+      "preco": 349.99,
+      "quantidadeEstoque": 12,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "Razer"
+    },
+    {
+      "id": 20,
+      "codigoProduto": "PROD020",
+      "nomeProduto": "Headset SteelSeries Arctis",
+      "descricaoProduto": "Headset SteelSeries Arctis 7, sem fio, som surround",
+      "preco": 549.99,
+      "quantidadeEstoque": 7,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "SteelSeries"
+    },
+    {
+      "id": 21,
+      "codigoProduto": "PROD021",
+      "nomeProduto": "Microfone Blue Yeti",
+      "descricaoProduto": "Microfone USB Blue Yeti, condensador, múltiplos padrões",
+      "preco": 399.99,
+      "quantidadeEstoque": 11,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "Blue Microphones"
+    },
+    {
+      "id": 22,
+      "codigoProduto": "PROD022",
+      "nomeProduto": "Câmera GoPro Hero 10",
+      "descricaoProduto": "Câmera de ação GoPro Hero 10 Black, 5.3K, estabilização",
+      "preco": 2499.99,
+      "quantidadeEstoque": 6,
+      "ultimaDataVenda": "2024-01-21",
+      "fornecedor": "GoPro"
+    },
+    {
+      "id": 23,
+      "codigoProduto": "PROD023",
+      "nomeProduto": "Drone DJI Mini 2",
+      "descricaoProduto": "Drone DJI Mini 2, 4K, até 31 minutos de voo, <250g",
+      "preco": 2999.99,
+      "quantidadeEstoque": 4,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "DJI"
+    },
+    {
+      "id": 24,
+      "codigoProduto": "PROD024",
+      "nomeProduto": "Smartphone Samsung Galaxy S21",
+      "descricaoProduto": "Smartphone Samsung Galaxy S21, 128GB, 5G, câmera tripla",
+      "preco": 3999.99,
+      "quantidadeEstoque": 9,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "Samsung"
+    },
+    {
+      "id": 25,
+      "codigoProduto": "PROD025",
+      "nomeProduto": "iPhone 13 Pro",
+      "descricaoProduto": "iPhone 13 Pro, 256GB, câmera tripla, A15 Bionic",
+      "preco": 6999.99,
+      "quantidadeEstoque": 5,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "Apple"
+    },
+    {
+      "id": 26,
+      "codigoProduto": "PROD026",
+      "nomeProduto": "iPad Air 5ª Geração",
+      "descricaoProduto": "iPad Air 5ª geração, 64GB, chip M1, 10.9 polegadas",
+      "preco": 4499.99,
+      "quantidadeEstoque": 8,
+      "ultimaDataVenda": "2024-01-17",
+      "fornecedor": "Apple"
+    },
+    {
+      "id": 27,
+      "codigoProduto": "PROD027",
+      "nomeProduto": "MacBook Air M1",
+      "descricaoProduto": "MacBook Air com chip M1, 8GB RAM, 256GB SSD, 13 polegadas",
+      "preco": 7999.99,
+      "quantidadeEstoque": 3,
+      "ultimaDataVenda": "2024-01-23",
+      "fornecedor": "Apple"
+    },
+    {
+      "id": 28,
+      "codigoProduto": "PROD028",
+      "nomeProduto": "Smart TV LG 55\"",
+      "descricaoProduto": "Smart TV LG 55 polegadas, 4K, webOS, HDR",
+      "preco": 2999.99,
+      "quantidadeEstoque": 12,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "LG Electronics"
+    },
+    {
+      "id": 29,
+      "codigoProduto": "PROD029",
+      "nomeProduto": "Console PlayStation 5",
+      "descricaoProduto": "Console PlayStation 5, 825GB SSD, controle DualSense",
+      "preco": 3999.99,
+      "quantidadeEstoque": 2,
+      "ultimaDataVenda": "2024-01-21",
+      "fornecedor": "Sony"
+    },
+    {
+      "id": 30,
+      "codigoProduto": "PROD030",
+      "nomeProduto": "Console Xbox Series X",
+      "descricaoProduto": "Console Xbox Series X, 1TB SSD, controle sem fio",
+      "preco": 3499.99,
+      "quantidadeEstoque": 4,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "Microsoft"
+    },
+    {
+      "id": 31,
+      "codigoProduto": "PROD031",
+      "nomeProduto": "Nintendo Switch OLED",
+      "descricaoProduto": "Nintendo Switch OLED, 64GB, tela 7 polegadas OLED",
+      "preco": 2499.99,
+      "quantidadeEstoque": 7,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "Nintendo"
+    },
+    {
+      "id": 32,
+      "codigoProduto": "PROD032",
+      "nomeProduto": "Fone de Ouvido AirPods Pro",
+      "descricaoProduto": "Fone de ouvido Apple AirPods Pro, cancelamento de ruído",
+      "preco": 1999.99,
+      "quantidadeEstoque": 15,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "Apple"
+    },
+    {
+      "id": 33,
+      "codigoProduto": "PROD033",
+      "nomeProduto": "Smartwatch Apple Watch Series 7",
+      "descricaoProduto": "Apple Watch Series 7, 45mm, GPS, tela sempre ligada",
+      "preco": 3499.99,
+      "quantidadeEstoque": 6,
+      "ultimaDataVenda": "2024-01-17",
+      "fornecedor": "Apple"
+    },
+    {
+      "id": 34,
+      "codigoProduto": "PROD034",
+      "nomeProduto": "Smartwatch Samsung Galaxy Watch 4",
+      "descricaoProduto": "Samsung Galaxy Watch 4, 44mm, Wear OS, monitor cardíaco",
+      "preco": 1499.99,
+      "quantidadeEstoque": 9,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "Samsung"
+    },
+    {
+      "id": 35,
+      "codigoProduto": "PROD035",
+      "nomeProduto": "Câmera Canon EOS R6",
+      "descricaoProduto": "Câmera mirrorless Canon EOS R6, 20MP, 4K, estabilização",
+      "preco": 8999.99,
+      "quantidadeEstoque": 3,
+      "ultimaDataVenda": "2024-01-21",
+      "fornecedor": "Canon"
+    },
+    {
+      "id": 36,
+      "codigoProduto": "PROD036",
+      "nomeProduto": "Lente Canon RF 24-70mm",
+      "descricaoProduto": "Lente Canon RF 24-70mm f/2.8L IS USM, zoom padrão",
+      "preco": 5999.99,
+      "quantidadeEstoque": 2,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "Canon"
+    },
+    {
+      "id": 37,
+      "codigoProduto": "PROD037",
+      "nomeProduto": "Câmera Sony A7 III",
+      "descricaoProduto": "Câmera mirrorless Sony A7 III, 24MP, 4K, estabilização",
+      "preco": 7999.99,
+      "quantidadeEstoque": 4,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "Sony"
+    },
+    {
+      "id": 38,
+      "codigoProduto": "PROD038",
+      "nomeProduto": "Lente Sony FE 50mm",
+      "descricaoProduto": "Lente Sony FE 50mm f/1.8, retrato, compacta",
+      "preco": 899.99,
+      "quantidadeEstoque": 8,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "Sony"
+    },
+    {
+      "id": 39,
+      "codigoProduto": "PROD039",
+      "nomeProduto": "Tripé Manfrotto MT055",
+      "descricaoProduto": "Tripé Manfrotto MT055, carga 10kg, altura 160cm",
+      "preco": 1299.99,
+      "quantidadeEstoque": 5,
+      "ultimaDataVenda": "2024-01-17",
+      "fornecedor": "Manfrotto"
+    },
+    {
+      "id": 40,
+      "codigoProduto": "PROD040",
+      "nomeProduto": "Flash Canon Speedlite 600EX",
+      "descricaoProduto": "Flash Canon Speedlite 600EX II-RT, sem fio, TTL",
+      "preco": 2499.99,
+      "quantidadeEstoque": 6,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "Canon"
+    },
+    {
+      "id": 41,
+      "codigoProduto": "PROD041",
+      "nomeProduto": "Impressora HP LaserJet Pro",
+      "descricaoProduto": "Impressora HP LaserJet Pro M404n, monocromática, 40ppm",
+      "preco": 899.99,
+      "quantidadeEstoque": 8,
+      "ultimaDataVenda": "2024-01-21",
+      "fornecedor": "HP"
+    },
+    {
+      "id": 42,
+      "codigoProduto": "PROD042",
+      "nomeProduto": "Scanner Epson Perfection V39",
+      "descricaoProduto": "Scanner Epson Perfection V39, 4800dpi, USB",
+      "preco": 299.99,
+      "quantidadeEstoque": 12,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "Epson"
+    },
+    {
+      "id": 43,
+      "codigoProduto": "PROD043",
+      "nomeProduto": "Projetor Epson PowerLite",
+      "descricaoProduto": "Projetor Epson PowerLite 1781W, 3200 lumens, WXGA",
+      "preco": 1999.99,
+      "quantidadeEstoque": 4,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "Epson"
+    },
+    {
+      "id": 44,
+      "codigoProduto": "PROD044",
+      "nomeProduto": "Roteador TP-Link Archer C7",
+      "descricaoProduto": "Roteador TP-Link Archer C7, dual-band, 1750Mbps",
+      "preco": 199.99,
+      "quantidadeEstoque": 25,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "TP-Link"
+    },
+    {
+      "id": 45,
+      "codigoProduto": "PROD045",
+      "nomeProduto": "Switch Netgear GS308",
+      "descricaoProduto": "Switch Netgear GS308, 8 portas Gigabit, não gerenciado",
+      "preco": 89.99,
+      "quantidadeEstoque": 30,
+      "ultimaDataVenda": "2024-01-17",
+      "fornecedor": "Netgear"
+    },
+    {
+      "id": 46,
+      "codigoProduto": "PROD046",
+      "nomeProduto": "Cabo HDMI 2.1",
+      "descricaoProduto": "Cabo HDMI 2.1, 2m, 48Gbps, 8K, certificado",
+      "preco": 49.99,
+      "quantidadeEstoque": 100,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "Cable Matters"
+    },
+    {
+      "id": 47,
+      "codigoProduto": "PROD047",
+      "nomeProduto": "Hub USB-C Anker",
+      "descricaoProduto": "Hub USB-C Anker, 7 portas, HDMI, SD, Ethernet",
+      "preco": 79.99,
+      "quantidadeEstoque": 45,
+      "ultimaDataVenda": "2024-01-21",
+      "fornecedor": "Anker"
+    },
+    {
+      "id": 48,
+      "codigoProduto": "PROD048",
+      "nomeProduto": "Carregador Wireless Samsung",
+      "descricaoProduto": "Carregador wireless Samsung, 15W, compatível Qi",
+      "preco": 129.99,
+      "quantidadeEstoque": 20,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "Samsung"
+    },
+    {
+      "id": 49,
+      "codigoProduto": "PROD049",
+      "nomeProduto": "Power Bank Anker 20000mAh",
+      "descricaoProduto": "Power Bank Anker PowerCore 20000mAh, USB-C, 18W",
+      "preco": 199.99,
+      "quantidadeEstoque": 15,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "Anker"
+    },
+    {
+      "id": 50,
+      "codigoProduto": "PROD050",
+      "nomeProduto": "Cabo Lightning Apple",
+      "descricaoProduto": "Cabo Lightning Apple, 1m, certificado MFi",
+      "preco": 29.99,
+      "quantidadeEstoque": 150,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "Apple"
+    },
+    {
+      "id": 51,
+      "codigoProduto": "PROD051",
+      "nomeProduto": "Cabo USB-C Belkin",
+      "descricaoProduto": "Cabo USB-C Belkin, 2m, 100W, Thunderbolt 3",
+      "preco": 39.99,
+      "quantidadeEstoque": 80,
+      "ultimaDataVenda": "2024-01-17",
+      "fornecedor": "Belkin"
+    },
+    {
+      "id": 52,
+      "codigoProduto": "PROD052",
+      "nomeProduto": "Adaptador VGA-HDMI",
+      "descricaoProduto": "Adaptador VGA para HDMI, conversor digital, áudio",
+      "preco": 19.99,
+      "quantidadeEstoque": 60,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "Cable Matters"
+    },
+    {
+      "id": 53,
+      "codigoProduto": "PROD053",
+      "nomeProduto": "Dock Station Dell",
+      "descricaoProduto": "Dock Station Dell WD19, Thunderbolt 3, 180W",
+      "preco": 299.99,
+      "quantidadeEstoque": 10,
+      "ultimaDataVenda": "2024-01-21",
+      "fornecedor": "Dell Brasil"
+    },
+    {
+      "id": 54,
+      "codigoProduto": "PROD054",
+      "nomeProduto": "Monitor Dell P2419H",
+      "descricaoProduto": "Monitor Dell P2419H, 24\", Full HD, IPS, ultrathin",
+      "preco": 799.99,
+      "quantidadeEstoque": 18,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "Dell Brasil"
+    },
+    {
+      "id": 55,
+      "codigoProduto": "PROD055",
+      "nomeProduto": "Teclado Dell KB216",
+      "descricaoProduto": "Teclado Dell KB216, membrana, USB, layout brasileiro",
+      "preco": 49.99,
+      "quantidadeEstoque": 40,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "Dell Brasil"
+    },
+    {
+      "id": 56,
+      "codigoProduto": "PROD056",
+      "nomeProduto": "Mouse Dell MS116",
+      "descricaoProduto": "Mouse Dell MS116, óptico, 1000 DPI, USB",
+      "preco": 29.99,
+      "quantidadeEstoque": 50,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "Dell Brasil"
+    },
+    {
+      "id": 57,
+      "codigoProduto": "PROD057",
+      "nomeProduto": "Webcam Logitech C270",
+      "descricaoProduto": "Webcam Logitech C270, HD 720p, microfone integrado",
+      "preco": 89.99,
+      "quantidadeEstoque": 35,
+      "ultimaDataVenda": "2024-01-17",
+      "fornecedor": "Logitech"
+    },
+    {
+      "id": 58,
+      "codigoProduto": "PROD058",
+      "nomeProduto": "Headset Logitech H390",
+      "descricaoProduto": "Headset Logitech H390, USB, controle de volume",
+      "preco": 119.99,
+      "quantidadeEstoque": 25,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "Logitech"
+    },
+    {
+      "id": 59,
+      "codigoProduto": "PROD059",
+      "nomeProduto": "Teclado Logitech K380",
+      "descricaoProduto": "Teclado Logitech K380, Bluetooth, multi-dispositivo",
+      "preco": 159.99,
+      "quantidadeEstoque": 20,
+      "ultimaDataVenda": "2024-01-21",
+      "fornecedor": "Logitech"
+    },
+    {
+      "id": 60,
+      "codigoProduto": "PROD060",
+      "nomeProduto": "Mouse Logitech M720",
+      "descricaoProduto": "Mouse Logitech M720 Triathlon, Bluetooth, 3 dispositivos",
+      "preco": 189.99,
+      "quantidadeEstoque": 15,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "Logitech"
+    },
+    {
+      "id": 61,
+      "codigoProduto": "PROD061",
+      "nomeProduto": "Tablet Samsung Galaxy Tab S7",
+      "descricaoProduto": "Tablet Samsung Galaxy Tab S7, 11\", 128GB, S Pen incluído",
+      "preco": 2999.99,
+      "quantidadeEstoque": 6,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "Samsung"
+    },
+    {
+      "id": 62,
+      "codigoProduto": "PROD062",
+      "nomeProduto": "Tablet iPad 9ª Geração",
+      "descricaoProduto": "iPad 9ª geração, 64GB, chip A13 Bionic, 10.2 polegadas",
+      "preco": 2499.99,
+      "quantidadeEstoque": 8,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "Apple"
+    },
+    {
+      "id": 63,
+      "codigoProduto": "PROD063",
+      "nomeProduto": "Chromebook Samsung",
+      "descricaoProduto": "Chromebook Samsung, Intel Celeron, 4GB RAM, 32GB eMMC",
+      "preco": 1499.99,
+      "quantidadeEstoque": 10,
+      "ultimaDataVenda": "2024-01-17",
+      "fornecedor": "Samsung"
+    },
+    {
+      "id": 64,
+      "codigoProduto": "PROD064",
+      "nomeProduto": "Notebook Lenovo ThinkPad",
+      "descricaoProduto": "Notebook Lenovo ThinkPad E14, Intel i5, 8GB RAM, 256GB SSD",
+      "preco": 2999.99,
+      "quantidadeEstoque": 7,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "Lenovo"
+    },
+    {
+      "id": 65,
+      "codigoProduto": "PROD065",
+      "nomeProduto": "Notebook HP Pavilion",
+      "descricaoProduto": "Notebook HP Pavilion 15, AMD Ryzen 5, 8GB RAM, 512GB SSD",
+      "preco": 2799.99,
+      "quantidadeEstoque": 5,
+      "ultimaDataVenda": "2024-01-21",
+      "fornecedor": "HP"
+    },
+    {
+      "id": 66,
+      "codigoProduto": "PROD066",
+      "nomeProduto": "Notebook Acer Aspire",
+      "descricaoProduto": "Notebook Acer Aspire 5, Intel i3, 4GB RAM, 256GB SSD",
+      "preco": 1999.99,
+      "quantidadeEstoque": 12,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "Acer"
+    },
+    {
+      "id": 67,
+      "codigoProduto": "PROD067",
+      "nomeProduto": "All-in-One Dell Inspiron",
+      "descricaoProduto": "All-in-One Dell Inspiron 24, Intel i5, 8GB RAM, 1TB HDD",
+      "preco": 3499.99,
+      "quantidadeEstoque": 3,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "Dell Brasil"
+    },
+    {
+      "id": 68,
+      "codigoProduto": "PROD068",
+      "nomeProduto": "Desktop HP Pavilion",
+      "descricaoProduto": "Desktop HP Pavilion, Intel i5, 8GB RAM, 1TB HDD, Windows 11",
+      "preco": 2499.99,
+      "quantidadeEstoque": 6,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "HP"
+    },
+    {
+      "id": 69,
+      "codigoProduto": "PROD069",
+      "nomeProduto": "Desktop Dell OptiPlex",
+      "descricaoProduto": "Desktop Dell OptiPlex 7090, Intel i7, 16GB RAM, 512GB SSD",
+      "preco": 3999.99,
+      "quantidadeEstoque": 4,
+      "ultimaDataVenda": "2024-01-17",
+      "fornecedor": "Dell Brasil"
+    },
+    {
+      "id": 70,
+      "codigoProduto": "PROD070",
+      "nomeProduto": "Mac Mini M1",
+      "descricaoProduto": "Mac Mini com chip M1, 8GB RAM, 256GB SSD, macOS",
+      "preco": 4999.99,
+      "quantidadeEstoque": 2,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "Apple"
+    },
+    {
+      "id": 71,
+      "codigoProduto": "PROD071",
+      "nomeProduto": "iMac 24\" M1",
+      "descricaoProduto": "iMac 24\" com chip M1, 8GB RAM, 256GB SSD, 4.5K Retina",
+      "preco": 9999.99,
+      "quantidadeEstoque": 1,
+      "ultimaDataVenda": "2024-01-21",
+      "fornecedor": "Apple"
+    },
+    {
+      "id": 72,
+      "codigoProduto": "PROD072",
+      "nomeProduto": "Mac Pro",
+      "descricaoProduto": "Mac Pro, Intel Xeon, 32GB RAM, 1TB SSD, macOS",
+      "preco": 29999.99,
+      "quantidadeEstoque": 1,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "Apple"
+    },
+    {
+      "id": 73,
+      "codigoProduto": "PROD073",
+      "nomeProduto": "Workstation HP Z2",
+      "descricaoProduto": "Workstation HP Z2 G5, Intel Xeon, 32GB RAM, Quadro P1000",
+      "preco": 15999.99,
+      "quantidadeEstoque": 2,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "HP"
+    },
+    {
+      "id": 74,
+      "codigoProduto": "PROD074",
+      "nomeProduto": "Workstation Dell Precision",
+      "descricaoProduto": "Workstation Dell Precision 3650, Intel i7, 16GB RAM, T600",
+      "preco": 8999.99,
+      "quantidadeEstoque": 3,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "Dell Brasil"
+    },
+    {
+      "id": 75,
+      "codigoProduto": "PROD075",
+      "nomeProduto": "Servidor Dell PowerEdge",
+      "descricaoProduto": "Servidor Dell PowerEdge R250, Intel Xeon, 16GB RAM, 2TB HDD",
+      "preco": 12999.99,
+      "quantidadeEstoque": 1,
+      "ultimaDataVenda": "2024-01-17",
+      "fornecedor": "Dell Brasil"
+    },
+    {
+      "id": 76,
+      "codigoProduto": "PROD076",
+      "nomeProduto": "Servidor HP ProLiant",
+      "descricaoProduto": "Servidor HP ProLiant DL20 Gen10, Intel Xeon, 32GB RAM",
+      "preco": 15999.99,
+      "quantidadeEstoque": 1,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "HP"
+    },
+    {
+      "id": 77,
+      "codigoProduto": "PROD077",
+      "nomeProduto": "NAS Synology DS220+",
+      "descricaoProduto": "NAS Synology DS220+, 2 bays, Intel Celeron, 2GB RAM",
+      "preco": 1999.99,
+      "quantidadeEstoque": 4,
+      "ultimaDataVenda": "2024-01-21",
+      "fornecedor": "Synology"
+    },
+    {
+      "id": 78,
+      "codigoProduto": "PROD078",
+      "nomeProduto": "NAS QNAP TS-251D",
+      "descricaoProduto": "NAS QNAP TS-251D, 2 bays, Intel Celeron, 4GB RAM",
+      "preco": 2499.99,
+      "quantidadeEstoque": 3,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "QNAP"
+    },
+    {
+      "id": 79,
+      "codigoProduto": "PROD079",
+      "nomeProduto": "Switch Cisco Catalyst",
+      "descricaoProduto": "Switch Cisco Catalyst 2960, 24 portas, gerenciado",
+      "preco": 3999.99,
+      "quantidadeEstoque": 2,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "Cisco"
+    },
+    {
+      "id": 80,
+      "codigoProduto": "PROD080",
+      "nomeProduto": "Roteador Cisco RV340",
+      "descricaoProduto": "Roteador Cisco RV340, 4 portas Gigabit, VPN",
+      "preco": 2999.99,
+      "quantidadeEstoque": 3,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "Cisco"
+    },
+    {
+      "id": 81,
+      "codigoProduto": "PROD081",
+      "nomeProduto": "Firewall Fortinet FortiGate",
+      "descricaoProduto": "Firewall Fortinet FortiGate 60F, UTM, VPN, 10 portas",
+      "preco": 8999.99,
+      "quantidadeEstoque": 2,
+      "ultimaDataVenda": "2024-01-17",
+      "fornecedor": "Fortinet"
+    },
+    {
+      "id": 82,
+      "codigoProduto": "PROD082",
+      "nomeProduto": "Access Point Ubiquiti UniFi",
+      "descricaoProduto": "Access Point Ubiquiti UniFi AP-AC-PRO, 802.11ac, PoE",
+      "preco": 899.99,
+      "quantidadeEstoque": 8,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "Ubiquiti"
+    },
+    {
+      "id": 83,
+      "codigoProduto": "PROD083",
+      "nomeProduto": "Câmera IP Hikvision",
+      "descricaoProduto": "Câmera IP Hikvision DS-2CD2142FWD-I, 4MP, infravermelho",
+      "preco": 299.99,
+      "quantidadeEstoque": 15,
+      "ultimaDataVenda": "2024-01-21",
+      "fornecedor": "Hikvision"
+    },
+    {
+      "id": 84,
+      "codigoProduto": "PROD084",
+      "nomeProduto": "DVR Hikvision 4 Canais",
+      "descricaoProduto": "DVR Hikvision DS-7104HGHI-F1, 4 canais, 1TB incluído",
+      "preco": 599.99,
+      "quantidadeEstoque": 6,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "Hikvision"
+    },
+    {
+      "id": 85,
+      "codigoProduto": "PROD085",
+      "nomeProduto": "NVR Dahua 8 Canais",
+      "descricaoProduto": "NVR Dahua NVR4208-8P-4KS2, 8 canais, PoE, 2TB",
+      "preco": 1299.99,
+      "quantidadeEstoque": 4,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "Dahua"
+    },
+    {
+      "id": 86,
+      "codigoProduto": "PROD086",
+      "nomeProduto": "Câmera Dome Dahua",
+      "descricaoProduto": "Câmera Dome Dahua IPC-HDW4431C-A, 3MP, 2.8mm",
+      "preco": 199.99,
+      "quantidadeEstoque": 20,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "Dahua"
+    },
+    {
+      "id": 87,
+      "codigoProduto": "PROD087",
+      "nomeProduto": "Interfone Digital",
+      "descricaoProduto": "Interfone Digital Aiphone GT-1C, cor, áudio bidirecional",
+      "preco": 399.99,
+      "quantidadeEstoque": 12,
+      "ultimaDataVenda": "2024-01-17",
+      "fornecedor": "Aiphone"
+    },
+    {
+      "id": 88,
+      "codigoProduto": "PROD088",
+      "nomeProduto": "Controle de Acesso",
+      "descricaoProduto": "Controle de Acesso ZKTeco C3X, leitor biométrico, 3000 digitais",
+      "preco": 799.99,
+      "quantidadeEstoque": 8,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "ZKTeco"
+    },
+    {
+      "id": 89,
+      "codigoProduto": "PROD089",
+      "nomeProduto": "Alarme Residencial",
+      "descricaoProduto": "Alarme Residencial Intelbras, 8 zonas, sirene 110dB",
+      "preco": 299.99,
+      "quantidadeEstoque": 25,
+      "ultimaDataVenda": "2024-01-21",
+      "fornecedor": "Intelbras"
+    },
+    {
+      "id": 90,
+      "codigoProduto": "PROD090",
+      "nomeProduto": "Sensor de Movimento",
+      "descricaoProduto": "Sensor de Movimento PIR, 12m, 110°, infravermelho",
+      "preco": 49.99,
+      "quantidadeEstoque": 50,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "Intelbras"
+    },
+    {
+      "id": 91,
+      "codigoProduto": "PROD091",
+      "nomeProduto": "Sensor Magnético",
+      "descricaoProduto": "Sensor Magnético para Porta/Janela, 2 partes, 12V",
+      "preco": 19.99,
+      "quantidadeEstoque": 100,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "Intelbras"
+    },
+    {
+      "id": 92,
+      "codigoProduto": "PROD092",
+      "nomeProduto": "Sirene Externa",
+      "descricaoProduto": "Sirene Externa 110dB, 12V, resistente à água",
+      "preco": 89.99,
+      "quantidadeEstoque": 30,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "Intelbras"
+    },
+    {
+      "id": 93,
+      "codigoProduto": "PROD093",
+      "nomeProduto": "Teclado de Controle",
+      "descricaoProduto": "Teclado de Controle LCD, 8 zonas, senha de acesso",
+      "preco": 159.99,
+      "quantidadeEstoque": 15,
+      "ultimaDataVenda": "2024-01-17",
+      "fornecedor": "Intelbras"
+    },
+    {
+      "id": 94,
+      "codigoProduto": "PROD094",
+      "nomeProduto": "Central de Alarme",
+      "descricaoProduto": "Central de Alarme 8 zonas, 2 partições, comunicação",
+      "preco": 199.99,
+      "quantidadeEstoque": 20,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "Intelbras"
+    },
+    {
+      "id": 95,
+      "codigoProduto": "PROD095",
+      "nomeProduto": "Fonte de Alimentação",
+      "descricaoProduto": "Fonte de Alimentação 12V 2A, para alarmes e câmeras",
+      "preco": 29.99,
+      "quantidadeEstoque": 80,
+      "ultimaDataVenda": "2024-01-21",
+      "fornecedor": "Intelbras"
+    },
+    {
+      "id": 96,
+      "codigoProduto": "PROD096",
+      "nomeProduto": "Bateria de Backup",
+      "descricaoProduto": "Bateria de Backup 7Ah, 12V, para alarmes e nobreaks",
+      "preco": 79.99,
+      "quantidadeEstoque": 40,
+      "ultimaDataVenda": "2024-01-18",
+      "fornecedor": "Intelbras"
+    },
+    {
+      "id": 97,
+      "codigoProduto": "PROD097",
+      "nomeProduto": "Cabo de Rede Cat6",
+      "descricaoProduto": "Cabo de Rede Cat6, 305m, blindado, CCA",
+      "preco": 299.99,
+      "quantidadeEstoque": 25,
+      "ultimaDataVenda": "2024-01-20",
+      "fornecedor": "Furukawa"
+    },
+    {
+      "id": 98,
+      "codigoProduto": "PROD098",
+      "nomeProduto": "Conector RJ45",
+      "descricaoProduto": "Conector RJ45, 100 unidades, crimpagem, Cat6",
+      "preco": 39.99,
+      "quantidadeEstoque": 200,
+      "ultimaDataVenda": "2024-01-22",
+      "fornecedor": "Furukawa"
+    },
+    {
+      "id": 99,
+      "codigoProduto": "PROD099",
+      "nomeProduto": "Crimpador RJ45",
+      "descricaoProduto": "Crimpador RJ45, profissional, com testador incluído",
+      "preco": 89.99,
+      "quantidadeEstoque": 15,
+      "ultimaDataVenda": "2024-01-17",
+      "fornecedor": "Furukawa"
+    },
+    {
+      "id": 100,
+      "codigoProduto": "PROD100",
+      "nomeProduto": "Testador de Rede",
+      "descricaoProduto": "Testador de Rede RJ45/RJ11, 8 LEDs, bateria incluída",
+      "preco": 29.99,
+      "quantidadeEstoque": 60,
+      "ultimaDataVenda": "2024-01-19",
+      "fornecedor": "Furukawa"
+    }
+  ]
+}
