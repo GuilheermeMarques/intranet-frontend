@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, useTheme as useMuiTheme } from '@mui/material';
+import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
@@ -10,8 +10,7 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const theme = useMuiTheme();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [sidebarHoverExpanded, setSidebarHoverExpanded] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -26,7 +25,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }, []);
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+    setSidebarOpen(!sidebarOpen);
   };
 
   const handleSidebarToggle = () => {
@@ -55,8 +54,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         sidebarHoverExpanded={sidebarHoverExpanded}
       />
       <Sidebar
-        open={mobileOpen}
-        onClose={() => setMobileOpen(false)}
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
         expanded={sidebarExpanded}
         onToggle={handleSidebarToggle}
         onHoverChange={handleSidebarHoverChange}

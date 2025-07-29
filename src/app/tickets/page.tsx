@@ -1,6 +1,8 @@
 'use client';
 
 import { DashboardLayout } from '@/components/DashboardLayout';
+import { FilterPanel } from '@/components/FilterPanel';
+import ticketsData from '@/mocks/tickets.json';
 import {
   closestCorners,
   DndContext,
@@ -27,7 +29,6 @@ import {
   Description as DescriptionIcon,
   Download as DownloadIcon,
   Edit as EditIcon,
-  FilterList as FilterIcon,
   Image as ImageIcon,
   Search as SearchIcon,
   Send as SendIcon,
@@ -61,10 +62,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { ptBR } from 'date-fns/locale';
 import { useState } from 'react';
 
 // Tipos para os chamados
@@ -105,253 +102,10 @@ interface Attachment {
   uploadedAt: string;
 }
 
-// Dados mockados para demonstração
-const mockTickets: Ticket[] = [
-  {
-    id: '1',
-    title: 'Erro no login do sistema',
-    description:
-      'Usuários não conseguem fazer login com credenciais válidas. O erro aparece após inserir email e senha.',
-    status: 'todo',
-    priority: 'high',
-    assignee: 'João Silva',
-    reporter: 'Maria Santos',
-    createdAt: '2024-01-15T10:30:00Z',
-    updatedAt: '2024-01-15T14:20:00Z',
-    category: 'Sistema',
-    tags: ['login', 'bug', 'urgente'],
-    messages: [
-      {
-        id: '1',
-        author: 'Maria Santos',
-        content:
-          'Usuários estão relatando que não conseguem fazer login mesmo com credenciais corretas. O erro aparece após inserir email e senha.',
-        timestamp: '2024-01-15T10:30:00Z',
-        mentions: [],
-        type: 'comment',
-      },
-      {
-        id: '2',
-        author: 'João Silva',
-        content:
-          'Vou investigar o problema. @Maria Santos, você pode me enviar os logs de erro que aparecem?',
-        timestamp: '2024-01-15T11:15:00Z',
-        mentions: ['Maria Santos'],
-        type: 'comment',
-        attachments: [
-          {
-            id: '1',
-            name: 'error-screenshot.png',
-            url: '/api/attachments/error-screenshot.png',
-            type: 'image',
-            size: 245760,
-            uploadedBy: 'João Silva',
-            uploadedAt: '2024-01-15T11:15:00Z',
-          },
-        ],
-      },
-      {
-        id: '3',
-        author: 'Maria Santos',
-        content:
-          'Claro! Enviei os logs por email. O erro parece estar relacionado ao token de autenticação.',
-        timestamp: '2024-01-15T11:45:00Z',
-        mentions: [],
-        type: 'comment',
-        attachments: [
-          {
-            id: '2',
-            name: 'auth-logs.txt',
-            url: '/api/attachments/auth-logs.txt',
-            type: 'document',
-            size: 15360,
-            uploadedBy: 'Maria Santos',
-            uploadedAt: '2024-01-15T11:45:00Z',
-          },
-          {
-            id: '3',
-            name: 'login-error.png',
-            url: '/api/attachments/login-error.png',
-            type: 'image',
-            size: 189440,
-            uploadedBy: 'Maria Santos',
-            uploadedAt: '2024-01-15T11:45:00Z',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: '2',
-    title: 'Melhoria na interface do catálogo',
-    description:
-      'Adicionar filtros avançados e melhorar a responsividade da página do catálogo de produtos.',
-    status: 'inProgress',
-    priority: 'medium',
-    assignee: 'Ana Costa',
-    reporter: 'Pedro Oliveira',
-    createdAt: '2024-01-14T09:15:00Z',
-    updatedAt: '2024-01-15T16:45:00Z',
-    category: 'Interface',
-    tags: ['UI/UX', 'melhoria', 'catálogo'],
-    messages: [
-      {
-        id: '1',
-        author: 'Pedro Oliveira',
-        content: 'Precisamos adicionar filtros por preço, categoria e disponibilidade no catálogo.',
-        timestamp: '2024-01-14T09:15:00Z',
-        mentions: [],
-        type: 'comment',
-      },
-      {
-        id: '2',
-        author: 'Ana Costa',
-        content:
-          'Entendi! Vou começar implementando os filtros básicos. @Pedro Oliveira, você tem alguma preferência específica para o layout?',
-        timestamp: '2024-01-15T10:00:00Z',
-        mentions: ['Pedro Oliveira'],
-        type: 'comment',
-        attachments: [
-          {
-            id: '4',
-            name: 'catalog-mockup.png',
-            url: '/api/attachments/catalog-mockup.png',
-            type: 'image',
-            size: 312320,
-            uploadedBy: 'Ana Costa',
-            uploadedAt: '2024-01-15T10:00:00Z',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: '3',
-    title: 'Relatório de vendas não carrega',
-    description:
-      'A página de relatórios de vendas apresenta erro 500 e não carrega os dados dos últimos 30 dias.',
-    status: 'inReview',
-    priority: 'critical',
-    assignee: 'Carlos Lima',
-    reporter: 'Fernanda Rocha',
-    createdAt: '2024-01-13T11:00:00Z',
-    updatedAt: '2024-01-15T12:30:00Z',
-    category: 'Relatórios',
-    tags: ['relatório', 'crítico', 'vendas'],
-    messages: [
-      {
-        id: '1',
-        author: 'Fernanda Rocha',
-        content:
-          'O relatório de vendas está apresentando erro 500. É urgente pois precisamos dos dados para a reunião de hoje.',
-        timestamp: '2024-01-13T11:00:00Z',
-        mentions: [],
-        type: 'comment',
-      },
-      {
-        id: '2',
-        author: 'Carlos Lima',
-        content:
-          'Vou verificar imediatamente. @Fernanda Rocha, você pode me enviar o erro específico que aparece?',
-        timestamp: '2024-01-13T11:30:00Z',
-        mentions: ['Fernanda Rocha'],
-        type: 'comment',
-      },
-      {
-        id: '3',
-        author: 'Carlos Lima',
-        content:
-          'Problema identificado! Era um timeout na consulta. Corrigido e testado. @Fernanda Rocha pode testar agora.',
-        timestamp: '2024-01-15T12:30:00Z',
-        mentions: ['Fernanda Rocha'],
-        type: 'status_update',
-        attachments: [
-          {
-            id: '5',
-            name: 'sales-report-fixed.png',
-            url: '/api/attachments/sales-report-fixed.png',
-            type: 'image',
-            size: 156720,
-            uploadedBy: 'Carlos Lima',
-            uploadedAt: '2024-01-15T12:30:00Z',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: '4',
-    title: 'Atualização de dados pessoais',
-    description:
-      'Implementar funcionalidade para usuários atualizarem seus dados pessoais no perfil.',
-    status: 'done',
-    priority: 'low',
-    assignee: 'Roberto Alves',
-    reporter: 'Lucia Ferreira',
-    createdAt: '2024-01-10T08:45:00Z',
-    updatedAt: '2024-01-14T17:20:00Z',
-    category: 'Perfil',
-    tags: ['perfil', 'dados', 'concluído'],
-    messages: [
-      {
-        id: '1',
-        author: 'Lucia Ferreira',
-        content: 'Precisamos permitir que os usuários atualizem nome, email e telefone no perfil.',
-        timestamp: '2024-01-10T08:45:00Z',
-        mentions: [],
-        type: 'comment',
-      },
-      {
-        id: '2',
-        author: 'Roberto Alves',
-        content:
-          'Implementado! @Lucia Ferreira pode testar a funcionalidade. Adicionei validação de email também.',
-        timestamp: '2024-01-14T17:20:00Z',
-        mentions: ['Lucia Ferreira'],
-        type: 'status_update',
-      },
-    ],
-  },
-  {
-    id: '5',
-    title: 'Integração com API externa',
-    description:
-      'Desenvolver integração com API de terceiros para sincronização de dados de produtos.',
-    status: 'todo',
-    priority: 'high',
-    assignee: 'Mariana Santos',
-    reporter: 'Ricardo Costa',
-    createdAt: '2024-01-12T14:20:00Z',
-    updatedAt: '2024-01-15T10:15:00Z',
-    category: 'Integração',
-    tags: ['API', 'integração', 'produtos'],
-    messages: [
-      {
-        id: '1',
-        author: 'Ricardo Costa',
-        content:
-          'Precisamos integrar com a API do fornecedor para sincronizar produtos automaticamente.',
-        timestamp: '2024-01-12T14:20:00Z',
-        mentions: [],
-        type: 'comment',
-      },
-    ],
-  },
-];
-
-const statusConfig = {
-  todo: { label: 'ToDo', color: '#ff9800' },
-  inProgress: { label: 'InProgress', color: '#2196f3' },
-  inReview: { label: 'In Review', color: '#9c27b0' },
-  done: { label: 'Done', color: '#4caf50' },
-};
-
-const priorityConfig = {
-  low: { label: 'Baixa', color: '#4caf50' },
-  medium: { label: 'Média', color: '#ff9800' },
-  high: { label: 'Alta', color: '#f44336' },
-  critical: { label: 'Crítica', color: '#d32f2f' },
-};
+// Usar dados do mock
+const mockTickets: Ticket[] = ticketsData.tickets as Ticket[];
+const statusConfig = ticketsData.statusConfig;
+const priorityConfig = ticketsData.priorityConfig;
 
 // Componente Sortable para os tickets
 const SortableTicketCard = ({ ticket, onClick }: { ticket: Ticket; onClick: () => void }) => {
@@ -552,10 +306,6 @@ export default function TicketsPage() {
     inProgress: filteredTickets.filter((ticket) => ticket.status === 'inProgress'),
     inReview: filteredTickets.filter((ticket) => ticket.status === 'inReview'),
     done: filteredTickets.filter((ticket) => ticket.status === 'done'),
-  };
-
-  const handleFilterChange = (field: string, value: string | Date | null) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -842,112 +592,58 @@ export default function TicketsPage() {
         </Box>
 
         {/* Filtros */}
-        <Card sx={{ mb: 3 }}>
-          <CardContent>
-            <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-              <FilterIcon sx={{ mr: 1 }} />
-              Filtros
-            </Typography>
-
-            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={3}>
-                  <TextField
-                    fullWidth
-                    placeholder="Buscar chamados..."
-                    value={filters.search}
-                    onChange={(e) => handleFilterChange('search', e.target.value)}
-                    InputProps={{
-                      startAdornment: <SearchIcon sx={{ mr: 1, color: 'text.secondary' }} />,
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={3}>
-                  <FormControl fullWidth>
-                    <InputLabel>Prioridade</InputLabel>
-                    <Select
-                      value={filters.priority}
-                      label="Prioridade"
-                      onChange={(e) => handleFilterChange('priority', e.target.value)}
-                    >
-                      <MenuItem value="">Todas</MenuItem>
-                      <MenuItem value="low">Baixa</MenuItem>
-                      <MenuItem value="medium">Média</MenuItem>
-                      <MenuItem value="high">Alta</MenuItem>
-                      <MenuItem value="critical">Crítica</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} md={3}>
-                  <FormControl fullWidth>
-                    <InputLabel>Categoria</InputLabel>
-                    <Select
-                      value={filters.category}
-                      label="Categoria"
-                      onChange={(e) => handleFilterChange('category', e.target.value)}
-                    >
-                      <MenuItem value="">Todas</MenuItem>
-                      {categories.map((category) => (
-                        <MenuItem key={category} value={category}>
-                          {category}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} md={3}>
-                  <FormControl fullWidth>
-                    <InputLabel>Responsável</InputLabel>
-                    <Select
-                      value={filters.assignee}
-                      label="Responsável"
-                      onChange={(e) => handleFilterChange('assignee', e.target.value)}
-                    >
-                      <MenuItem value="">Todos</MenuItem>
-                      {assignees.map((assignee) => (
-                        <MenuItem key={assignee} value={assignee}>
-                          {assignee}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <DatePicker
-                    label="Data Inicial"
-                    value={filters.dataInicial}
-                    onChange={(newValue) => handleFilterChange('dataInicial', newValue)}
-                    slotProps={{
-                      textField: {
-                        fullWidth: true,
-                        size: 'medium',
-                        InputProps: {
-                          style: { fontSize: '14px' },
-                        },
-                      },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <DatePicker
-                    label="Data Final"
-                    value={filters.dataFinal}
-                    onChange={(newValue) => handleFilterChange('dataFinal', newValue)}
-                    slotProps={{
-                      textField: {
-                        fullWidth: true,
-                        size: 'medium',
-                        InputProps: {
-                          style: { fontSize: '14px' },
-                        },
-                      },
-                    }}
-                  />
-                </Grid>
-              </Grid>
-            </LocalizationProvider>
-          </CardContent>
-        </Card>
+        <FilterPanel
+          title="Filtros de Chamados"
+          fields={[
+            {
+              id: 'search',
+              type: 'text',
+              label: 'Buscar chamados',
+              placeholder: 'Buscar chamados...',
+              startAdornment: <SearchIcon sx={{ mr: 1, color: 'text.secondary' }} />,
+            },
+            {
+              id: 'priority',
+              type: 'select',
+              label: 'Prioridade',
+              options: [
+                { value: 'low', label: 'Baixa' },
+                { value: 'medium', label: 'Média' },
+                { value: 'high', label: 'Alta' },
+                { value: 'critical', label: 'Crítica' },
+              ],
+            },
+            {
+              id: 'category',
+              type: 'select',
+              label: 'Categoria',
+              options: categories.map((category) => ({ value: category, label: category })),
+            },
+            {
+              id: 'assignee',
+              type: 'select',
+              label: 'Responsável',
+              options: assignees.map((assignee) => ({ value: assignee, label: assignee })),
+            },
+            {
+              id: 'dataInicial',
+              type: 'date',
+              label: 'Data Inicial',
+            },
+            {
+              id: 'dataFinal',
+              type: 'date',
+              label: 'Data Final',
+            },
+          ]}
+          filters={filters}
+          onFiltersChange={(newFilters) => {
+            setFilters(newFilters as typeof filters);
+          }}
+          showClearButton={false}
+          resultsCount={filteredTickets.length}
+          resultsLabel="chamado(s) encontrado(s)"
+        />
 
         {/* Kanban Board */}
         <DndContext

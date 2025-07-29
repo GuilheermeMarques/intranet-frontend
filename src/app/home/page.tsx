@@ -1,6 +1,7 @@
 'use client';
 
 import { DashboardLayout } from '@/components/DashboardLayout';
+import homeData from '@/mocks/home.json';
 import {
   AttachMoney,
   Inventory,
@@ -9,6 +10,7 @@ import {
   Support,
   TrendingUp,
 } from '@mui/icons-material';
+import type { PaletteColor } from '@mui/material';
 import {
   Avatar,
   Box,
@@ -125,7 +127,17 @@ function ProgressCard({ title, value, total, color, icon }: ProgressCardProps) {
   );
 }
 
+// Mapear ícones
+const iconMap: Record<string, React.ReactNode> = {
+  People: <People />,
+  ShoppingCart: <ShoppingCart />,
+  AttachMoney: <AttachMoney />,
+  Support: <Support />,
+  Inventory: <Inventory />,
+};
+
 export default function HomePage() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const theme = useMuiTheme();
 
   return (
@@ -150,38 +162,19 @@ export default function HomePage() {
             mb: 4,
           }}
         >
-          <StatCard
-            title="Total de Usuários"
-            value="1,234"
-            icon={<People />}
-            color={theme.palette.primary.main}
-            trend="este mês"
-            trendValue="+12%"
-          />
-          <StatCard
-            title="Vendas"
-            value="R$ 45,678"
-            icon={<ShoppingCart />}
-            color={theme.palette.success.main}
-            trend="este mês"
-            trendValue="+8%"
-          />
-          <StatCard
-            title="Orçamentos"
-            value="89"
-            icon={<AttachMoney />}
-            color={theme.palette.warning.main}
-            trend="este mês"
-            trendValue="+15%"
-          />
-          <StatCard
-            title="Chamados"
-            value="23"
-            icon={<Support />}
-            color={theme.palette.error.main}
-            trend="este mês"
-            trendValue="-5%"
-          />
+          {homeData.stats.map((stat, index) => (
+            <StatCard
+              key={index}
+              title={stat.title}
+              value={stat.value}
+              icon={iconMap[stat.icon]}
+              color={
+                (theme.palette[stat.color as keyof typeof theme.palette] as PaletteColor)?.main
+              }
+              trend={stat.trend}
+              trendValue={stat.trendValue}
+            />
+          ))}
         </Box>
 
         {/* Progress Cards */}
@@ -193,20 +186,18 @@ export default function HomePage() {
             mb: 4,
           }}
         >
-          <ProgressCard
-            title="Produtos no Catálogo"
-            value={156}
-            total={200}
-            color={theme.palette.primary.main}
-            icon={<Inventory />}
-          />
-          <ProgressCard
-            title="Chamados Resolvidos"
-            value={18}
-            total={23}
-            color={theme.palette.success.main}
-            icon={<Support />}
-          />
+          {homeData.progress.map((progress, index) => (
+            <ProgressCard
+              key={index}
+              title={progress.title}
+              value={progress.value}
+              total={progress.total}
+              color={
+                (theme.palette[progress.color as keyof typeof theme.palette] as PaletteColor)?.main
+              }
+              icon={iconMap[progress.icon]}
+            />
+          ))}
         </Box>
 
         {/* Recent Activity */}
@@ -216,32 +207,7 @@ export default function HomePage() {
               Atividade Recente
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {[
-                {
-                  action: 'Novo usuário registrado',
-                  user: 'João Silva',
-                  time: '2 minutos atrás',
-                  type: 'user',
-                },
-                {
-                  action: 'Orçamento aprovado',
-                  user: 'Maria Santos',
-                  time: '15 minutos atrás',
-                  type: 'budget',
-                },
-                {
-                  action: 'Chamado resolvido',
-                  user: 'Pedro Costa',
-                  time: '1 hora atrás',
-                  type: 'ticket',
-                },
-                {
-                  action: 'Produto adicionado ao catálogo',
-                  user: 'Ana Oliveira',
-                  time: '2 horas atrás',
-                  type: 'catalog',
-                },
-              ].map((activity, index) => (
+              {homeData.recentActivity.map((activity, index) => (
                 <Box
                   key={index}
                   sx={{

@@ -1,0 +1,40 @@
+{
+  "colorOptions": [
+    {
+      "name": "purple",
+      "primary": "#667eea",
+      "secondary": "#764ba2",
+      "label": "Roxo"
+    },
+    {
+      "name": "blue",
+      "primary": "#2196f3",
+      "secondary": "#1976d2",
+      "label": "Azul"
+    },
+    {
+      "name": "green",
+      "primary": "#4caf50",
+      "secondary": "#388e3c",
+      "label": "Verde"
+    },
+    {
+      "name": "orange",
+      "primary": "#ff9800",
+      "secondary": "#f57c00",
+      "label": "Laranja"
+    },
+    {
+      "name": "red",
+      "primary": "#f44336",
+      "secondary": "#d32f2f",
+      "label": "Vermelho"
+    },
+    {
+      "name": "teal",
+      "primary": "#009688",
+      "secondary": "#00796b",
+      "label": "Teal"
+    }
+  ]
+}

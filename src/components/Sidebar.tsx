@@ -1,5 +1,6 @@
 'use client';
 
+import menuData from '@/mocks/menu.json';
 import {
   AttachMoney,
   Dashboard,
@@ -43,46 +44,25 @@ interface MenuItem {
   children?: MenuItem[];
 }
 
-const menuItems: MenuItem[] = [
-  {
-    id: 'dashboard',
-    label: 'Dashboard',
-    icon: <Dashboard />,
-    href: '/home',
-  },
-  {
-    id: 'catalog',
-    label: 'Catálogo',
-    icon: <Inventory />,
-    href: '/catalog',
-  },
-  {
-    id: 'tickets',
-    label: 'Chamados',
-    icon: <Support />,
-    href: '/tickets',
-  },
-  {
-    id: 'budgets',
-    label: 'Orçamentos',
-    icon: <AttachMoney />,
-    href: '/budgets',
-  },
-  {
-    id: 'sales',
-    label: 'Vendas',
-    icon: <ShoppingCart />,
-    href: '#',
-    children: [
-      {
-        id: 'representatives',
-        label: 'Representantes',
-        icon: <People />,
-        href: '/sales/representatives',
-      },
-    ],
-  },
-];
+// Mapear ícones
+const iconMap: Record<string, React.ReactNode> = {
+  Dashboard: <Dashboard />,
+  Inventory: <Inventory />,
+  Support: <Support />,
+  AttachMoney: <AttachMoney />,
+  ShoppingCart: <ShoppingCart />,
+  People: <People />,
+};
+
+// Usar dados do mock
+const menuItems: MenuItem[] = menuData.menuItems.map((item) => ({
+  ...item,
+  icon: iconMap[item.icon as keyof typeof iconMap] || <Dashboard />,
+  children: item.children?.map((child) => ({
+    ...child,
+    icon: iconMap[child.icon as keyof typeof iconMap] || <Dashboard />,
+  })),
+}));
 
 export function Sidebar({
   open,

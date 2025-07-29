@@ -1,0 +1,232 @@
+{
+  "tickets": [
+    {
+      "id": "1",
+      "title": "Erro no login do sistema",
+      "description": "Usuários não conseguem fazer login com credenciais válidas. O erro aparece após inserir email e senha.",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "João Silva",
+      "reporter": "Maria Santos",
+      "createdAt": "2025-07-15T10:30:00Z",
+      "updatedAt": "2025-07-15T14:20:00Z",
+      "category": "Sistema",
+      "tags": ["login", "bug", "urgente"],
+      "messages": [
+        {
+          "id": "1",
+          "author": "Maria Santos",
+          "content": "Usuários estão relatando que não conseguem fazer login mesmo com credenciais corretas. O erro aparece após inserir email e senha.",
+          "timestamp": "2025-07-15T10:30:00Z",
+          "mentions": [],
+          "type": "comment"
+        },
+        {
+          "id": "2",
+          "author": "João Silva",
+          "content": "Vou investigar o problema. @Maria Santos, você pode me enviar os logs de erro que aparecem?",
+          "timestamp": "2025-07-15T11:15:00Z",
+          "mentions": ["Maria Santos"],
+          "type": "comment",
+          "attachments": [
+            {
+              "id": "1",
+              "name": "error-screenshot.png",
+              "url": "/api/attachments/error-screenshot.png",
+              "type": "image",
+              "size": 245760,
+              "uploadedBy": "João Silva",
+              "uploadedAt": "2025-07-15T11:15:00Z"
+            }
+          ]
+        },
+        {
+          "id": "3",
+          "author": "Maria Santos",
+          "content": "Claro! Enviei os logs por email. O erro parece estar relacionado ao token de autenticação.",
+          "timestamp": "2025-07-15T11:45:00Z",
+          "mentions": [],
+          "type": "comment",
+          "attachments": [
+            {
+              "id": "2",
+              "name": "auth-logs.txt",
+              "url": "/api/attachments/auth-logs.txt",
+              "type": "document",
+              "size": 15360,
+              "uploadedBy": "Maria Santos",
+              "uploadedAt": "2025-07-15T11:45:00Z"
+            },
+            {
+              "id": "3",
+              "name": "login-error.png",
+              "url": "/api/attachments/login-error.png",
+              "type": "image",
+              "size": 189440,
+              "uploadedBy": "Maria Santos",
+              "uploadedAt": "2025-07-15T11:45:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Melhoria na interface do catálogo",
+      "description": "Adicionar filtros avançados e melhorar a responsividade da página do catálogo de produtos.",
+      "status": "inProgress",
+      "priority": "medium",
+      "assignee": "Ana Costa",
+      "reporter": "Pedro Oliveira",
+      "createdAt": "2025-07-14T09:15:00Z",
+      "updatedAt": "2025-07-15T16:45:00Z",
+      "category": "Interface",
+      "tags": ["UI/UX", "melhoria", "catálogo"],
+      "messages": [
+        {
+          "id": "1",
+          "author": "Pedro Oliveira",
+          "content": "Precisamos adicionar filtros por preço, categoria e disponibilidade no catálogo.",
+          "timestamp": "2025-07-14T09:15:00Z",
+          "mentions": [],
+          "type": "comment"
+        },
+        {
+          "id": "2",
+          "author": "Ana Costa",
+          "content": "Entendi! Vou começar implementando os filtros básicos. @Pedro Oliveira, você tem alguma preferência específica para o layout?",
+          "timestamp": "2025-07-15T10:00:00Z",
+          "mentions": ["Pedro Oliveira"],
+          "type": "comment",
+          "attachments": [
+            {
+              "id": "4",
+              "name": "catalog-mockup.png",
+              "url": "/api/attachments/catalog-mockup.png",
+              "type": "image",
+              "size": 312320,
+              "uploadedBy": "Ana Costa",
+              "uploadedAt": "2025-07-15T10:00:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Relatório de vendas não carrega",
+      "description": "A página de relatórios de vendas apresenta erro 500 e não carrega os dados dos últimos 30 dias.",
+      "status": "inReview",
+      "priority": "critical",
+      "assignee": "Carlos Lima",
+      "reporter": "Fernanda Rocha",
+      "createdAt": "2025-07-13T11:00:00Z",
+      "updatedAt": "2025-07-15T12:30:00Z",
+      "category": "Relatórios",
+      "tags": ["relatório", "crítico", "vendas"],
+      "messages": [
+        {
+          "id": "1",
+          "author": "Fernanda Rocha",
+          "content": "O relatório de vendas está apresentando erro 500. É urgente pois precisamos dos dados para a reunião de hoje.",
+          "timestamp": "2025-07-13T11:00:00Z",
+          "mentions": [],
+          "type": "comment"
+        },
+        {
+          "id": "2",
+          "author": "Carlos Lima",
+          "content": "Vou verificar imediatamente. @Fernanda Rocha, você pode me enviar o erro específico que aparece?",
+          "timestamp": "2025-07-13T11:30:00Z",
+          "mentions": ["Fernanda Rocha"],
+          "type": "comment"
+        },
+        {
+          "id": "3",
+          "author": "Carlos Lima",
+          "content": "Problema identificado! Era um timeout na consulta. Corrigido e testado. @Fernanda Rocha pode testar agora.",
+          "timestamp": "2025-07-15T12:30:00Z",
+          "mentions": ["Fernanda Rocha"],
+          "type": "status_update",
+          "attachments": [
+            {
+              "id": "5",
+              "name": "sales-report-fixed.png",
+              "url": "/api/attachments/sales-report-fixed.png",
+              "type": "image",
+              "size": 156720,
+              "uploadedBy": "Carlos Lima",
+              "uploadedAt": "2025-07-15T12:30:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "Atualização de dados pessoais",
+      "description": "Implementar funcionalidade para usuários atualizarem seus dados pessoais no perfil.",
+      "status": "done",
+      "priority": "low",
+      "assignee": "Roberto Alves",
+      "reporter": "Lucia Ferreira",
+      "createdAt": "2025-07-10T08:45:00Z",
+      "updatedAt": "2025-07-14T17:20:00Z",
+      "category": "Perfil",
+      "tags": ["perfil", "dados", "concluído"],
+      "messages": [
+        {
+          "id": "1",
+          "author": "Lucia Ferreira",
+          "content": "Precisamos permitir que os usuários atualizem nome, email e telefone no perfil.",
+          "timestamp": "2025-07-10T08:45:00Z",
+          "mentions": [],
+          "type": "comment"
+        },
+        {
+          "id": "2",
+          "author": "Roberto Alves",
+          "content": "Implementado! @Lucia Ferreira pode testar a funcionalidade. Adicionei validação de email também.",
+          "timestamp": "2025-07-14T17:20:00Z",
+          "mentions": ["Lucia Ferreira"],
+          "type": "status_update"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "title": "Integração com API externa",
+      "description": "Desenvolver integração com API de terceiros para sincronização de dados de produtos.",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "Mariana Santos",
+      "reporter": "Ricardo Costa",
+      "createdAt": "2025-07-12T14:20:00Z",
+      "updatedAt": "2025-07-15T10:15:00Z",
+      "category": "Integração",
+      "tags": ["API", "integração", "produtos"],
+      "messages": [
+        {
+          "id": "1",
+          "author": "Ricardo Costa",
+          "content": "Precisamos integrar com a API do fornecedor para sincronizar produtos automaticamente.",
+          "timestamp": "2025-07-12T14:20:00Z",
+          "mentions": [],
+          "type": "comment"
+        }
+      ]
+    }
+  ],
+  "statusConfig": {
+    "todo": { "label": "ToDo", "color": "#ff9800" },
+    "inProgress": { "label": "InProgress", "color": "#2196f3" },
+    "inReview": { "label": "In Review", "color": "#9c27b0" },
+    "done": { "label": "Done", "color": "#4caf50" }
+  },
+  "priorityConfig": {
+    "low": { "label": "Baixa", "color": "#4caf50" },
+    "medium": { "label": "Média", "color": "#ff9800" },
+    "high": { "label": "Alta", "color": "#f44336" },
+    "critical": { "label": "Crítica", "color": "#d32f2f" }
+  }
+}

@@ -2,6 +2,7 @@
 
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { ThemeCustomizer } from '@/components/ThemeCustomizer';
+import settingsData from '@/mocks/settings.json';
 import { Help, Language, Notifications, Palette, Security, Storage } from '@mui/icons-material';
 import {
   Box,
@@ -14,7 +15,6 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-  useTheme as useMuiTheme,
 } from '@mui/material';
 import React, { useState } from 'react';
 
@@ -26,47 +26,23 @@ interface SettingsSection {
   action?: () => void;
 }
 
-const settingsSections: SettingsSection[] = [
-  {
-    id: 'theme',
-    title: 'Personalização',
-    description: 'Customize cores e aparência da interface',
-    icon: <Palette />,
-  },
-  {
-    id: 'notifications',
-    title: 'Notificações',
-    description: 'Configure alertas e notificações',
-    icon: <Notifications />,
-  },
-  {
-    id: 'security',
-    title: 'Segurança',
-    description: 'Configurações de senha e privacidade',
-    icon: <Security />,
-  },
-  {
-    id: 'language',
-    title: 'Idioma',
-    description: 'Altere o idioma da interface',
-    icon: <Language />,
-  },
-  {
-    id: 'storage',
-    title: 'Armazenamento',
-    description: 'Gerencie dados e cache',
-    icon: <Storage />,
-  },
-  {
-    id: 'help',
-    title: 'Ajuda',
-    description: 'Suporte e documentação',
-    icon: <Help />,
-  },
-];
+// Mapear ícones
+const iconMap: Record<string, React.ReactNode> = {
+  Palette: <Palette />,
+  Notifications: <Notifications />,
+  Security: <Security />,
+  Language: <Language />,
+  Storage: <Storage />,
+  Help: <Help />,
+};
+
+// Usar dados do mock
+const settingsSections: SettingsSection[] = settingsData.settingsSections.map((section) => ({
+  ...section,
+  icon: iconMap[section.icon] || <Help />,
+}));
 
 export default function SettingsPage() {
-  const theme = useMuiTheme();
   const [themeCustomizerOpen, setThemeCustomizerOpen] = useState(false);
 
   const handleSectionClick = (sectionId: string) => {
@@ -130,7 +106,7 @@ export default function SettingsPage() {
                   Nome
                 </Typography>
                 <Typography variant="body1" fontWeight={500}>
-                  Usuário Exemplo
+                  {settingsData.userInfo.name}
                 </Typography>
               </Box>
               <Box sx={{ mb: 3 }}>
@@ -138,7 +114,7 @@ export default function SettingsPage() {
                   Email
                 </Typography>
                 <Typography variant="body1" fontWeight={500}>
-                  usuario@exemplo.com
+                  {settingsData.userInfo.email}
                 </Typography>
               </Box>
               <Box sx={{ mb: 3 }}>
@@ -146,7 +122,7 @@ export default function SettingsPage() {
                   Último Login
                 </Typography>
                 <Typography variant="body1" fontWeight={500}>
-                  Hoje às 14:30
+                  {settingsData.userInfo.lastLogin}
                 </Typography>
               </Box>
               <Button variant="outlined" fullWidth>

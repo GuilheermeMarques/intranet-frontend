@@ -18,7 +18,6 @@ import {
   MenuItem,
   Toolbar,
   Typography,
-  useMediaQuery,
   useTheme as useMuiTheme,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -36,7 +35,6 @@ export function Header({
   sidebarHoverExpanded = false,
 }: HeaderProps) {
   const theme = useMuiTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const { mode, toggleTheme } = useTheme();
   const router = useRouter();

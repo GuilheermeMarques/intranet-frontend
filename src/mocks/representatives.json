@@ -1,0 +1,85 @@
+{
+  "representatives": [
+    {
+      "id": "1",
+      "name": "João Silva",
+      "email": "joao.silva@empresa.com",
+      "phone": "(11) 99999-1111",
+      "region": "São Paulo - Capital",
+      "status": "active",
+      "totalSales": 125000,
+      "monthlyGoal": 100000,
+      "clientsCount": 45,
+      "lastActivity": "2025-07-15T14:30:00Z",
+      "avatar": "JS"
+    },
+    {
+      "id": "2",
+      "name": "Maria Santos",
+      "email": "maria.santos@empresa.com",
+      "phone": "(11) 99999-2222",
+      "region": "São Paulo - Interior",
+      "status": "active",
+      "totalSales": 98000,
+      "monthlyGoal": 100000,
+      "clientsCount": 38,
+      "lastActivity": "2025-07-15T13:45:00Z",
+      "avatar": "MS"
+    },
+    {
+      "id": "3",
+      "name": "Pedro Costa",
+      "email": "pedro.costa@empresa.com",
+      "phone": "(11) 99999-3333",
+      "region": "Rio de Janeiro",
+      "status": "active",
+      "totalSales": 156000,
+      "monthlyGoal": 120000,
+      "clientsCount": 52,
+      "lastActivity": "2025-07-15T15:20:00Z",
+      "avatar": "PC"
+    },
+    {
+      "id": "4",
+      "name": "Ana Oliveira",
+      "email": "ana.oliveira@empresa.com",
+      "phone": "(11) 99999-4444",
+      "region": "Minas Gerais",
+      "status": "inactive",
+      "totalSales": 45000,
+      "monthlyGoal": 80000,
+      "clientsCount": 22,
+      "lastActivity": "2025-07-10T09:15:00Z",
+      "avatar": "AO"
+    },
+    {
+      "id": "5",
+      "name": "Carlos Lima",
+      "email": "carlos.lima@empresa.com",
+      "phone": "(11) 99999-5555",
+      "region": "Bahia",
+      "status": "active",
+      "totalSales": 89000,
+      "monthlyGoal": 90000,
+      "clientsCount": 35,
+      "lastActivity": "2025-07-15T12:10:00Z",
+      "avatar": "CL"
+    }
+  ],
+  "regions": [
+    "São Paulo - Capital",
+    "São Paulo - Interior",
+    "Rio de Janeiro",
+    "Minas Gerais",
+    "Bahia",
+    "Paraná",
+    "Santa Catarina",
+    "Rio Grande do Sul"
+  ],
+  "statusOptions": [
+    { "value": "active", "label": "Ativo" },
+    { "value": "inactive", "label": "Inativo" },
+    { "value": "vacation", "label": "Férias" },
+    { "value": "training", "label": "Treinamento" }
+  ]
+}

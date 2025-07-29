@@ -1,0 +1,78 @@
+{
+  "stats": [
+    {
+      "title": "Total de Usuários",
+      "value": "1,234",
+      "icon": "People",
+      "color": "primary",
+      "trend": "este mês",
+      "trendValue": "+12%"
+    },
+    {
+      "title": "Vendas",
+      "value": "R$ 45,678",
+      "icon": "ShoppingCart",
+      "color": "success",
+      "trend": "este mês",
+      "trendValue": "+8%"
+    },
+    {
+      "title": "Orçamentos",
+      "value": "89",
+      "icon": "AttachMoney",
+      "color": "warning",
+      "trend": "este mês",
+      "trendValue": "+15%"
+    },
+    {
+      "title": "Chamados",
+      "value": "23",
+      "icon": "Support",
+      "color": "error",
+      "trend": "este mês",
+      "trendValue": "-5%"
+    }
+  ],
+  "progress": [
+    {
+      "title": "Produtos no Catálogo",
+      "value": 156,
+      "total": 200,
+      "color": "primary",
+      "icon": "Inventory"
+    },
+    {
+      "title": "Chamados Resolvidos",
+      "value": 18,
+      "total": 23,
+      "color": "success",
+      "icon": "Support"
+    }
+  ],
+  "recentActivity": [
+    {
+      "action": "Novo usuário registrado",
+      "user": "João Silva",
+      "time": "2 minutos atrás",
+      "type": "user"
+    },
+    {
+      "action": "Orçamento aprovado",
+      "user": "Maria Santos",
+      "time": "15 minutos atrás",
+      "type": "budget"
+    },
+    {
+      "action": "Chamado resolvido",
+      "user": "Pedro Costa",
+      "time": "1 hora atrás",
+      "type": "ticket"
+    },
+    {
+      "action": "Produto adicionado ao catálogo",
+      "user": "Ana Oliveira",
+      "time": "2 horas atrás",
+      "type": "catalog"
+    }
+  ]
+}

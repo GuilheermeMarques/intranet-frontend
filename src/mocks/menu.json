@@ -1,0 +1,42 @@
+{
+  "menuItems": [
+    {
+      "id": "dashboard",
+      "label": "Dashboard",
+      "icon": "Dashboard",
+      "href": "/home"
+    },
+    {
+      "id": "catalog",
+      "label": "Catálogo",
+      "icon": "Inventory",
+      "href": "/catalog"
+    },
+    {
+      "id": "tickets",
+      "label": "Chamados",
+      "icon": "Support",
+      "href": "/tickets"
+    },
+    {
+      "id": "budgets",
+      "label": "Orçamentos",
+      "icon": "AttachMoney",
+      "href": "/budgets"
+    },
+    {
+      "id": "sales",
+      "label": "Vendas",
+      "icon": "ShoppingCart",
+      "href": "#",
+      "children": [
+        {
+          "id": "representatives",
+          "label": "Representantes",
+          "icon": "People",
+          "href": "/sales/representatives"
+        }
+      ]
+    }
+  ]
+}

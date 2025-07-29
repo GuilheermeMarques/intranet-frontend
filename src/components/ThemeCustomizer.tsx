@@ -1,17 +1,19 @@
 'use client';
 
 import { useTheme } from '@/contexts/ThemeContext';
-import { Close, Palette, Refresh } from '@mui/icons-material';
+import themeData from '@/mocks/theme.json';
+import { Palette } from '@mui/icons-material';
 import {
   Box,
   Button,
-  Card,
-  CardContent,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
-  Grid,
-  IconButton,
+  FormControl,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
   Typography,
   useTheme as useMuiTheme,
 } from '@mui/material';
@@ -24,44 +26,8 @@ interface ColorOption {
   label: string;
 }
 
-const colorOptions: ColorOption[] = [
-  {
-    name: 'purple',
-    primary: '#667eea',
-    secondary: '#764ba2',
-    label: 'Roxo',
-  },
-  {
-    name: 'blue',
-    primary: '#2196f3',
-    secondary: '#1976d2',
-    label: 'Azul',
-  },
-  {
-    name: 'green',
-    primary: '#4caf50',
-    secondary: '#388e3c',
-    label: 'Verde',
-  },
-  {
-    name: 'orange',
-    primary: '#ff9800',
-    secondary: '#f57c00',
-    label: 'Laranja',
-  },
-  {
-    name: 'red',
-    primary: '#f44336',
-    secondary: '#d32f2f',
-    label: 'Vermelho',
-  },
-  {
-    name: 'teal',
-    primary: '#009688',
-    secondary: '#00796b',
-    label: 'Teal',
-  },
-];
+// Usar dados do mock
+const colorOptions: ColorOption[] = themeData.colorOptions;
 
 interface ThemeCustomizerProps {
   open: boolean;
@@ -70,7 +36,7 @@ interface ThemeCustomizerProps {
 
 export function ThemeCustomizer({ open, onClose }: ThemeCustomizerProps) {
   const theme = useMuiTheme();
-  const { mode, toggleTheme, colorScheme, setColorScheme } = useTheme();
+  const { colorScheme, setColorScheme } = useTheme();
   const [selectedColor, setSelectedColor] = useState(() => {
     // Encontrar a cor atual baseada no colorScheme
     const currentColor = colorOptions.find((option) => option.primary === colorScheme.primary);
@@ -107,7 +73,7 @@ export function ThemeCustomizer({ open, onClose }: ThemeCustomizerProps) {
       fullWidth
       PaperProps={{
         sx: {
-          background: theme.palette.mode === 'dark' ? '#44475a' : '#ffffff', // Dracula selection
+          background: theme.palette.mode === 'dark' ? '#44475a' : '#ffffff',
           borderRadius: 2,
         },
       }}
@@ -129,116 +95,106 @@ export function ThemeCustomizer({ open, onClose }: ThemeCustomizerProps) {
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', gap: 1 }}>
-          <IconButton
-            onClick={handleReset}
-            size="small"
-            sx={{
-              bgcolor: 'action.hover',
-              '&:hover': { bgcolor: 'action.selected' },
-            }}
-          >
-            <Refresh />
-          </IconButton>
-          <IconButton onClick={onClose} size="small">
-            <Close />
-          </IconButton>
+          <Button onClick={handleReset} size="small">
+            Resetar
+          </Button>
+          <Button onClick={onClose} size="small">
+            Fechar
+          </Button>
         </Box>
       </DialogTitle>
 
       <DialogContent>
         <Box sx={{ mt: 2 }}>
           {/* Seção Theming */}
-          <Card
+          <Box
             sx={{
               mb: 3,
               bgcolor: 'primary.main',
               color: 'primary.contrastText',
+              borderRadius: 2,
+              p: 2,
             }}
           >
-            <CardContent sx={{ py: 1, px: 2 }}>
-              <Typography variant="body2" fontWeight={500}>
-                Theming
-              </Typography>
-            </CardContent>
-          </Card>
+            <Typography variant="body2" fontWeight={500}>
+              Theming
+            </Typography>
+          </Box>
 
           {/* Seleção de Cor Primária */}
-          <Box sx={{ mb: 4 }}>
+          <Box sx={{ mb: 3 }}>
             <Typography variant="h6" sx={{ mb: 2 }}>
               Cor Primária
             </Typography>
-            <Grid container spacing={1}>
-              {colorOptions.map((color) => (
-                <Grid key={color.name}>
-                  <Box
-                    sx={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 1,
-                      bgcolor: color.primary,
-                      border: selectedColor === color.name ? 3 : 1,
-                      borderColor: selectedColor === color.name ? 'white' : 'divider',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      '&:hover': {
-                        transform: 'scale(1.05)',
-                        transition: 'transform 0.2s',
-                      },
-                    }}
-                    onClick={() => handleColorSelect(color.name)}
-                  >
-                    {color.name === 'custom' && <Palette sx={{ color: 'white', fontSize: 20 }} />}
-                  </Box>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      display: 'block',
-                      textAlign: 'center',
-                      mt: 0.5,
-                      color: selectedColor === color.name ? 'primary.main' : 'text.secondary',
-                      fontWeight: selectedColor === color.name ? 600 : 400,
-                    }}
-                  >
-                    {color.label}
-                  </Typography>
-                </Grid>
-              ))}
-            </Grid>
+            <FormControl>
+              <RadioGroup
+                row
+                value={selectedColor}
+                onChange={(e) => handleColorSelect(e.target.value)}
+              >
+                {colorOptions.map((color) => (
+                  <FormControlLabel
+                    key={color.name}
+                    value={color.name}
+                    control={<Radio />}
+                    label={
+                      <Box
+                        sx={{
+                          width: 48,
+                          height: 48,
+                          borderRadius: 1,
+                          bgcolor: color.primary,
+                          border: selectedColor === color.name ? 3 : 1,
+                          borderColor: selectedColor === color.name ? 'white' : 'divider',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          '&:hover': {
+                            transform: 'scale(1.05)',
+                            transition: 'transform 0.2s',
+                          },
+                        }}
+                      >
+                        {color.name === 'custom' && (
+                          <Palette sx={{ color: 'white', fontSize: 20 }} />
+                        )}
+                      </Box>
+                    }
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
           </Box>
 
-          {/* Preview do Tema */}
+          {/* Preview */}
           <Box sx={{ mb: 3 }}>
             <Typography variant="h6" sx={{ mb: 2 }}>
               Preview
             </Typography>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-                  <Button variant="contained" size="small">
-                    Botão Primário
-                  </Button>
-                  <Button variant="outlined" size="small">
-                    Botão Secundário
-                  </Button>
-                </Box>
-                <Typography variant="body2" color="text.secondary">
-                  Este é um exemplo de como o tema ficará com a cor selecionada.
-                </Typography>
-              </CardContent>
-            </Card>
+            <Box
+              sx={{
+                bgcolor: 'primary.main',
+                color: 'primary.contrastText',
+                borderRadius: 2,
+                p: 3,
+              }}
+            >
+              <Typography variant="body2" color="text.secondary">
+                Este é um exemplo de como o tema ficará com a cor selecionada.
+              </Typography>
+            </Box>
           </Box>
 
           {/* Ações */}
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+          <DialogActions>
             <Button variant="outlined" onClick={onClose}>
               Cancelar
             </Button>
             <Button variant="contained" onClick={onClose}>
               Aplicar Tema
             </Button>
-          </Box>
+          </DialogActions>
         </Box>
       </DialogContent>
     </Dialog>
