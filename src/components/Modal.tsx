@@ -197,6 +197,8 @@ export interface FormModalProps {
   cancelLabel?: string;
   loading?: boolean;
   disabled?: boolean;
+  maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  fullWidth?: boolean;
 }
 
 export function FormModal({
@@ -210,6 +212,8 @@ export function FormModal({
   cancelLabel = 'Cancelar',
   loading = false,
   disabled = false,
+  maxWidth = 'md',
+  fullWidth = true,
 }: FormModalProps) {
   const actions: ModalAction[] = [
     {
@@ -234,6 +238,8 @@ export function FormModal({
       subtitle={subtitle}
       actions={actions}
       loading={loading}
+      maxWidth={maxWidth}
+      fullWidth={fullWidth}
     >
       {children}
     </Modal>
