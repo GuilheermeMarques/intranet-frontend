@@ -2,6 +2,7 @@
 
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { FilterPanel } from '@/components/FilterPanel';
+import { FormModal, Modal } from '@/components/Modal';
 import ticketsData from '@/mocks/tickets.json';
 import {
   closestCorners,
@@ -24,7 +25,6 @@ import { CSS } from '@dnd-kit/utilities';
 import {
   Add as AddIcon,
   AttachFile as AttachFileIcon,
-  Close as CloseIcon,
   Delete as DeleteIcon,
   Description as DescriptionIcon,
   Download as DownloadIcon,
@@ -41,10 +41,6 @@ import {
   Card,
   CardContent,
   Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
   FormControl,
   Grid,
@@ -777,585 +773,551 @@ export default function TicketsPage() {
         </DndContext>
 
         {/* Modal de Detalhes */}
-        <Dialog open={isModalOpen} onClose={handleCloseModal} maxWidth="md" fullWidth>
+        <Modal
+          open={isModalOpen}
+          onClose={handleCloseModal}
+          title={selectedTicket?.title}
+          actions={[
+            {
+              label: 'Editar',
+              onClick: () => {
+                // TODO: Implementar edição
+                console.log('Editar chamado');
+              },
+              variant: 'outlined',
+              startIcon: <EditIcon />,
+            },
+            {
+              label: 'Fechar',
+              onClick: handleCloseModal,
+              variant: 'text',
+            },
+          ]}
+        >
           {selectedTicket && (
             <>
-              <DialogTitle sx={{ pb: 1 }}>
-                <Box
-                  sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                >
-                  <Typography variant="h6" sx={{ flex: 1 }}>
-                    {selectedTicket.title}
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={8}>
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    Descrição
                   </Typography>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    <IconButton size="small">
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton size="small" onClick={handleCloseModal}>
-                      <CloseIcon />
-                    </IconButton>
+                  <Typography variant="body1" sx={{ mb: 3 }}>
+                    {selectedTicket.description}
+                  </Typography>
+
+                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 3 }}>
+                    {selectedTicket.tags.map((tag, index) => (
+                      <Chip key={index} label={tag} size="small" />
+                    ))}
                   </Box>
-                </Box>
-              </DialogTitle>
 
-              <DialogContent>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={8}>
-                    <Typography variant="h6" sx={{ mb: 2 }}>
-                      Descrição
-                    </Typography>
-                    <Typography variant="body1" sx={{ mb: 3 }}>
-                      {selectedTicket.description}
-                    </Typography>
+                  {/* Chat/Histórico */}
+                  <Divider sx={{ my: 3 }} />
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    Histórico de Conversas
+                  </Typography>
 
-                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 3 }}>
-                      {selectedTicket.tags.map((tag, index) => (
-                        <Chip key={index} label={tag} size="small" />
-                      ))}
-                    </Box>
-
-                    {/* Chat/Histórico */}
-                    <Divider sx={{ my: 3 }} />
-                    <Typography variant="h6" sx={{ mb: 2 }}>
-                      Histórico de Conversas
-                    </Typography>
-
-                    <Box sx={{ maxHeight: 400, overflowY: 'auto', mb: 2 }}>
-                      <List>
-                        {selectedTicket.messages.map((message) => (
-                          <ListItem key={message.id} sx={{ px: 0 }}>
-                            <ListItemAvatar>
-                              <Avatar sx={{ width: 32, height: 32 }}>
-                                {message.author.charAt(0)}
-                              </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                              primary={
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                  <Typography variant="subtitle2" fontWeight={600}>
-                                    {message.author}
-                                  </Typography>
-                                  <Typography variant="caption" color="text.secondary">
-                                    {formatDate(message.timestamp)}
-                                  </Typography>
-                                  {message.type === 'status_update' && (
-                                    <Chip
-                                      label="Atualização"
-                                      size="small"
-                                      color="primary"
-                                      variant="outlined"
-                                      sx={{ fontSize: '0.6rem' }}
-                                    />
-                                  )}
-                                </Box>
-                              }
-                              secondary={
-                                <span>
-                                  <span
-                                    style={{
-                                      marginTop: '8px',
-                                      display: 'block',
-                                    }}
-                                    dangerouslySetInnerHTML={{
-                                      __html: formatMessageContent(
-                                        message.content,
-                                        message.mentions,
-                                      ),
-                                    }}
+                  <Box sx={{ maxHeight: 400, overflowY: 'auto', mb: 2 }}>
+                    <List>
+                      {selectedTicket.messages.map((message) => (
+                        <ListItem key={message.id} sx={{ px: 0 }}>
+                          <ListItemAvatar>
+                            <Avatar sx={{ width: 32, height: 32 }}>
+                              {message.author.charAt(0)}
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Typography variant="subtitle2" fontWeight={600}>
+                                  {message.author}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                  {formatDate(message.timestamp)}
+                                </Typography>
+                                {message.type === 'status_update' && (
+                                  <Chip
+                                    label="Atualização"
+                                    size="small"
+                                    color="primary"
+                                    variant="outlined"
+                                    sx={{ fontSize: '0.6rem' }}
                                   />
+                                )}
+                              </Box>
+                            }
+                            secondary={
+                              <span>
+                                <span
+                                  style={{
+                                    marginTop: '8px',
+                                    display: 'block',
+                                  }}
+                                  dangerouslySetInnerHTML={{
+                                    __html: formatMessageContent(message.content, message.mentions),
+                                  }}
+                                />
 
-                                  {/* Anexos */}
-                                  {message.attachments && message.attachments.length > 0 && (
-                                    <span style={{ marginTop: '16px', display: 'block' }}>
-                                      <span
-                                        style={{
-                                          fontSize: '0.75rem',
-                                          color: 'rgba(0, 0, 0, 0.6)',
-                                          marginBottom: '8px',
-                                          display: 'block',
-                                        }}
-                                      >
-                                        Anexos:
-                                      </span>
-                                      <span
-                                        style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}
-                                      >
-                                        {message.attachments.map((attachment) => (
-                                          <span
-                                            key={attachment.id}
-                                            style={{
-                                              padding: '8px',
-                                              display: 'flex',
-                                              alignItems: 'center',
-                                              gap: '8px',
-                                              maxWidth: '200px',
-                                              cursor: 'pointer',
-                                              backgroundColor: '#f5f5f5',
-                                              borderRadius: '4px',
-                                              border: '1px solid #e0e0e0',
-                                            }}
-                                            onClick={() => window.open(attachment.url, '_blank')}
-                                          >
-                                            {attachment.type === 'image' ? (
-                                              <ImageIcon color="primary" />
-                                            ) : attachment.type === 'document' ? (
-                                              <DescriptionIcon color="primary" />
-                                            ) : (
-                                              <AttachFileIcon color="primary" />
-                                            )}
-                                            <span style={{ minWidth: 0, flex: 1 }}>
-                                              <span
-                                                style={{
-                                                  fontSize: '0.75rem',
-                                                  overflow: 'hidden',
-                                                  textOverflow: 'ellipsis',
-                                                  whiteSpace: 'nowrap',
-                                                  display: 'block',
-                                                }}
-                                              >
-                                                {attachment.name}
-                                              </span>
-                                              <span
-                                                style={{
-                                                  fontSize: '0.75rem',
-                                                  color: 'rgba(0, 0, 0, 0.6)',
-                                                  display: 'block',
-                                                }}
-                                              >
-                                                {formatFileSize(attachment.size)}
-                                              </span>
-                                            </span>
-                                            <IconButton
-                                              size="small"
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                window.open(attachment.url, '_blank');
+                                {/* Anexos */}
+                                {message.attachments && message.attachments.length > 0 && (
+                                  <span style={{ marginTop: '16px', display: 'block' }}>
+                                    <span
+                                      style={{
+                                        fontSize: '0.75rem',
+                                        color: 'rgba(0, 0, 0, 0.6)',
+                                        marginBottom: '8px',
+                                        display: 'block',
+                                      }}
+                                    >
+                                      Anexos:
+                                    </span>
+                                    <span style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                      {message.attachments.map((attachment) => (
+                                        <span
+                                          key={attachment.id}
+                                          style={{
+                                            padding: '8px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '8px',
+                                            maxWidth: '200px',
+                                            cursor: 'pointer',
+                                            backgroundColor: '#f5f5f5',
+                                            borderRadius: '4px',
+                                            border: '1px solid #e0e0e0',
+                                          }}
+                                          onClick={() => window.open(attachment.url, '_blank')}
+                                        >
+                                          {attachment.type === 'image' ? (
+                                            <ImageIcon color="primary" />
+                                          ) : attachment.type === 'document' ? (
+                                            <DescriptionIcon color="primary" />
+                                          ) : (
+                                            <AttachFileIcon color="primary" />
+                                          )}
+                                          <span style={{ minWidth: 0, flex: 1 }}>
+                                            <span
+                                              style={{
+                                                fontSize: '0.75rem',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap',
+                                                display: 'block',
                                               }}
                                             >
-                                              <DownloadIcon fontSize="small" />
-                                            </IconButton>
+                                              {attachment.name}
+                                            </span>
+                                            <span
+                                              style={{
+                                                fontSize: '0.75rem',
+                                                color: 'rgba(0, 0, 0, 0.6)',
+                                                display: 'block',
+                                              }}
+                                            >
+                                              {formatFileSize(attachment.size)}
+                                            </span>
                                           </span>
-                                        ))}
-                                      </span>
+                                          <IconButton
+                                            size="small"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              window.open(attachment.url, '_blank');
+                                            }}
+                                          >
+                                            <DownloadIcon fontSize="small" />
+                                          </IconButton>
+                                        </span>
+                                      ))}
                                     </span>
-                                  )}
-                                </span>
-                              }
-                            />
-                          </ListItem>
-                        ))}
-                      </List>
-                    </Box>
-
-                    {/* Input para nova mensagem */}
-                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
-                      <TextField
-                        fullWidth
-                        multiline
-                        rows={2}
-                        placeholder="Digite sua mensagem... Use @nome para mencionar alguém"
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        onKeyPress={(e) => {
-                          if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            handleSendMessage();
-                          }
-                        }}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <input
-                                type="file"
-                                multiple
-                                accept="image/*,.pdf,.doc,.docx,.txt"
-                                style={{ display: 'none' }}
-                                id="file-upload"
-                                onChange={handleFileSelect}
-                              />
-                              <label htmlFor="file-upload">
-                                <IconButton component="span" color="primary">
-                                  <AttachFileIcon />
-                                </IconButton>
-                              </label>
-                              <IconButton
-                                onClick={handleSendMessage}
-                                disabled={!newMessage.trim() && selectedFiles.length === 0}
-                                color="primary"
-                              >
-                                <SendIcon />
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    </Box>
-
-                    {/* Lista de arquivos selecionados */}
-                    {selectedFiles.length > 0 && (
-                      <Box sx={{ mt: 2 }}>
-                        <Typography
-                          variant="caption"
-                          color="text.secondary"
-                          sx={{ mb: 1, display: 'block' }}
-                        >
-                          Arquivos selecionados:
-                        </Typography>
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                          {selectedFiles.map((file, index) => (
-                            <Paper
-                              key={index}
-                              sx={{
-                                p: 1,
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1,
-                                maxWidth: 200,
-                              }}
-                            >
-                              {getFileType(file) === 'image' ? (
-                                <ImageIcon color="primary" />
-                              ) : getFileType(file) === 'document' ? (
-                                <DescriptionIcon color="primary" />
-                              ) : (
-                                <AttachFileIcon color="primary" />
-                              )}
-                              <Box sx={{ minWidth: 0, flex: 1 }}>
-                                <Typography variant="caption" noWrap>
-                                  {file.name}
-                                </Typography>
-                                <Typography
-                                  variant="caption"
-                                  color="text.secondary"
-                                  display="block"
-                                >
-                                  {formatFileSize(file.size)}
-                                </Typography>
-                              </Box>
-                              <IconButton
-                                size="small"
-                                onClick={() => handleRemoveFile(index)}
-                                color="error"
-                              >
-                                <DeleteIcon fontSize="small" />
-                              </IconButton>
-                            </Paper>
-                          ))}
-                        </Box>
-                      </Box>
-                    )}
-                  </Grid>
-
-                  <Grid item xs={12} md={4}>
-                    <Stack spacing={2}>
-                      <Box>
-                        <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                          Status
-                        </Typography>
-                        <FormControl fullWidth size="small">
-                          <Select
-                            value={selectedTicket.status}
-                            onChange={(e) =>
-                              handleStatusChange(
-                                selectedTicket.id,
-                                e.target.value as Ticket['status'],
-                              )
+                                  </span>
+                                )}
+                              </span>
                             }
-                          >
-                            {Object.entries(statusConfig).map(([status, config]) => (
-                              <MenuItem key={status} value={status}>
-                                {config.label}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Box>
-
-                      <Box>
-                        <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                          Prioridade
-                        </Typography>
-                        <Chip
-                          label={priorityConfig[selectedTicket.priority].label}
-                          sx={{
-                            backgroundColor: priorityConfig[selectedTicket.priority].color,
-                            color: 'white',
-                          }}
-                        />
-                      </Box>
-
-                      <Box>
-                        <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                          Responsável
-                        </Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Avatar sx={{ width: 32, height: 32, mr: 1 }}>
-                            {selectedTicket.assignee.charAt(0)}
-                          </Avatar>
-                          <Typography variant="body2">{selectedTicket.assignee}</Typography>
-                        </Box>
-                      </Box>
-
-                      <Box>
-                        <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                          Solicitante
-                        </Typography>
-                        <Typography variant="body2">{selectedTicket.reporter}</Typography>
-                      </Box>
-
-                      <Box>
-                        <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                          Categoria
-                        </Typography>
-                        <Chip label={selectedTicket.category} variant="outlined" />
-                      </Box>
-
-                      <Divider />
-
-                      <Box>
-                        <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                          Criado em
-                        </Typography>
-                        <Typography variant="body2">
-                          {formatDate(selectedTicket.createdAt)}
-                        </Typography>
-                      </Box>
-
-                      <Box>
-                        <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                          Última atualização
-                        </Typography>
-                        <Typography variant="body2">
-                          {formatDate(selectedTicket.updatedAt)}
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </Grid>
-                </Grid>
-              </DialogContent>
-
-              <DialogActions sx={{ p: 3, pt: 1 }}>
-                <Button onClick={handleCloseModal}>Fechar</Button>
-                <Button variant="contained">Editar Chamado</Button>
-              </DialogActions>
-            </>
-          )}
-        </Dialog>
-
-        {/* Modal de Novo Chamado */}
-        <Dialog
-          open={isNewTicketModalOpen}
-          onClose={handleCloseNewTicketModal}
-          maxWidth="md"
-          fullWidth
-        >
-          <DialogTitle>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="h6">Novo Chamado</Typography>
-              <IconButton onClick={handleCloseNewTicketModal}>
-                <CloseIcon />
-              </IconButton>
-            </Box>
-          </DialogTitle>
-
-          <DialogContent>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Título do Chamado"
-                  placeholder="Digite um título descritivo"
-                  value={newTicketForm.title}
-                  onChange={(e) => handleNewTicketFormChange('title', e.target.value)}
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={4}
-                  label="Descrição"
-                  placeholder="Descreva detalhadamente o problema ou solicitação"
-                  value={newTicketForm.description}
-                  onChange={(e) => handleNewTicketFormChange('description', e.target.value)}
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <FormControl fullWidth>
-                  <InputLabel>Prioridade</InputLabel>
-                  <Select
-                    value={newTicketForm.priority}
-                    label="Prioridade"
-                    onChange={(e) => handleNewTicketFormChange('priority', e.target.value)}
-                  >
-                    <MenuItem value="low">Baixa</MenuItem>
-                    <MenuItem value="medium">Média</MenuItem>
-                    <MenuItem value="high">Alta</MenuItem>
-                    <MenuItem value="critical">Crítica</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <FormControl fullWidth>
-                  <InputLabel>Categoria</InputLabel>
-                  <Select
-                    value={newTicketForm.category}
-                    label="Categoria"
-                    onChange={(e) => handleNewTicketFormChange('category', e.target.value)}
-                  >
-                    <MenuItem value="">Selecione uma categoria</MenuItem>
-                    <MenuItem value="Sistema">Sistema</MenuItem>
-                    <MenuItem value="Interface">Interface</MenuItem>
-                    <MenuItem value="Relatórios">Relatórios</MenuItem>
-                    <MenuItem value="Perfil">Perfil</MenuItem>
-                    <MenuItem value="Integração">Integração</MenuItem>
-                    <MenuItem value="Geral">Geral</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <FormControl fullWidth>
-                  <InputLabel>Responsável</InputLabel>
-                  <Select
-                    value={newTicketForm.assignee}
-                    label="Responsável"
-                    onChange={(e) => handleNewTicketFormChange('assignee', e.target.value)}
-                  >
-                    <MenuItem value="">Selecione um responsável</MenuItem>
-                    <MenuItem value="João Silva">João Silva</MenuItem>
-                    <MenuItem value="Ana Costa">Ana Costa</MenuItem>
-                    <MenuItem value="Carlos Lima">Carlos Lima</MenuItem>
-                    <MenuItem value="Roberto Alves">Roberto Alves</MenuItem>
-                    <MenuItem value="Mariana Santos">Mariana Santos</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <Box>
-                  <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                    Tags
-                  </Typography>
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 1 }}>
-                    {newTicketForm.tags.map((tag, index) => (
-                      <Chip
-                        key={index}
-                        label={tag}
-                        onDelete={() => handleRemoveTag(tag)}
-                        size="small"
-                      />
-                    ))}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
                   </Box>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
+
+                  {/* Input para nova mensagem */}
+                  <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
                     <TextField
-                      size="small"
-                      placeholder="Adicionar tag"
-                      value={newTag}
-                      onChange={(e) => setNewTag(e.target.value)}
+                      fullWidth
+                      multiline
+                      rows={2}
+                      placeholder="Digite sua mensagem... Use @nome para mencionar alguém"
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
                       onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
+                        if (e.key === 'Enter' && !e.shiftKey) {
                           e.preventDefault();
-                          handleAddTag();
+                          handleSendMessage();
                         }
                       }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <input
+                              type="file"
+                              multiple
+                              accept="image/*,.pdf,.doc,.docx,.txt"
+                              style={{ display: 'none' }}
+                              id="file-upload"
+                              onChange={handleFileSelect}
+                            />
+                            <label htmlFor="file-upload">
+                              <IconButton component="span" color="primary">
+                                <AttachFileIcon />
+                              </IconButton>
+                            </label>
+                            <IconButton
+                              onClick={handleSendMessage}
+                              disabled={!newMessage.trim() && selectedFiles.length === 0}
+                              color="primary"
+                            >
+                              <SendIcon />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
                     />
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={handleAddTag}
-                      disabled={!newTag.trim()}
-                    >
-                      Adicionar
-                    </Button>
                   </Box>
-                </Box>
-              </Grid>
 
-              <Grid item xs={12}>
+                  {/* Lista de arquivos selecionados */}
+                  {selectedFiles.length > 0 && (
+                    <Box sx={{ mt: 2 }}>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ mb: 1, display: 'block' }}
+                      >
+                        Arquivos selecionados:
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                        {selectedFiles.map((file, index) => (
+                          <Paper
+                            key={index}
+                            sx={{
+                              p: 1,
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 1,
+                              maxWidth: 200,
+                            }}
+                          >
+                            {getFileType(file) === 'image' ? (
+                              <ImageIcon color="primary" />
+                            ) : getFileType(file) === 'document' ? (
+                              <DescriptionIcon color="primary" />
+                            ) : (
+                              <AttachFileIcon color="primary" />
+                            )}
+                            <Box sx={{ minWidth: 0, flex: 1 }}>
+                              <Typography variant="caption" noWrap>
+                                {file.name}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary" display="block">
+                                {formatFileSize(file.size)}
+                              </Typography>
+                            </Box>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleRemoveFile(index)}
+                              color="error"
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </Paper>
+                        ))}
+                      </Box>
+                    </Box>
+                  )}
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                  <Stack spacing={2}>
+                    <Box>
+                      <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                        Status
+                      </Typography>
+                      <FormControl fullWidth size="small">
+                        <Select
+                          value={selectedTicket.status}
+                          onChange={(e) =>
+                            handleStatusChange(
+                              selectedTicket.id,
+                              e.target.value as Ticket['status'],
+                            )
+                          }
+                        >
+                          {Object.entries(statusConfig).map(([status, config]) => (
+                            <MenuItem key={status} value={status}>
+                              {config.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Box>
+
+                    <Box>
+                      <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                        Prioridade
+                      </Typography>
+                      <Chip
+                        label={priorityConfig[selectedTicket.priority].label}
+                        sx={{
+                          backgroundColor: priorityConfig[selectedTicket.priority].color,
+                          color: 'white',
+                        }}
+                      />
+                    </Box>
+
+                    <Box>
+                      <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                        Responsável
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Avatar sx={{ width: 32, height: 32, mr: 1 }}>
+                          {selectedTicket.assignee.charAt(0)}
+                        </Avatar>
+                        <Typography variant="body2">{selectedTicket.assignee}</Typography>
+                      </Box>
+                    </Box>
+
+                    <Box>
+                      <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                        Solicitante
+                      </Typography>
+                      <Typography variant="body2">{selectedTicket.reporter}</Typography>
+                    </Box>
+
+                    <Box>
+                      <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                        Categoria
+                      </Typography>
+                      <Chip label={selectedTicket.category} variant="outlined" />
+                    </Box>
+
+                    <Divider />
+
+                    <Box>
+                      <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                        Criado em
+                      </Typography>
+                      <Typography variant="body2">
+                        {formatDate(selectedTicket.createdAt)}
+                      </Typography>
+                    </Box>
+
+                    <Box>
+                      <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                        Última atualização
+                      </Typography>
+                      <Typography variant="body2">
+                        {formatDate(selectedTicket.updatedAt)}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </Grid>
+              </Grid>
+            </>
+          )}
+        </Modal>
+
+        {/* Modal de Novo Chamado */}
+        <FormModal
+          open={isNewTicketModalOpen}
+          onClose={handleCloseNewTicketModal}
+          title="Novo Chamado"
+          onSubmit={handleCreateTicket}
+          submitLabel="Criar Chamado"
+          disabled={!newTicketForm.title.trim() || !newTicketForm.description.trim()}
+        >
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Título do Chamado"
+                placeholder="Digite um título descritivo"
+                value={newTicketForm.title}
+                onChange={(e) => handleNewTicketFormChange('title', e.target.value)}
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                multiline
+                rows={4}
+                label="Descrição"
+                placeholder="Descreva detalhadamente o problema ou solicitação"
+                value={newTicketForm.description}
+                onChange={(e) => handleNewTicketFormChange('description', e.target.value)}
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth>
+                <InputLabel>Prioridade</InputLabel>
+                <Select
+                  value={newTicketForm.priority}
+                  label="Prioridade"
+                  onChange={(e) => handleNewTicketFormChange('priority', e.target.value)}
+                >
+                  <MenuItem value="low">Baixa</MenuItem>
+                  <MenuItem value="medium">Média</MenuItem>
+                  <MenuItem value="high">Alta</MenuItem>
+                  <MenuItem value="critical">Crítica</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth>
+                <InputLabel>Categoria</InputLabel>
+                <Select
+                  value={newTicketForm.category}
+                  label="Categoria"
+                  onChange={(e) => handleNewTicketFormChange('category', e.target.value)}
+                >
+                  <MenuItem value="">Selecione uma categoria</MenuItem>
+                  <MenuItem value="Sistema">Sistema</MenuItem>
+                  <MenuItem value="Interface">Interface</MenuItem>
+                  <MenuItem value="Relatórios">Relatórios</MenuItem>
+                  <MenuItem value="Perfil">Perfil</MenuItem>
+                  <MenuItem value="Integração">Integração</MenuItem>
+                  <MenuItem value="Geral">Geral</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth>
+                <InputLabel>Responsável</InputLabel>
+                <Select
+                  value={newTicketForm.assignee}
+                  label="Responsável"
+                  onChange={(e) => handleNewTicketFormChange('assignee', e.target.value)}
+                >
+                  <MenuItem value="">Selecione um responsável</MenuItem>
+                  <MenuItem value="João Silva">João Silva</MenuItem>
+                  <MenuItem value="Ana Costa">Ana Costa</MenuItem>
+                  <MenuItem value="Carlos Lima">Carlos Lima</MenuItem>
+                  <MenuItem value="Roberto Alves">Roberto Alves</MenuItem>
+                  <MenuItem value="Mariana Santos">Mariana Santos</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <Box>
                 <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                  Anexos
+                  Tags
                 </Typography>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*,.pdf,.doc,.docx,.txt"
-                  style={{ display: 'none' }}
-                  id="new-ticket-file-upload"
-                  onChange={handleNewTicketFileSelect}
-                />
-                <label htmlFor="new-ticket-file-upload">
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 1 }}>
+                  {newTicketForm.tags.map((tag, index) => (
+                    <Chip
+                      key={index}
+                      label={tag}
+                      onDelete={() => handleRemoveTag(tag)}
+                      size="small"
+                    />
+                  ))}
+                </Box>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <TextField
+                    size="small"
+                    placeholder="Adicionar tag"
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddTag();
+                      }
+                    }}
+                  />
                   <Button
                     variant="outlined"
-                    startIcon={<AttachFileIcon />}
-                    fullWidth
-                    component="span"
+                    size="small"
+                    onClick={handleAddTag}
+                    disabled={!newTag.trim()}
                   >
-                    Adicionar Anexo
+                    Adicionar
                   </Button>
-                </label>
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                    Anexos Selecionados:
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                    {newTicketFiles.map((file, index) => (
-                      <Paper
-                        key={index}
-                        sx={{
-                          p: 1,
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 1,
-                          maxWidth: 200,
-                        }}
-                      >
-                        {getFileType(file) === 'image' ? (
-                          <ImageIcon color="primary" />
-                        ) : getFileType(file) === 'document' ? (
-                          <DescriptionIcon color="primary" />
-                        ) : (
-                          <AttachFileIcon color="primary" />
-                        )}
-                        <Box sx={{ minWidth: 0, flex: 1 }}>
-                          <Typography variant="caption" noWrap>
-                            {file.name}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary" display="block">
-                            {formatFileSize(file.size)}
-                          </Typography>
-                        </Box>
-                        <IconButton
-                          size="small"
-                          onClick={() => handleRemoveNewTicketFile(index)}
-                          color="error"
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
-                      </Paper>
-                    ))}
-                  </Box>
                 </Box>
-              </Grid>
+              </Box>
             </Grid>
-          </DialogContent>
 
-          <DialogActions sx={{ p: 3, pt: 1 }}>
-            <Button onClick={handleCloseNewTicketModal}>Cancelar</Button>
-            <Button
-              variant="contained"
-              onClick={handleCreateTicket}
-              disabled={!newTicketForm.title.trim() || !newTicketForm.description.trim()}
-            >
-              Criar Chamado
-            </Button>
-          </DialogActions>
-        </Dialog>
+            <Grid item xs={12}>
+              <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                Anexos
+              </Typography>
+              <input
+                type="file"
+                multiple
+                accept="image/*,.pdf,.doc,.docx,.txt"
+                style={{ display: 'none' }}
+                id="new-ticket-file-upload"
+                onChange={handleNewTicketFileSelect}
+              />
+              <label htmlFor="new-ticket-file-upload">
+                <Button
+                  variant="outlined"
+                  startIcon={<AttachFileIcon />}
+                  fullWidth
+                  component="span"
+                >
+                  Adicionar Anexo
+                </Button>
+              </label>
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                  Anexos Selecionados:
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  {newTicketFiles.map((file, index) => (
+                    <Paper
+                      key={index}
+                      sx={{
+                        p: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        maxWidth: 200,
+                      }}
+                    >
+                      {getFileType(file) === 'image' ? (
+                        <ImageIcon color="primary" />
+                      ) : getFileType(file) === 'document' ? (
+                        <DescriptionIcon color="primary" />
+                      ) : (
+                        <AttachFileIcon color="primary" />
+                      )}
+                      <Box sx={{ minWidth: 0, flex: 1 }}>
+                        <Typography variant="caption" noWrap>
+                          {file.name}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" display="block">
+                          {formatFileSize(file.size)}
+                        </Typography>
+                      </Box>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleRemoveNewTicketFile(index)}
+                        color="error"
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Paper>
+                  ))}
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
+        </FormModal>
       </Box>
     </DashboardLayout>
   );

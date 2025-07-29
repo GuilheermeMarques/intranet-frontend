@@ -1,6 +1,7 @@
 'use client';
 
 import { DashboardLayout } from '@/components/DashboardLayout';
+import { ConfirmModal } from '@/components/Modal';
 import { ThemeCustomizer } from '@/components/ThemeCustomizer';
 import settingsData from '@/mocks/settings.json';
 import { Help, Language, Notifications, Palette, Security, Storage } from '@mui/icons-material';
@@ -44,6 +45,7 @@ const settingsSections: SettingsSection[] = settingsData.settingsSections.map((s
 
 export default function SettingsPage() {
   const [themeCustomizerOpen, setThemeCustomizerOpen] = useState(false);
+  const [confirmEditProfileOpen, setConfirmEditProfileOpen] = useState(false);
 
   const handleSectionClick = (sectionId: string) => {
     switch (sectionId) {
@@ -54,6 +56,16 @@ export default function SettingsPage() {
         console.log('Seção clicada:', sectionId);
         break;
     }
+  };
+
+  const handleEditProfile = () => {
+    setConfirmEditProfileOpen(true);
+  };
+
+  const handleConfirmEditProfile = () => {
+    // TODO: Implementar edição de perfil
+    console.log('Editando perfil...');
+    setConfirmEditProfileOpen(false);
   };
 
   return (
@@ -125,7 +137,7 @@ export default function SettingsPage() {
                   {settingsData.userInfo.lastLogin}
                 </Typography>
               </Box>
-              <Button variant="outlined" fullWidth>
+              <Button variant="outlined" fullWidth onClick={handleEditProfile}>
                 Editar Perfil
               </Button>
             </CardContent>
@@ -134,6 +146,17 @@ export default function SettingsPage() {
       </Box>
 
       <ThemeCustomizer open={themeCustomizerOpen} onClose={() => setThemeCustomizerOpen(false)} />
+
+      <ConfirmModal
+        open={confirmEditProfileOpen}
+        onClose={() => setConfirmEditProfileOpen(false)}
+        onConfirm={handleConfirmEditProfile}
+        title="Editar Perfil"
+        message="Você será redirecionado para a página de edição de perfil. Deseja continuar?"
+        confirmLabel="Continuar"
+        cancelLabel="Cancelar"
+        confirmColor="primary"
+      />
     </DashboardLayout>
   );
 }

@@ -2,6 +2,59 @@
 
 Este diretório contém componentes reutilizáveis que seguem o padrão de design da aplicação.
 
+## Modal
+
+Componente reutilizável para modais na aplicação, baseado no Material-UI Dialog com funcionalidades adicionais.
+
+### Componentes Disponíveis
+
+- **Modal**: Componente base para qualquer tipo de modal
+- **ConfirmModal**: Modal específico para confirmações
+- **FormModal**: Modal específico para formulários
+
+### Uso Básico
+
+```typescript
+import { Modal, ConfirmModal, FormModal } from '@/components/Modal';
+
+// Modal base
+<Modal
+  open={open}
+  onClose={() => setOpen(false)}
+  title="Título do Modal"
+  actions={[
+    { label: 'Cancelar', onClick: () => setOpen(false), variant: 'text' },
+    { label: 'Salvar', onClick: handleSave, variant: 'contained' },
+  ]}
+>
+  <Typography>Conteúdo do modal</Typography>
+</Modal>
+
+// Modal de confirmação
+<ConfirmModal
+  open={open}
+  onClose={() => setOpen(false)}
+  onConfirm={handleConfirm}
+  title="Confirmar Exclusão"
+  message="Tem certeza que deseja excluir este item?"
+  confirmColor="error"
+/>
+
+// Modal de formulário
+<FormModal
+  open={open}
+  onClose={() => setOpen(false)}
+  onSubmit={handleSubmit}
+  title="Novo Item"
+  submitLabel="Criar"
+  disabled={!isValid}
+>
+  <TextField label="Nome" />
+</FormModal>
+```
+
+Para documentação completa, consulte [Modal/README.md](./Modal/README.md).
+
 ## FilterPanel
 
 Componente para painéis de filtros padronizados.
