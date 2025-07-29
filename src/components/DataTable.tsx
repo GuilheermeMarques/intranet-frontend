@@ -172,7 +172,7 @@ export function DataTable({
               </TableRow>
             </TableHead>
             <TableBody>
-              {currentData.map((row) => (
+              {currentData.map((row, rowIndex) => (
                 <TableRow
                   key={getRowKey(row)}
                   hover
@@ -180,7 +180,7 @@ export function DataTable({
                   sx={onRowClick ? { cursor: 'pointer' } : {}}
                 >
                   {columns.map((col) => (
-                    <TableCell key={col.id}>
+                    <TableCell key={`${rowIndex}-${col.id}`}>
                       {col.render ? col.render(row[col.id], row) : String(row[col.id])}
                     </TableCell>
                   ))}

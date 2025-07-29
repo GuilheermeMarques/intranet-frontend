@@ -1,0 +1,121 @@
+{
+  "clients": [
+    {
+      "codigo": "CLI001",
+      "nome": "João Silva",
+      "cidade": "São Paulo",
+      "dataUltimaCompra": "2024-01-15",
+      "quantidadeCompras": 12
+    },
+    {
+      "codigo": "CLI002",
+      "nome": "Maria Santos",
+      "cidade": "Rio de Janeiro",
+      "dataUltimaCompra": "2024-01-20",
+      "quantidadeCompras": 8
+    },
+    {
+      "codigo": "CLI003",
+      "nome": "Pedro Oliveira",
+      "cidade": "Belo Horizonte",
+      "dataUltimaCompra": "2024-01-10",
+      "quantidadeCompras": 15
+    },
+    {
+      "codigo": "CLI004",
+      "nome": "Ana Costa",
+      "cidade": "São Paulo",
+      "dataUltimaCompra": "2024-01-25",
+      "quantidadeCompras": 6
+    },
+    {
+      "codigo": "CLI005",
+      "nome": "Carlos Ferreira",
+      "cidade": "Porto Alegre",
+      "dataUltimaCompra": "2024-01-18",
+      "quantidadeCompras": 22
+    },
+    {
+      "codigo": "CLI006",
+      "nome": "Lucia Rodrigues",
+      "cidade": "Curitiba",
+      "dataUltimaCompra": "2024-01-12",
+      "quantidadeCompras": 9
+    },
+    {
+      "codigo": "CLI007",
+      "nome": "Roberto Almeida",
+      "cidade": "Salvador",
+      "dataUltimaCompra": "2024-01-22",
+      "quantidadeCompras": 14
+    },
+    {
+      "codigo": "CLI008",
+      "nome": "Fernanda Lima",
+      "cidade": "Brasília",
+      "dataUltimaCompra": "2024-01-08",
+      "quantidadeCompras": 11
+    },
+    {
+      "codigo": "CLI009",
+      "nome": "Marcos Pereira",
+      "cidade": "São Paulo",
+      "dataUltimaCompra": "2024-01-30",
+      "quantidadeCompras": 18
+    },
+    {
+      "codigo": "CLI010",
+      "nome": "Juliana Martins",
+      "cidade": "Fortaleza",
+      "dataUltimaCompra": "2024-01-05",
+      "quantidadeCompras": 7
+    },
+    {
+      "codigo": "CLI011",
+      "nome": "Ricardo Souza",
+      "cidade": "Recife",
+      "dataUltimaCompra": "2024-01-28",
+      "quantidadeCompras": 13
+    },
+    {
+      "codigo": "CLI012",
+      "nome": "Patricia Gomes",
+      "cidade": "Manaus",
+      "dataUltimaCompra": "2024-01-14",
+      "quantidadeCompras": 5
+    },
+    {
+      "codigo": "CLI013",
+      "nome": "Andre Silva",
+      "cidade": "Rio de Janeiro",
+      "dataUltimaCompra": "2024-01-16",
+      "quantidadeCompras": 20
+    },
+    {
+      "codigo": "CLI014",
+      "nome": "Camila Santos",
+      "cidade": "Belo Horizonte",
+      "dataUltimaCompra": "2024-01-24",
+      "quantidadeCompras": 16
+    },
+    {
+      "codigo": "CLI015",
+      "nome": "Diego Oliveira",
+      "cidade": "Porto Alegre",
+      "dataUltimaCompra": "2024-01-02",
+      "quantidadeCompras": 10
+    }
+  ],
+  "cidades": [
+    "São Paulo",
+    "Rio de Janeiro",
+    "Belo Horizonte",
+    "Porto Alegre",
+    "Curitiba",
+    "Salvador",
+    "Brasília",
+    "Fortaleza",
+    "Recife",
+    "Manaus"
+  ]
+}

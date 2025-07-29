@@ -2,10 +2,9 @@
 
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Column, DataTable } from '@/components/DataTable';
-import { FilterField, FilterPanel } from '@/components/FilterPanel';
 import productsData from '@/mocks/products.json';
 import { Search } from '@mui/icons-material';
-import { Box, Chip, Typography } from '@mui/material';
+import { Box, Card, CardContent, Chip, Grid, TextField, Typography } from '@mui/material';
 import { useMemo, useState } from 'react';
 
 export default function CatalogPage() {
@@ -127,28 +126,6 @@ export default function CatalogPage() {
     return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
-  // Configuração dos campos de filtro
-  const filterFields: FilterField[] = [
-    {
-      id: 'codigoProduto',
-      type: 'text',
-      label: 'Código do Produto',
-      startAdornment: <Search />,
-    },
-    {
-      id: 'nomeProduto',
-      type: 'text',
-      label: 'Nome do Produto',
-      startAdornment: <Search />,
-    },
-    {
-      id: 'fornecedor',
-      type: 'text',
-      label: 'Fornecedor',
-      startAdornment: <Search />,
-    },
-  ];
-
   return (
     <DashboardLayout>
       <Box sx={{ p: 3 }}>
@@ -159,16 +136,63 @@ export default function CatalogPage() {
           Gerencie e visualize os produtos do seu catálogo.
         </Typography>
 
-        {/* Filtros */}
-        <FilterPanel
-          title="Filtros de Busca"
-          fields={filterFields}
-          filters={filters}
-          onFiltersChange={handleFilterChange}
-          onClearFilters={clearFilters}
-          resultsCount={filteredProducts.length}
-          resultsLabel="produto(s) encontrado(s)"
-        />
+        {/* Filtros Customizados */}
+        <Card sx={{ mb: 3 }}>
+          <CardContent>
+            <Typography variant="h6" sx={{ mb: 3 }}>
+              Filtros de Busca
+            </Typography>
+
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="Código do Produto"
+                  placeholder="Digite o código do produto"
+                  value={filters.codigoProduto}
+                  onChange={(e) =>
+                    handleFilterChange({ ...filters, codigoProduto: e.target.value })
+                  }
+                  InputProps={{
+                    startAdornment: <Search />,
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="Nome do Produto"
+                  placeholder="Digite o nome do produto"
+                  value={filters.nomeProduto}
+                  onChange={(e) => handleFilterChange({ ...filters, nomeProduto: e.target.value })}
+                  InputProps={{
+                    startAdornment: <Search />,
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="Fornecedor"
+                  placeholder="Digite o nome do fornecedor"
+                  value={filters.fornecedor}
+                  onChange={(e) => handleFilterChange({ ...filters, fornecedor: e.target.value })}
+                  InputProps={{
+                    startAdornment: <Search />,
+                  }}
+                />
+              </Grid>
+            </Grid>
+
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="body2" color="text.secondary">
+                {filteredProducts.length} produto(s) encontrado(s)
+              </Typography>
+            </Box>
+          </CardContent>
+        </Card>
 
         {/* Tabela de Produtos */}
         <DataTable

@@ -13,6 +13,12 @@
       "href": "/catalog"
     },
     {
+      "id": "clients",
+      "label": "Clientes",
+      "icon": "People",
+      "href": "/clients"
+    },
+    {
       "id": "tickets",
       "label": "Chamados",
       "icon": "Support",
