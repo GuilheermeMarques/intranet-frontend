@@ -6,7 +6,7 @@ import { FilterField, FilterPanel } from '@/components/FilterPanel';
 import { FormModal } from '@/components/Modal';
 import clientsData from '@/mocks/clients.json';
 import { Client, ClientFilters } from '@/types/client';
-import { Add, LocationOn, Search } from '@mui/icons-material';
+import { Add, LocationOn, Search, Visibility } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -20,6 +20,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
 interface NewClientForm {
@@ -38,6 +39,7 @@ interface NewClientForm {
 }
 
 export default function ClientsPage() {
+  const router = useRouter();
   const [filters, setFilters] = useState<ClientFilters>({
     codigo: '',
     nome: '',
@@ -113,6 +115,21 @@ export default function ClientsPage() {
           }
           variant="outlined"
         />
+      ),
+    },
+    {
+      id: 'actions',
+      label: 'Ações',
+      sortable: false,
+      render: (value, row) => (
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<Visibility />}
+          onClick={() => router.push(`/clients/${row.codigo}`)}
+        >
+          Detalhes
+        </Button>
       ),
     },
   ];
