@@ -1,0 +1,84 @@
+{
+  "tags": [
+    {
+      "id": "tag-1",
+      "name": "Bug",
+      "color": "#f44336",
+      "description": "Problemas e erros no sistema",
+      "isActive": true,
+      "category": "Tipo"
+    },
+    {
+      "id": "tag-2",
+      "name": "Feature",
+      "color": "#2196f3",
+      "description": "Nova funcionalidade solicitada",
+      "isActive": true,
+      "category": "Tipo"
+    },
+    {
+      "id": "tag-3",
+      "name": "Melhoria",
+      "color": "#4caf50",
+      "description": "Melhorias em funcionalidades existentes",
+      "isActive": true,
+      "category": "Tipo"
+    },
+    {
+      "id": "tag-4",
+      "name": "Suporte",
+      "color": "#ff9800",
+      "description": "Dúvidas e solicitações de suporte",
+      "isActive": true,
+      "category": "Tipo"
+    },
+    {
+      "id": "tag-5",
+      "name": "Frontend",
+      "color": "#9c27b0",
+      "description": "Relacionado à interface do usuário",
+      "isActive": true,
+      "category": "Área"
+    },
+    {
+      "id": "tag-6",
+      "name": "Backend",
+      "color": "#607d8b",
+      "description": "Relacionado ao servidor e APIs",
+      "isActive": true,
+      "category": "Área"
+    },
+    {
+      "id": "tag-7",
+      "name": "Database",
+      "color": "#795548",
+      "description": "Relacionado ao banco de dados",
+      "isActive": true,
+      "category": "Área"
+    },
+    {
+      "id": "tag-8",
+      "name": "Mobile",
+      "color": "#e91e63",
+      "description": "Relacionado ao aplicativo mobile",
+      "isActive": true,
+      "category": "Plataforma"
+    },
+    {
+      "id": "tag-9",
+      "name": "Web",
+      "color": "#3f51b5",
+      "description": "Relacionado ao sistema web",
+      "isActive": true,
+      "category": "Plataforma"
+    },
+    {
+      "id": "tag-10",
+      "name": "Urgente",
+      "color": "#d32f2f",
+      "description": "Chamados que precisam de atenção imediata",
+      "isActive": true,
+      "category": "Status"
+    }
+  ]
+}

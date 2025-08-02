@@ -7,8 +7,10 @@ import {
   ExpandLess,
   ExpandMore,
   Inventory,
+  Label,
   Menu,
   People,
+  PriorityHigh,
   ShoppingCart,
   Support,
 } from '@mui/icons-material';
@@ -52,6 +54,8 @@ const iconMap: Record<string, React.ReactNode> = {
   AttachMoney: <AttachMoney />,
   ShoppingCart: <ShoppingCart />,
   People: <People />,
+  PriorityHigh: <PriorityHigh />,
+  Label: <Label />,
 };
 
 // Usar dados do mock

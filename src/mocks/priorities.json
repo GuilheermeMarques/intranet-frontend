@@ -1,0 +1,44 @@
+{
+  "priorities": [
+    {
+      "id": "priority-1",
+      "name": "Muito Baixa",
+      "color": "#4caf50",
+      "level": 1,
+      "description": "Chamados que podem ser resolvidos quando houver tempo disponível",
+      "isActive": true
+    },
+    {
+      "id": "priority-2",
+      "name": "Baixa",
+      "color": "#8bc34a",
+      "level": 2,
+      "description": "Chamados de baixa urgência, mas que devem ser atendidos",
+      "isActive": true
+    },
+    {
+      "id": "priority-3",
+      "name": "Média",
+      "color": "#ff9800",
+      "level": 3,
+      "description": "Chamados com urgência moderada",
+      "isActive": true
+    },
+    {
+      "id": "priority-4",
+      "name": "Alta",
+      "color": "#f44336",
+      "level": 4,
+      "description": "Chamados urgentes que precisam de atenção imediata",
+      "isActive": true
+    },
+    {
+      "id": "priority-5",
+      "name": "Crítica",
+      "color": "#d32f2f",
+      "level": 5,
+      "description": "Chamados críticos que afetam o funcionamento do sistema",
+      "isActive": true
+    }
+  ]
+}

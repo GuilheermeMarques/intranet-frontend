@@ -25,6 +25,7 @@ import { ReactNode, useMemo, useState } from 'react';
 
 export interface Column {
   id: string;
+  field?: string;
   label: string;
   render?: (value: unknown, row: Record<string, unknown>) => ReactNode;
   sortable?: boolean;
@@ -180,8 +181,10 @@ export function DataTable({
                   sx={onRowClick ? { cursor: 'pointer' } : {}}
                 >
                   {columns.map((col) => (
-                    <TableCell key={`${rowIndex}-${col.id}`}>
-                      {col.render ? col.render(row[col.id], row) : String(row[col.id])}
+                    <TableCell key={`${getRowKey(row)}-${col.id}`}>
+                      {col.render
+                        ? col.render(row[col.field || col.id], row)
+                        : String(row[col.field || col.id] || '')}
                     </TableCell>
                   ))}
                 </TableRow>

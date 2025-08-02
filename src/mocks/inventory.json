@@ -1,0 +1,145 @@
+{
+  "movements": [
+    {
+      "id": "1",
+      "codigoProduto": "PROD001",
+      "descricao": "Notebook Dell Inspiron 15",
+      "quantidade": 50,
+      "tipo": "entrada",
+      "data": "2024-01-15T10:30:00Z",
+      "motivo": "Compra de fornecedor",
+      "responsavel": "João Silva",
+      "observacoes": "Entrega conforme pedido"
+    },
+    {
+      "id": "2",
+      "codigoProduto": "PROD001",
+      "descricao": "Notebook Dell Inspiron 15",
+      "quantidade": 5,
+      "tipo": "saida",
+      "data": "2024-01-16T14:20:00Z",
+      "motivo": "Venda",
+      "responsavel": "Maria Santos",
+      "observacoes": "Venda para cliente corporativo"
+    },
+    {
+      "id": "3",
+      "codigoProduto": "PROD002",
+      "descricao": "Mouse Wireless Logitech",
+      "quantidade": 100,
+      "tipo": "entrada",
+      "data": "2024-01-17T09:15:00Z",
+      "motivo": "Compra de fornecedor",
+      "responsavel": "Carlos Oliveira",
+      "observacoes": "Produto em promoção"
+    },
+    {
+      "id": "4",
+      "codigoProduto": "PROD002",
+      "descricao": "Mouse Wireless Logitech",
+      "quantidade": 12,
+      "tipo": "saida",
+      "data": "2024-01-18T11:45:00Z",
+      "motivo": "Venda",
+      "responsavel": "Ana Costa",
+      "observacoes": "Venda para loja parceira"
+    },
+    {
+      "id": "5",
+      "codigoProduto": "PROD003",
+      "descricao": "Teclado Mecânico RGB",
+      "quantidade": 30,
+      "tipo": "entrada",
+      "data": "2024-01-19T16:30:00Z",
+      "motivo": "Compra de fornecedor",
+      "responsavel": "Pedro Lima",
+      "observacoes": "Novo modelo"
+    },
+    {
+      "id": "6",
+      "codigoProduto": "PROD003",
+      "descricao": "Teclado Mecânico RGB",
+      "quantidade": 3,
+      "tipo": "saida",
+      "data": "2024-01-20T13:10:00Z",
+      "motivo": "Venda",
+      "responsavel": "Lucas Ferreira",
+      "observacoes": "Cliente final"
+    },
+    {
+      "id": "7",
+      "codigoProduto": "PROD004",
+      "descricao": "Monitor 24\" Full HD",
+      "quantidade": 25,
+      "tipo": "entrada",
+      "data": "2024-01-21T08:45:00Z",
+      "motivo": "Compra de fornecedor",
+      "responsavel": "Fernanda Rocha",
+      "observacoes": "Lote promocional"
+    },
+    {
+      "id": "8",
+      "codigoProduto": "PROD004",
+      "descricao": "Monitor 24\" Full HD",
+      "quantidade": 2,
+      "tipo": "saida",
+      "data": "2024-01-22T15:20:00Z",
+      "motivo": "Venda",
+      "responsavel": "Roberto Alves",
+      "observacoes": "Empresa cliente"
+    },
+    {
+      "id": "9",
+      "codigoProduto": "PROD005",
+      "descricao": "SSD 500GB SATA",
+      "quantidade": 80,
+      "tipo": "entrada",
+      "data": "2024-01-23T12:00:00Z",
+      "motivo": "Compra de fornecedor",
+      "responsavel": "Juliana Martins",
+      "observacoes": "Preço competitivo"
+    },
+    {
+      "id": "10",
+      "codigoProduto": "PROD005",
+      "descricao": "SSD 500GB SATA",
+      "quantidade": 8,
+      "tipo": "saida",
+      "data": "2024-01-24T10:30:00Z",
+      "motivo": "Venda",
+      "responsavel": "Diego Souza",
+      "observacoes": "Upgrade de clientes"
+    },
+    {
+      "id": "11",
+      "codigoProduto": "PROD001",
+      "descricao": "Notebook Dell Inspiron 15",
+      "quantidade": 20,
+      "tipo": "entrada",
+      "data": "2024-01-25T14:15:00Z",
+      "motivo": "Compra de fornecedor",
+      "responsavel": "João Silva",
+      "observacoes": "Reposição de estoque"
+    },
+    {
+      "id": "12",
+      "codigoProduto": "PROD002",
+      "descricao": "Mouse Wireless Logitech",
+      "quantidade": 15,
+      "tipo": "saida",
+      "data": "2024-01-26T09:45:00Z",
+      "motivo": "Venda",
+      "responsavel": "Carla Mendes",
+      "observacoes": "Pedido em massa"
+    }
+  ],
+  "tipos": ["entrada", "saida"],
+  "motivos": [
+    "Compra de fornecedor",
+    "Venda",
+    "Devolução",
+    "Ajuste de estoque",
+    "Transferência",
+    "Perda/Danificação"
+  ]
+}

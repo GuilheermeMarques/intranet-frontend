@@ -1,0 +1,120 @@
+{
+  "orders": [
+    {
+      "id": "PED-001",
+      "clientCode": "CLI001",
+      "clientName": "João Silva",
+      "clientEmail": "joao.silva@email.com",
+      "clientPhone": "(11) 99999-9999",
+      "items": [
+        {
+          "id": "ITEM-001",
+          "productName": "Produto Premium A",
+          "quantity": 2,
+          "unitPrice": 150.0,
+          "total": 300.0
+        },
+        {
+          "id": "ITEM-002",
+          "productName": "Produto Básico B",
+          "quantity": 1,
+          "unitPrice": 75.0,
+          "total": 75.0
+        },
+        {
+          "id": "ITEM-003",
+          "productName": "Acessório C",
+          "quantity": 3,
+          "unitPrice": 25.0,
+          "total": 75.0
+        }
+      ],
+      "total": 450.0,
+      "shippingCost": 25.0,
+      "status": "pending",
+      "createdAt": "2025-07-20T10:00:00Z",
+      "updatedAt": "2025-07-20T10:00:00Z",
+      "notes": "Pedido com entrega urgente"
+    },
+    {
+      "id": "PED-002",
+      "clientCode": "CLI002",
+      "clientName": "Maria Santos",
+      "clientEmail": "maria.santos@email.com",
+      "clientPhone": "(21) 88888-8888",
+      "items": [
+        {
+          "id": "ITEM-004",
+          "productName": "Produto Especial D",
+          "quantity": 1,
+          "unitPrice": 120.5,
+          "total": 120.5
+        }
+      ],
+      "total": 120.5,
+      "shippingCost": 15.0,
+      "status": "shipped",
+      "createdAt": "2025-06-15T14:30:00Z",
+      "updatedAt": "2025-06-16T09:15:00Z",
+      "notes": "Enviar com embalagem especial"
+    },
+    {
+      "id": "PED-003",
+      "clientCode": "CLI003",
+      "clientName": "Pedro Oliveira",
+      "clientEmail": "pedro.oliveira@email.com",
+      "clientPhone": "(31) 77777-7777",
+      "items": [
+        {
+          "id": "ITEM-005",
+          "productName": "Kit Completo E",
+          "quantity": 1,
+          "unitPrice": 800.0,
+          "total": 800.0
+        },
+        {
+          "id": "ITEM-006",
+          "productName": "Produto F",
+          "quantity": 2,
+          "unitPrice": 200.0,
+          "total": 400.0
+        }
+      ],
+      "total": 1200.0,
+      "shippingCost": 0.0,
+      "status": "delivered",
+      "createdAt": "2025-05-01T09:00:00Z",
+      "updatedAt": "2025-05-03T16:45:00Z",
+      "notes": "Cliente VIP - prioridade máxima"
+    },
+    {
+      "id": "PED-004",
+      "clientCode": "CLI004",
+      "clientName": "Ana Costa",
+      "clientEmail": "ana.costa@email.com",
+      "clientPhone": "(11) 66666-6666",
+      "items": [
+        {
+          "id": "ITEM-007",
+          "productName": "Produto G",
+          "quantity": 1,
+          "unitPrice": 250.75,
+          "total": 250.75
+        },
+        {
+          "id": "ITEM-008",
+          "productName": "Acessório H",
+          "quantity": 1,
+          "unitPrice": 50.0,
+          "total": 50.0
+        }
+      ],
+      "total": 300.75,
+      "shippingCost": 20.0,
+      "status": "canceled",
+      "createdAt": "2025-04-25T11:45:00Z",
+      "updatedAt": "2025-04-26T10:30:00Z",
+      "notes": "Cancelado por solicitação do cliente"
+    }
+  ]
+}

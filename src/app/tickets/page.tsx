@@ -3,7 +3,10 @@
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { FilterPanel } from '@/components/FilterPanel';
 import { FormModal, Modal } from '@/components/Modal';
+import prioritiesData from '@/mocks/priorities.json';
+import tagsData from '@/mocks/tags.json';
 import ticketsData from '@/mocks/tickets.json';
+import { Attachment, Message, Priority, Tag, Ticket } from '@/types/ticket';
 import {
   closestCorners,
   DndContext,
@@ -60,48 +63,34 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 
-// Tipos para os chamados
-interface Ticket {
-  id: string;
-  title: string;
-  description: string;
-  status: 'todo' | 'inProgress' | 'inReview' | 'done';
-  priority: 'low' | 'medium' | 'high' | 'critical';
-  assignee: string;
-  reporter: string;
-  createdAt: string;
-  updatedAt: string;
-  category: string;
-  tags: string[];
-  messages: Message[];
-}
-
-// Tipos para as mensagens do chat
-interface Message {
-  id: string;
-  author: string;
-  content: string;
-  timestamp: string;
-  mentions: string[];
-  type: 'comment' | 'status_update' | 'assignment';
-  attachments?: Attachment[];
-}
-
-// Tipos para anexos
-interface Attachment {
-  id: string;
-  name: string;
-  url: string;
-  type: 'image' | 'document' | 'other';
-  size: number;
-  uploadedBy: string;
-  uploadedAt: string;
-}
+// Dados das prioridades e tags
+const priorities: Priority[] = prioritiesData.priorities;
+const tags: Tag[] = tagsData.tags;
 
 // Usar dados do mock
 const mockTickets: Ticket[] = ticketsData.tickets as Ticket[];
 const statusConfig = ticketsData.statusConfig;
-const priorityConfig = ticketsData.priorityConfig;
+
+// Função para obter configuração de prioridade
+const getPriorityConfig = (priorityId: string) => {
+  const priority = priorities.find((p) => p.id === priorityId);
+  return priority
+    ? {
+        label: priority.name,
+        color: priority.color,
+        level: priority.level,
+      }
+    : {
+        label: 'Desconhecida',
+        color: '#999',
+        level: 0,
+      };
+};
+
+// Função para obter tag por ID
+const getTagById = (tagId: string) => {
+  return tags.find((t) => t.id === tagId);
+};
 
 // Componente Sortable para os tickets
 const SortableTicketCard = ({ ticket, onClick }: { ticket: Ticket; onClick: () => void }) => {
@@ -153,10 +142,10 @@ const SortableTicketCard = ({ ticket, onClick }: { ticket: Ticket; onClick: () =
             {ticket.title}
           </Typography>
           <Chip
-            label={priorityConfig[ticket.priority].label}
+            label={getPriorityConfig(ticket.priority).label}
             size="small"
             sx={{
-              backgroundColor: priorityConfig[ticket.priority].color,
+              backgroundColor: getPriorityConfig(ticket.priority).color,
               color: 'white',
               fontSize: '0.7rem',
             }}
@@ -192,9 +181,22 @@ const SortableTicketCard = ({ ticket, onClick }: { ticket: Ticket; onClick: () =
 
         {ticket.tags.length > 0 && (
           <Box sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-            {ticket.tags.slice(0, 2).map((tag, index) => (
-              <Chip key={index} label={tag} size="small" sx={{ fontSize: '0.6rem', height: 20 }} />
-            ))}
+            {ticket.tags.slice(0, 2).map((tagId, index) => {
+              const tag = getTagById(tagId);
+              return tag ? (
+                <Chip
+                  key={`${ticket.id}-tag-${tagId}`}
+                  label={tag.name}
+                  size="small"
+                  sx={{
+                    fontSize: '0.6rem',
+                    height: 20,
+                    backgroundColor: tag.color,
+                    color: 'white',
+                  }}
+                />
+              ) : null;
+            })}
             {ticket.tags.length > 2 && (
               <Chip
                 label={`+${ticket.tags.length - 2}`}
@@ -248,12 +250,12 @@ export default function TicketsPage() {
   const [newTicketForm, setNewTicketForm] = useState({
     title: '',
     description: '',
-    priority: 'medium' as Ticket['priority'],
+    priority: '',
     category: '',
     assignee: '',
     tags: [] as string[],
   });
-  const [newTag, setNewTag] = useState('');
+
   const [newTicketFiles, setNewTicketFiles] = useState<File[]>([]);
   const [filters, setFilters] = useState({
     search: '',
@@ -387,12 +389,11 @@ export default function TicketsPage() {
     setNewTicketForm({
       title: '',
       description: '',
-      priority: 'medium',
+      priority: '',
       category: '',
       assignee: '',
       tags: [],
     });
-    setNewTag('');
     setNewTicketFiles([]);
   };
 
@@ -409,16 +410,6 @@ export default function TicketsPage() {
     setNewTicketForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleAddTag = () => {
-    if (newTag.trim() && !newTicketForm.tags.includes(newTag.trim())) {
-      setNewTicketForm((prev) => ({
-        ...prev,
-        tags: [...prev.tags, newTag.trim()],
-      }));
-      setNewTag('');
-    }
-  };
-
   const handleRemoveTag = (tagToRemove: string) => {
     setNewTicketForm((prev) => ({
       ...prev,
@@ -427,7 +418,11 @@ export default function TicketsPage() {
   };
 
   const handleCreateTicket = () => {
-    if (!newTicketForm.title.trim() || !newTicketForm.description.trim()) {
+    if (
+      !newTicketForm.title.trim() ||
+      !newTicketForm.description.trim() ||
+      !newTicketForm.priority
+    ) {
       return;
     }
 
@@ -447,7 +442,7 @@ export default function TicketsPage() {
       title: newTicketForm.title,
       description: newTicketForm.description,
       status: 'todo',
-      priority: newTicketForm.priority,
+      priority: newTicketForm.priority || priorities.find((p) => p.level === 3)?.id || '',
       assignee: newTicketForm.assignee || 'Não atribuído',
       reporter: currentUser,
       createdAt: new Date().toISOString(),
@@ -724,10 +719,10 @@ export default function TicketsPage() {
                       {activeTicket.title}
                     </Typography>
                     <Chip
-                      label={priorityConfig[activeTicket.priority].label}
+                      label={getPriorityConfig(activeTicket.priority).label}
                       size="small"
                       sx={{
-                        backgroundColor: priorityConfig[activeTicket.priority].color,
+                        backgroundColor: getPriorityConfig(activeTicket.priority).color,
                         color: 'white',
                         fontSize: '0.7rem',
                       }}
@@ -806,9 +801,20 @@ export default function TicketsPage() {
                   </Typography>
 
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 3 }}>
-                    {selectedTicket.tags.map((tag, index) => (
-                      <Chip key={index} label={tag} size="small" />
-                    ))}
+                    {selectedTicket.tags.map((tagId, index) => {
+                      const tag = getTagById(tagId);
+                      return tag ? (
+                        <Chip
+                          key={`${selectedTicket.id}-tag-${tagId}`}
+                          label={tag.name}
+                          size="small"
+                          sx={{
+                            backgroundColor: tag.color,
+                            color: 'white',
+                          }}
+                        />
+                      ) : null;
+                    })}
                   </Box>
 
                   {/* Chat/Histórico */}
@@ -996,7 +1002,7 @@ export default function TicketsPage() {
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                         {selectedFiles.map((file, index) => (
                           <Paper
-                            key={index}
+                            key={`selected-file-${file.name}-${index}`}
                             sx={{
                               p: 1,
                               display: 'flex',
@@ -1064,9 +1070,9 @@ export default function TicketsPage() {
                         Prioridade
                       </Typography>
                       <Chip
-                        label={priorityConfig[selectedTicket.priority].label}
+                        label={getPriorityConfig(selectedTicket.priority).label}
                         sx={{
-                          backgroundColor: priorityConfig[selectedTicket.priority].color,
+                          backgroundColor: getPriorityConfig(selectedTicket.priority).color,
                           color: 'white',
                         }}
                       />
@@ -1131,7 +1137,11 @@ export default function TicketsPage() {
           title="Novo Chamado"
           onSubmit={handleCreateTicket}
           submitLabel="Criar Chamado"
-          disabled={!newTicketForm.title.trim() || !newTicketForm.description.trim()}
+          disabled={
+            !newTicketForm.title.trim() ||
+            !newTicketForm.description.trim() ||
+            !newTicketForm.priority
+          }
         >
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -1166,10 +1176,25 @@ export default function TicketsPage() {
                   label="Prioridade"
                   onChange={(e) => handleNewTicketFormChange('priority', e.target.value)}
                 >
-                  <MenuItem value="low">Baixa</MenuItem>
-                  <MenuItem value="medium">Média</MenuItem>
-                  <MenuItem value="high">Alta</MenuItem>
-                  <MenuItem value="critical">Crítica</MenuItem>
+                  <MenuItem value="">Selecione uma prioridade</MenuItem>
+                  {priorities
+                    .filter((p) => p.isActive)
+                    .sort((a, b) => a.level - b.level)
+                    .map((priority) => (
+                      <MenuItem key={priority.id} value={priority.id}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Box
+                            sx={{
+                              width: 12,
+                              height: 12,
+                              borderRadius: '50%',
+                              backgroundColor: priority.color,
+                            }}
+                          />
+                          {priority.name}
+                        </Box>
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -1217,37 +1242,52 @@ export default function TicketsPage() {
                   Tags
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 1 }}>
-                  {newTicketForm.tags.map((tag, index) => (
-                    <Chip
-                      key={index}
-                      label={tag}
-                      onDelete={() => handleRemoveTag(tag)}
-                      size="small"
-                    />
-                  ))}
+                  {newTicketForm.tags.map((tagId, index) => {
+                    const tag = getTagById(tagId);
+                    return tag ? (
+                      <Chip
+                        key={`new-ticket-tag-${tagId}`}
+                        label={tag.name}
+                        onDelete={() => handleRemoveTag(tagId)}
+                        size="small"
+                        sx={{
+                          backgroundColor: tag.color,
+                          color: 'white',
+                        }}
+                      />
+                    ) : null;
+                  })}
                 </Box>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                  <TextField
-                    size="small"
-                    placeholder="Adicionar tag"
-                    value={newTag}
-                    onChange={(e) => setNewTag(e.target.value)}
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        handleAddTag();
+                <FormControl fullWidth size="small">
+                  <InputLabel>Adicionar Tag</InputLabel>
+                  <Select
+                    value=""
+                    label="Adicionar Tag"
+                    onChange={(e) => {
+                      if (e.target.value && !newTicketForm.tags.includes(e.target.value)) {
+                        handleNewTicketFormChange('tags', [...newTicketForm.tags, e.target.value]);
                       }
                     }}
-                  />
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    onClick={handleAddTag}
-                    disabled={!newTag.trim()}
                   >
-                    Adicionar
-                  </Button>
-                </Box>
+                    {tags
+                      .filter((t) => t.isActive && !newTicketForm.tags.includes(t.id))
+                      .map((tag) => (
+                        <MenuItem key={tag.id} value={tag.id}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Box
+                              sx={{
+                                width: 12,
+                                height: 12,
+                                borderRadius: '50%',
+                                backgroundColor: tag.color,
+                              }}
+                            />
+                            {tag.name}
+                          </Box>
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
               </Box>
             </Grid>
 
@@ -1280,7 +1320,7 @@ export default function TicketsPage() {
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                   {newTicketFiles.map((file, index) => (
                     <Paper
-                      key={index}
+                      key={`new-ticket-file-${file.name}-${index}`}
                       sx={{
                         p: 1,
                         display: 'flex',

@@ -5,13 +5,13 @@
       "title": "Erro no login do sistema",
       "description": "Usuários não conseguem fazer login com credenciais válidas. O erro aparece após inserir email e senha.",
       "status": "todo",
-      "priority": "high",
+      "priority": "priority-4",
       "assignee": "João Silva",
       "reporter": "Maria Santos",
       "createdAt": "2025-07-15T10:30:00Z",
       "updatedAt": "2025-07-15T14:20:00Z",
       "category": "Sistema",
-      "tags": ["login", "bug", "urgente"],
+      "tags": ["tag-4", "tag-1", "tag-10"],
       "messages": [
         {
           "id": "1",
@@ -75,13 +75,13 @@
       "title": "Melhoria na interface do catálogo",
       "description": "Adicionar filtros avançados e melhorar a responsividade da página do catálogo de produtos.",
       "status": "inProgress",
-      "priority": "medium",
+      "priority": "priority-3",
       "assignee": "Ana Costa",
       "reporter": "Pedro Oliveira",
       "createdAt": "2025-07-14T09:15:00Z",
       "updatedAt": "2025-07-15T16:45:00Z",
       "category": "Interface",
-      "tags": ["UI/UX", "melhoria", "catálogo"],
+      "tags": ["tag-5", "tag-3", "tag-9"],
       "messages": [
         {
           "id": "1",
@@ -117,13 +117,13 @@
       "title": "Relatório de vendas não carrega",
       "description": "A página de relatórios de vendas apresenta erro 500 e não carrega os dados dos últimos 30 dias.",
       "status": "inReview",
-      "priority": "critical",
+      "priority": "priority-5",
       "assignee": "Carlos Lima",
       "reporter": "Fernanda Rocha",
       "createdAt": "2025-07-13T11:00:00Z",
       "updatedAt": "2025-07-15T12:30:00Z",
       "category": "Relatórios",
-      "tags": ["relatório", "crítico", "vendas"],
+      "tags": ["tag-6", "tag-10", "tag-9"],
       "messages": [
         {
           "id": "1",
@@ -167,13 +167,13 @@
       "title": "Atualização de dados pessoais",
       "description": "Implementar funcionalidade para usuários atualizarem seus dados pessoais no perfil.",
       "status": "done",
-      "priority": "low",
+      "priority": "priority-1",
       "assignee": "Roberto Alves",
       "reporter": "Lucia Ferreira",
       "createdAt": "2025-07-10T08:45:00Z",
       "updatedAt": "2025-07-14T17:20:00Z",
       "category": "Perfil",
-      "tags": ["perfil", "dados", "concluído"],
+      "tags": ["tag-2", "tag-6", "tag-9"],
       "messages": [
         {
           "id": "1",
@@ -198,13 +198,13 @@
       "title": "Integração com API externa",
       "description": "Desenvolver integração com API de terceiros para sincronização de dados de produtos.",
       "status": "todo",
-      "priority": "high",
+      "priority": "priority-4",
       "assignee": "Mariana Santos",
       "reporter": "Ricardo Costa",
       "createdAt": "2025-07-12T14:20:00Z",
       "updatedAt": "2025-07-15T10:15:00Z",
       "category": "Integração",
-      "tags": ["API", "integração", "produtos"],
+      "tags": ["tag-6", "tag-2", "tag-9"],
       "messages": [
         {
           "id": "1",
@@ -222,11 +222,5 @@
     "inProgress": { "label": "InProgress", "color": "#2196f3" },
     "inReview": { "label": "In Review", "color": "#9c27b0" },
     "done": { "label": "Done", "color": "#4caf50" }
-  },
-  "priorityConfig": {
-    "low": { "label": "Baixa", "color": "#4caf50" },
-    "medium": { "label": "Média", "color": "#ff9800" },
-    "high": { "label": "Alta", "color": "#f44336" },
-    "critical": { "label": "Crítica", "color": "#d32f2f" }
   }
 }

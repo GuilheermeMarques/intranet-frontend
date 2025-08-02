@@ -22,13 +22,39 @@
       "id": "tickets",
       "label": "Chamados",
       "icon": "Support",
-      "href": "/tickets"
+      "href": "#",
+      "children": [
+        {
+          "id": "tickets-list",
+          "label": "Lista de Chamados",
+          "icon": "Support",
+          "href": "/tickets"
+        },
+        {
+          "id": "priorities",
+          "label": "Prioridades",
+          "icon": "PriorityHigh",
+          "href": "/tickets/priorities"
+        },
+        {
+          "id": "tags",
+          "label": "Tags",
+          "icon": "Label",
+          "href": "/tickets/tags"
+        }
+      ]
     },
     {
       "id": "budgets",
       "label": "Orçamentos",
       "icon": "AttachMoney",
       "href": "/budgets"
+    },
+    {
+      "id": "inventory",
+      "label": "Estoque",
+      "icon": "Inventory",
+      "href": "/inventory"
     },
     {
       "id": "sales",
@@ -41,6 +67,12 @@
           "label": "Representantes",
           "icon": "People",
           "href": "/sales/representatives"
+        },
+        {
+          "id": "orders",
+          "label": "Pedidos",
+          "icon": "ShoppingCart",
+          "href": "/sales/orders"
         }
       ]
     }
