@@ -21,39 +21,39 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { ReactNode, useMemo, useState } from 'react';
+import { ReactNode, useCallback, useMemo, useState } from 'react';
 
-export interface Column {
+export interface Column<T = Record<string, unknown>> {
   id: string;
   field?: string;
   label: string;
-  render?: (value: unknown, row: Record<string, unknown>) => ReactNode;
+  render?: (value: unknown, row: T) => ReactNode;
   sortable?: boolean;
 }
 
-export interface DataTableProps {
-  columns: Column[];
-  data: Record<string, unknown>[];
+export interface DataTableProps<T = Record<string, unknown>> {
+  columns: Column<T>[];
+  data: T[];
   title?: string;
   itemsPerPage?: number;
   itemsPerPageOptions?: number[];
-  onRowClick?: (row: Record<string, unknown>) => void;
-  getRowKey?: (row: Record<string, unknown>) => string;
+  onRowClick?: (row: T) => void;
+  getRowKey?: (row: T) => string;
   emptyMessage?: string;
   showItemsPerPage?: boolean;
 }
 
-export function DataTable({
+export function DataTable<T = Record<string, unknown>>({
   columns,
   data,
   title,
   itemsPerPage: initialItemsPerPage = 20,
   itemsPerPageOptions = [20, 60, 100],
   onRowClick,
-  getRowKey = (row) => (row.id as string) || String(row),
+  getRowKey = (row) => ((row as Record<string, unknown>).id as string) || String(row),
   emptyMessage = 'Nenhum item encontrado.',
   showItemsPerPage = true,
-}: DataTableProps) {
+}: DataTableProps<T>) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage);
   const [orderBy, setOrderBy] = useState<string>('');
@@ -72,10 +72,10 @@ export function DataTable({
     setCurrentPage(1);
   };
 
-  const getComparator = (order: 'asc' | 'desc', orderBy: string) => {
-    return (a: Record<string, unknown>, b: Record<string, unknown>) => {
-      const aValue = a[orderBy];
-      const bValue = b[orderBy];
+  const getComparator = useCallback((order: 'asc' | 'desc', orderBy: string) => {
+    return (a: T, b: T) => {
+      const aValue = (a as Record<string, unknown>)[orderBy];
+      const bValue = (b as Record<string, unknown>)[orderBy];
 
       if (typeof aValue === 'number' && typeof bValue === 'number') {
         if (aValue < bValue) return order === 'asc' ? -1 : 1;
@@ -94,12 +94,12 @@ export function DataTable({
       }
       return 0;
     };
-  };
+  }, []);
 
   const sortedData = useMemo(() => {
     if (!orderBy) return data;
     return [...data].sort(getComparator(order, orderBy));
-  }, [data, order, orderBy]);
+  }, [data, order, orderBy, getComparator]);
 
   const totalPages = Math.ceil(sortedData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -173,7 +173,7 @@ export function DataTable({
               </TableRow>
             </TableHead>
             <TableBody>
-              {currentData.map((row, rowIndex) => (
+              {currentData.map((row) => (
                 <TableRow
                   key={getRowKey(row)}
                   hover
@@ -183,8 +183,8 @@ export function DataTable({
                   {columns.map((col) => (
                     <TableCell key={`${getRowKey(row)}-${col.id}`}>
                       {col.render
-                        ? col.render(row[col.field || col.id], row)
-                        : String(row[col.field || col.id] || '')}
+                        ? col.render((row as Record<string, unknown>)[col.field || col.id], row)
+                        : String((row as Record<string, unknown>)[col.field || col.id] || '')}
                     </TableCell>
                   ))}
                 </TableRow>

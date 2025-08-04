@@ -181,7 +181,7 @@ const SortableTicketCard = ({ ticket, onClick }: { ticket: Ticket; onClick: () =
 
         {ticket.tags.length > 0 && (
           <Box sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-            {ticket.tags.slice(0, 2).map((tagId, index) => {
+            {ticket.tags.slice(0, 2).map((tagId) => {
               const tag = getTagById(tagId);
               return tag ? (
                 <Chip
@@ -801,7 +801,7 @@ export default function TicketsPage() {
                   </Typography>
 
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 3 }}>
-                    {selectedTicket.tags.map((tagId, index) => {
+                    {selectedTicket.tags.map((tagId) => {
                       const tag = getTagById(tagId);
                       return tag ? (
                         <Chip
@@ -1242,7 +1242,7 @@ export default function TicketsPage() {
                   Tags
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 1 }}>
-                  {newTicketForm.tags.map((tagId, index) => {
+                  {newTicketForm.tags.map((tagId) => {
                     const tag = getTagById(tagId);
                     return tag ? (
                       <Chip

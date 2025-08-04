@@ -2,7 +2,7 @@
 
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { DataTable } from '@/components/DataTable';
-import { FormModal, Modal } from '@/components/Modal';
+import { ConfirmModal, FormModal } from '@/components/Modal';
 import tagsData from '@/mocks/tags.json';
 import { Tag } from '@/types/ticket';
 import {
@@ -209,7 +209,7 @@ export default function TagsPage() {
           open={openModal}
           onClose={handleCloseModal}
           title={editingTag ? 'Editar Tag' : 'Nova Tag'}
-          onSave={handleSave}
+          onSubmit={handleSave}
           maxWidth="sm"
         >
           <Grid container spacing={2}>
@@ -265,19 +265,15 @@ export default function TagsPage() {
         </FormModal>
 
         {/* Modal de confirmação de exclusão */}
-        <Modal
+        <ConfirmModal
           open={!!deleteModal}
           onClose={() => setDeleteModal(null)}
           title="Confirmar Exclusão"
           onConfirm={() => deleteModal && handleDelete(deleteModal)}
-          confirmText="Excluir"
+          confirmLabel="Excluir"
           confirmColor="error"
-        >
-          <Typography>
-            Tem certeza que deseja excluir a tag "{deleteModal?.name}"? Esta ação não pode ser
-            desfeita.
-          </Typography>
-        </Modal>
+          message={`Tem certeza que deseja excluir a tag "${deleteModal?.name}"? Esta ação não pode ser desfeita.`}
+        />
       </Box>
     </DashboardLayout>
   );

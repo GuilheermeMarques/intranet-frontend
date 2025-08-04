@@ -40,6 +40,7 @@ export interface Priority {
   level: number; // 1 = mais baixa, 5 = mais alta
   description?: string;
   isActive: boolean;
+  [key: string]: unknown;
 }
 
 export interface Tag {
@@ -49,4 +50,5 @@ export interface Tag {
   description?: string;
   isActive: boolean;
   category?: string; // Para agrupar tags por categoria
+  [key: string]: unknown;
 }

@@ -8,6 +8,7 @@ export interface InventoryMovement {
   motivo?: string;
   responsavel?: string;
   observacoes?: string;
+  [key: string]: unknown;
 }
 
 export interface InventoryFilters {
@@ -16,4 +17,5 @@ export interface InventoryFilters {
   tipo: string;
   dataInicial: Date | null;
   dataFinal: Date | null;
+  [key: string]: unknown;
 }

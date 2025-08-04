@@ -33,8 +33,6 @@ interface StatCardProps {
 }
 
 function StatCard({ title, value, icon, color, trend, trendValue }: StatCardProps) {
-  const theme = useMuiTheme();
-
   return (
     <Card sx={{ height: '100%' }}>
       <CardContent>
@@ -137,7 +135,6 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 export default function HomePage() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const theme = useMuiTheme();
 
   return (

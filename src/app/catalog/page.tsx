@@ -107,14 +107,6 @@ export default function CatalogPage() {
     setFilters(newFilters as typeof filters);
   };
 
-  const clearFilters = () => {
-    setFilters({
-      codigoProduto: '',
-      nomeProduto: '',
-      fornecedor: '',
-    });
-  };
-
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',

@@ -2,7 +2,7 @@
 
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { DataTable } from '@/components/DataTable';
-import { FormModal, Modal } from '@/components/Modal';
+import { ConfirmModal, FormModal } from '@/components/Modal';
 import prioritiesData from '@/mocks/priorities.json';
 import { Priority } from '@/types/ticket';
 import {
@@ -214,7 +214,7 @@ export default function PrioritiesPage() {
           open={openModal}
           onClose={handleCloseModal}
           title={editingPriority ? 'Editar Prioridade' : 'Nova Prioridade'}
-          onSave={handleSave}
+          onSubmit={handleSave}
           maxWidth="sm"
         >
           <Grid container spacing={2}>
@@ -277,19 +277,15 @@ export default function PrioritiesPage() {
         </FormModal>
 
         {/* Modal de confirmação de exclusão */}
-        <Modal
+        <ConfirmModal
           open={!!deleteModal}
           onClose={() => setDeleteModal(null)}
           title="Confirmar Exclusão"
           onConfirm={() => deleteModal && handleDelete(deleteModal)}
-          confirmText="Excluir"
+          confirmLabel="Excluir"
           confirmColor="error"
-        >
-          <Typography>
-            Tem certeza que deseja excluir a prioridade "{deleteModal?.name}"? Esta ação não pode
-            ser desfeita.
-          </Typography>
-        </Modal>
+          message={`Tem certeza que deseja excluir a prioridade "${deleteModal?.name}"? Esta ação não pode ser desfeita.`}
+        />
       </Box>
     </DashboardLayout>
   );
