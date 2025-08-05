@@ -22,7 +22,12 @@ export interface Client {
 export interface ClientFilters {
   codigo?: string;
   nome?: string;
+  cpf?: string;
+  email?: string;
+  telefone?: string;
+  instagram?: string;
   cidade?: string;
+  estado?: string;
   dataInicial?: Date;
   dataFinal?: Date;
 }
