@@ -1,8 +1,8 @@
 'use client';
 
-import { Box } from '@mui/material';
+import { Menu as MenuIcon } from '@mui/icons-material';
+import { Box, IconButton } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 
 interface DashboardLayoutProps {
@@ -24,10 +24,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     setIsLoaded(true);
   }, []);
 
-  const handleDrawerToggle = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
   const handleSidebarToggle = () => {
     const newExpanded = !sidebarExpanded;
     setSidebarExpanded(newExpanded);
@@ -48,11 +44,24 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      <Header
-        onMenuClick={handleDrawerToggle}
-        sidebarExpanded={sidebarExpanded}
-        sidebarHoverExpanded={sidebarHoverExpanded}
-      />
+      <IconButton
+        color="inherit"
+        aria-label="Abrir menu"
+        onClick={() => setSidebarOpen(true)}
+        sx={{
+          display: { xs: 'inline-flex', md: 'none' },
+          position: 'fixed',
+          top: 12,
+          left: 12,
+          zIndex: (t) => t.zIndex.drawer + 1,
+          bgcolor: 'background.paper',
+          boxShadow: 2,
+          '&:hover': { bgcolor: 'action.hover' },
+        }}
+      >
+        <MenuIcon />
+      </IconButton>
+
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -67,9 +76,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           flexGrow: 1,
           width: { md: `calc(100vw - ${sidebarWidth}px)` },
           ml: { md: `${sidebarWidth}px` },
-          mt: '64px', // Height of AppBar
+          pt: { xs: 7, md: 0 },
           backgroundColor: 'background.default',
-          minHeight: 'calc(100vh - 64px)',
+          minHeight: '100vh',
           transition: 'width 0.3s ease, margin-left 0.3s ease',
         }}
       >

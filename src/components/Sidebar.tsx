@@ -1,20 +1,27 @@
 'use client';
 
+import { useTheme as useAppTheme } from '@/contexts/ThemeContext';
 import menuData from '@/mocks/menu.json';
 import {
+  AccountCircle,
   AttachMoney,
+  DarkMode,
   Dashboard,
   ExpandLess,
   ExpandMore,
   Inventory,
   Label,
+  LightMode,
+  Logout,
   Menu,
   People,
   PriorityHigh,
+  Settings,
   ShoppingCart,
   Support,
 } from '@mui/icons-material';
 import {
+  Avatar,
   Box,
   Collapse,
   Drawer,
@@ -24,6 +31,8 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Menu as MuiMenu,
+  MenuItem,
   Typography,
   useTheme as useMuiTheme,
 } from '@mui/material';
@@ -78,11 +87,16 @@ export function Sidebar({
   const theme = useMuiTheme();
   const router = useRouter();
   const pathname = usePathname();
+  const { mode, toggleTheme } = useAppTheme();
   const [hoverExpanded, setHoverExpanded] = useState(false);
   const [openSubmenus, setOpenSubmenus] = useState<string[]>([]);
+  const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
 
   const isExpanded = expanded || hoverExpanded;
   const drawerWidth = isExpanded ? 280 : 80;
+  /** Drawer temporário (mobile) aberto: sempre layout expandido e largura total */
+  const showExpandedUi = isExpanded || open;
+  const innerDrawerWidth = open ? 280 : drawerWidth;
 
   const handleSubmenuToggle = (itemId: string) => {
     setOpenSubmenus((prev) =>
@@ -125,6 +139,20 @@ export function Sidebar({
     }
   };
 
+  const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setUserMenuAnchor(event.currentTarget);
+  };
+
+  const handleUserMenuClose = () => {
+    setUserMenuAnchor(null);
+  };
+
+  const handleSettings = () => {
+    router.push('/settings');
+    handleUserMenuClose();
+    onClose();
+  };
+
   const renderMenuItem = (item: MenuItem, level: number = 0) => {
     const hasChildren = item.children && item.children.length > 0;
     const isSubmenuOpen = openSubmenus.includes(item.id);
@@ -136,7 +164,7 @@ export function Sidebar({
           <ListItemButton
             sx={{
               minHeight: 48,
-              justifyContent: isExpanded ? 'initial' : 'center',
+              justifyContent: showExpandedUi ? 'initial' : 'center',
               px: 2.5,
               pl: level > 0 ? 4 : 2.5,
               '&:hover': {
@@ -158,14 +186,14 @@ export function Sidebar({
             <ListItemIcon
               sx={{
                 minWidth: 0,
-                mr: isExpanded ? 3 : 'auto',
+                mr: showExpandedUi ? 3 : 'auto',
                 justifyContent: 'center',
                 color: isActive ? 'primary.contrastText' : 'primary.main',
               }}
             >
               {item.icon}
             </ListItemIcon>
-            {isExpanded && (
+            {showExpandedUi && (
               <>
                 <ListItemText
                   primary={item.label}
@@ -185,7 +213,7 @@ export function Sidebar({
           </ListItemButton>
         </ListItem>
 
-        {hasChildren && isExpanded && (
+        {hasChildren && showExpandedUi && (
           <Collapse in={isSubmenuOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               {item.children!.map((child) => renderMenuItem(child, level + 1))}
@@ -195,6 +223,20 @@ export function Sidebar({
       </React.Fragment>
     );
   };
+
+  const themeToggleButton = (
+    <IconButton
+      color="inherit"
+      onClick={toggleTheme}
+      aria-label={mode === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'}
+      size={showExpandedUi ? 'medium' : 'small'}
+      sx={{
+        color: 'text.primary',
+      }}
+    >
+      {mode === 'dark' ? <LightMode /> : <DarkMode />}
+    </IconButton>
+  );
 
   const drawer = (
     <Box
@@ -208,10 +250,10 @@ export function Sidebar({
         borderRight: 1,
         borderColor: 'divider',
         transition: 'width 0.3s ease',
-        width: drawerWidth,
+        width: innerDrawerWidth,
       }}
     >
-      {/* Header */}
+      {/* Topo: marca + tema + recolher */}
       <Box
         sx={{
           display: 'flex',
@@ -221,69 +263,128 @@ export function Sidebar({
           borderBottom: 1,
           borderColor: 'divider',
           minHeight: 64,
+          ...(showExpandedUi
+            ? { flexDirection: 'row' }
+            : { flexDirection: 'column', gap: 0.5, py: 1.5 }),
         }}
       >
-        {isExpanded ? (
+        {showExpandedUi ? (
           <>
-            <Box>
-              <Typography variant="h6" fontWeight={600} color="primary.main">
+            <Box sx={{ minWidth: 0 }}>
+              <Typography variant="h6" fontWeight={600} color="primary.main" noWrap>
                 Intranet
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" color="text.secondary" noWrap>
                 Sistema Corporativo
               </Typography>
             </Box>
-            <IconButton
-              onClick={onToggle}
-              sx={{
-                p: 1,
-                borderRadius: 1,
-                '&:hover': {
-                  backgroundColor: 'action.hover',
-                },
-              }}
-            >
-              <Menu />
-            </IconButton>
+            <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+              {themeToggleButton}
+              <IconButton
+                onClick={onToggle}
+                aria-label="Recolher menu"
+                sx={{
+                  p: 1,
+                  borderRadius: 1,
+                  color: 'text.primary',
+                  '&:hover': {
+                    backgroundColor: 'action.hover',
+                  },
+                }}
+              >
+                <Menu />
+              </IconButton>
+            </Box>
           </>
         ) : (
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-            }}
-          >
+          <>
             <Typography variant="h6" fontWeight={600} color="primary.main">
               I
             </Typography>
-          </Box>
+            {themeToggleButton}
+          </>
         )}
       </Box>
 
-      {/* Menu Items */}
+      {/* Itens de navegação */}
       <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
         <List>{menuItems.map((item) => renderMenuItem(item))}</List>
       </Box>
 
-      {/* Footer */}
+      {/* Rodapé: usuário + copyright */}
       <Box
         sx={{
-          p: 2,
           borderTop: 1,
           borderColor: 'divider',
         }}
       >
-        {isExpanded ? (
-          <Typography variant="caption" color="text.secondary" align="center">
-            © 2024 Intranet Corporativa
-          </Typography>
-        ) : (
-          <Typography variant="caption" color="text.secondary" align="center">
-            © 2024
-          </Typography>
-        )}
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={handleUserMenuOpen}
+            aria-label="Menu da conta"
+            aria-controls={userMenuAnchor ? 'sidebar-user-menu' : undefined}
+            aria-haspopup="true"
+            sx={{
+              minHeight: 56,
+              justifyContent: showExpandedUi ? 'flex-start' : 'center',
+              px: 2.5,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: showExpandedUi ? 40 : 0,
+                justifyContent: 'center',
+                color: 'primary.main',
+              }}
+            >
+              <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
+                <AccountCircle />
+              </Avatar>
+            </ListItemIcon>
+            {showExpandedUi && (
+              <ListItemText
+                primary="Conta"
+                secondary="Perfil e sair"
+                slotProps={{
+                  primary: { fontSize: '0.875rem', fontWeight: 600 },
+                  secondary: { fontSize: '0.75rem' },
+                }}
+              />
+            )}
+          </ListItemButton>
+        </ListItem>
+        <MuiMenu
+          id="sidebar-user-menu"
+          anchorEl={userMenuAnchor}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+          open={Boolean(userMenuAnchor)}
+          onClose={handleUserMenuClose}
+          slotProps={{
+            paper: { sx: { ml: 1 } },
+          }}
+        >
+          <MenuItem onClick={handleSettings}>
+            <Settings sx={{ mr: 1, fontSize: 20 }} />
+            Configurações
+          </MenuItem>
+          <MenuItem onClick={handleUserMenuClose}>
+            <Logout sx={{ mr: 1, fontSize: 20 }} />
+            Sair
+          </MenuItem>
+        </MuiMenu>
+
+        <Box sx={{ px: 2, pb: 1.5, pt: 0 }}>
+          {showExpandedUi ? (
+            <Typography variant="caption" color="text.secondary" align="center" display="block">
+              © 2024 Intranet Corporativa
+            </Typography>
+          ) : (
+            <Typography variant="caption" color="text.secondary" align="center" display="block">
+              © 2024
+            </Typography>
+          )}
+        </Box>
       </Box>
     </Box>
   );
@@ -296,7 +397,7 @@ export function Sidebar({
         open={open}
         onClose={onClose}
         ModalProps={{
-          keepMounted: true, // Better open performance on mobile.
+          keepMounted: true,
         }}
         sx={{
           display: { xs: 'block', md: 'none' },
@@ -318,7 +419,7 @@ export function Sidebar({
             boxSizing: 'border-box',
             width: drawerWidth,
             transition: 'width 0.3s ease',
-            zIndex: theme.zIndex.drawer + 2, // Maior que o header
+            zIndex: theme.zIndex.drawer,
           },
         }}
         open
