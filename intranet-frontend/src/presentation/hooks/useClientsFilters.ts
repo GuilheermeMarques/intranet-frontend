@@ -16,7 +16,7 @@ export const useClientsFilters = (options: UseClientsFiltersOptions = {}) => {
   // Debounce filters para evitar muitas requisições
   const debouncedFilters = useDebounce(filters, debounceDelay);
 
-  const updateFilter = useCallback((key: keyof ClientFilters, value: string | Date | undefined) => {
+  const updateFilter = useCallback((key: keyof ClientFilters, value: string | Date | null | undefined) => {
     setFilters(prev => ({
       ...prev,
       [key]: value,

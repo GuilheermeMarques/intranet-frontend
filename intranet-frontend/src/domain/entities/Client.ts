@@ -1,22 +1,9 @@
-export interface Client {
+import type { Client as BaseClient } from '@/types/client';
+
+export interface Client extends Omit<BaseClient, 'id' | 'createdAt' | 'updatedAt'> {
   id: string;
-  codigo: string;
-  nome: string;
-  cpf: string;
-  cep: string;
-  endereco: string;
-  cidade: string;
-  estado: string;
-  bairro: string;
-  numero: string;
-  complemento: string;
-  email: string;
-  telefone: string;
-  instagram: string;
-  dataUltimaCompra: Date;
-  quantidadeCompras: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ClientFilters {
@@ -28,8 +15,8 @@ export interface ClientFilters {
   instagram?: string;
   cidade?: string;
   estado?: string;
-  dataInicial?: Date;
-  dataFinal?: Date;
+  dataInicial?: Date | null;
+  dataFinal?: Date | null;
 }
 
 export interface CreateClientRequest {

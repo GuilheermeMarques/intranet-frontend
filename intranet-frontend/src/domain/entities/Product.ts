@@ -1,21 +1,10 @@
-export interface Product {
-  id: string;
-  codigo: string;
-  nome: string;
-  descricao: string;
-  preco: number;
-  estoque: number;
-  categoria: string;
-  fornecedor: string;
-  imagem?: string;
-  ativo: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import type { Product as BaseProduct } from '@/types/product';
+
+export interface Product extends BaseProduct {}
 
 export interface ProductFilters {
-  codigo?: string;
-  nome?: string;
+  codigoProduto?: string;
+  nomeProduto?: string;
   categoria?: string;
   fornecedor?: string;
   ativo?: boolean;
@@ -23,16 +12,17 @@ export interface ProductFilters {
 }
 
 export interface CreateProductRequest {
-  codigo: string;
-  nome: string;
-  descricao: string;
+  codigoProduto: string;
+  nomeProduto: string;
+  descricaoProduto: string;
   preco: number;
-  estoque: number;
-  categoria: string;
+  quantidadeEstoque: number;
   fornecedor: string;
+  categoria?: string;
   imagem?: string;
+  ativo?: boolean;
 }
 
 export interface UpdateProductRequest extends Partial<CreateProductRequest> {
-  id: string;
+  id: string | number;
 }

@@ -13,6 +13,9 @@ export interface Ticket {
   messages: Message[];
 }
 
+export type TicketStatus = Ticket['status'];
+export type TicketMessageType = Message['type'];
+
 export interface Message {
   id: string;
   author: string;

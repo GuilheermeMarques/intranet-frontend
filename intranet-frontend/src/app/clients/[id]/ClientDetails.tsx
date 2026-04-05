@@ -519,7 +519,9 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                     <Grid item xs={12} md={6}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography variant="h4" color="success.main" fontWeight={600}>
-                          {formatDate(currentClient.dataUltimaCompra)}
+                          {currentClient.dataUltimaCompra
+                            ? formatDate(currentClient.dataUltimaCompra)
+                            : '-'}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Última Compra

@@ -36,7 +36,7 @@ export const useClients = () => {
         !filters.cidade || filters.cidade.trim() === '' || client.cidade === filters.cidade;
 
       let dataMatch = true;
-      if (filters.dataInicial || filters.dataFinal) {
+      if ((filters.dataInicial || filters.dataFinal) && client.dataUltimaCompra) {
         const dataUltimaCompra = new Date(client.dataUltimaCompra);
 
         if (filters.dataInicial && filters.dataFinal) {
@@ -47,6 +47,8 @@ export const useClients = () => {
         } else if (filters.dataFinal) {
           dataMatch = dataUltimaCompra <= filters.dataFinal;
         }
+      } else if ((filters.dataInicial || filters.dataFinal) && !client.dataUltimaCompra) {
+        dataMatch = false;
       }
 
       return codigoMatch && nomeMatch && cidadeMatch && dataMatch;
@@ -72,17 +74,25 @@ export const useClients = () => {
   );
 
   const handleCreateClient = useCallback(
-    async (clientData: Omit<Client, 'id' | 'createdAt' | 'updatedAt'>) => {
+    async (
+      clientData: Omit<
+        Client,
+        'id' | 'codigo' | 'dataUltimaCompra' | 'quantidadeCompras' | 'createdAt' | 'updatedAt'
+      >,
+    ) => {
       try {
         setLoading(true);
         setError(null);
 
-        // Simular criação de cliente (substituir por chamada real da API)
+        const timestamp = new Date().toISOString();
         const newClient: Client = {
           ...clientData,
           id: Date.now().toString(),
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          codigo: `CLI${String(clients.length + 1).padStart(3, '0')}`,
+          dataUltimaCompra: null,
+          quantidadeCompras: 0,
+          createdAt: timestamp,
+          updatedAt: timestamp,
         };
 
         addClient(newClient);
@@ -94,7 +104,7 @@ export const useClients = () => {
         setLoading(false);
       }
     },
-    [addClient, setLoading, setError],
+    [addClient, clients.length, setLoading, setError],
   );
 
   const handleUpdateClient = useCallback(
@@ -111,7 +121,7 @@ export const useClients = () => {
         const updatedClient: Client = {
           ...existingClient,
           ...clientData,
-          updatedAt: new Date(),
+          updatedAt: new Date().toISOString(),
         };
 
         updateClient(id, updatedClient);

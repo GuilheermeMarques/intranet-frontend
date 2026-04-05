@@ -459,7 +459,9 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                       <Typography variant="body2" color="text.secondary">
                         Última Compra:
                       </Typography>
-                      <Typography variant="body1">{formatDate(client.dataUltimaCompra)}</Typography>
+                      <Typography variant="body1">
+                        {client.dataUltimaCompra ? formatDate(client.dataUltimaCompra) : '-'}
+                      </Typography>
                     </Box>
 
                     <Box sx={{ mb: 2 }}>

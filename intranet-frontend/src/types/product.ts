@@ -1,5 +1,5 @@
 export interface Product {
-  id: number;
+  id: string | number;
   codigoProduto: string;
   nomeProduto: string;
   descricaoProduto: string;
@@ -7,4 +7,9 @@ export interface Product {
   quantidadeEstoque: number;
   ultimaDataVenda: string;
   fornecedor: string;
+  categoria?: string;
+  imagem?: string;
+  ativo?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }

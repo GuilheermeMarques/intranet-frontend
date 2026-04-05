@@ -1,47 +1,42 @@
-export interface OrderItem {
-  id: string;
-  productId: string;
-  productName: string;
-  quantity: number;
-  unitPrice: number;
-  totalPrice: number;
+import type { Order as BaseOrder, OrderItem as BaseOrderItem } from '@/types/order';
+
+export interface OrderItem extends BaseOrderItem {
+  productId?: string;
+  productCode?: string;
 }
 
-export interface Order {
-  id: string;
-  clientId: string;
-  clientName: string;
+export interface Order extends Omit<BaseOrder, 'items'> {
+  clientId?: string;
   items: OrderItem[];
-  total: number;
-  status: OrderStatus;
-  createdAt: Date;
-  updatedAt: Date;
-  shippedAt?: Date;
-  deliveredAt?: Date;
 }
 
-export type OrderStatus = 'pending' | 'shipped' | 'delivered' | 'canceled';
+export type OrderStatus = Order['status'];
 
 export interface OrderFilters {
   orderCode?: string;
   clientName?: string;
   status?: OrderStatus;
-  startDate?: Date;
-  endDate?: Date;
+  startDate?: Date | null;
+  endDate?: Date | null;
 }
 
 export interface CreateOrderRequest {
   clientId: string;
   items: CreateOrderItemRequest[];
+  shippingCost?: number;
+  notes?: string;
 }
 
 export interface CreateOrderItemRequest {
   productId: string;
   quantity: number;
+  unitPrice?: number;
 }
 
 export interface UpdateOrderRequest {
   id: string;
   status?: OrderStatus;
   items?: CreateOrderItemRequest[];
+  shippingCost?: number;
+  notes?: string;
 }

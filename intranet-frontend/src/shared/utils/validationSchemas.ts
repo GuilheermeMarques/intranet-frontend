@@ -51,6 +51,8 @@ export const OrderSchema = z.object({
       }),
     )
     .min(1, 'Pedido deve ter pelo menos um item'),
+  shippingCost: z.number().min(0, 'Frete deve ser maior ou igual a 0').optional(),
+  notes: z.string().max(500, 'Observações devem ter no máximo 500 caracteres').optional(),
 });
 
 // Schema de validação para Item do Pedido
@@ -61,45 +63,45 @@ export const OrderItemSchema = z.object({
 
 // Schema de validação para Produto
 export const ProductSchema = z.object({
-  codigo: z
+  codigoProduto: z
     .string()
     .min(1, 'Código é obrigatório')
     .max(20, 'Código deve ter no máximo 20 caracteres'),
-  nome: z
+  nomeProduto: z
     .string()
     .min(2, 'Nome deve ter pelo menos 2 caracteres')
     .max(100, 'Nome deve ter no máximo 100 caracteres'),
-  descricao: z.string().max(500, 'Descrição deve ter no máximo 500 caracteres').optional(),
-  preco: z.number().min(0, 'Preço deve ser maior ou igual a 0'),
-  estoque: z.number().min(0, 'Estoque deve ser maior ou igual a 0'),
-  categoria: z
+  descricaoProduto: z
     .string()
-    .min(1, 'Categoria é obrigatória')
-    .max(50, 'Categoria deve ter no máximo 50 caracteres'),
+    .max(500, 'Descrição deve ter no máximo 500 caracteres')
+    .optional(),
+  preco: z.number().min(0, 'Preço deve ser maior ou igual a 0'),
+  quantidadeEstoque: z.number().min(0, 'Estoque deve ser maior ou igual a 0'),
   fornecedor: z
     .string()
     .min(1, 'Fornecedor é obrigatório')
     .max(100, 'Fornecedor deve ter no máximo 100 caracteres'),
+  categoria: z.string().max(50, 'Categoria deve ter no máximo 50 caracteres').optional(),
   imagem: z.string().url('URL da imagem inválida').optional(),
 });
 
 // Schema de validação para Ticket
 export const TicketSchema = z.object({
-  titulo: z
+  title: z
     .string()
     .min(5, 'Título deve ter pelo menos 5 caracteres')
     .max(200, 'Título deve ter no máximo 200 caracteres'),
-  descricao: z
+  description: z
     .string()
     .min(10, 'Descrição deve ter pelo menos 10 caracteres')
     .max(1000, 'Descrição deve ter no máximo 1000 caracteres'),
-  prioridade: z.enum(['baixa', 'media', 'alta', 'critica']),
-  categoria: z
+  priority: z.string().min(1, 'Prioridade é obrigatória'),
+  category: z
     .string()
     .min(1, 'Categoria é obrigatória')
     .max(50, 'Categoria deve ter no máximo 50 caracteres'),
   tags: z.array(z.string().max(20)).optional(),
-  atribuidoPara: z.string().optional(),
+  assignee: z.string().optional(),
 });
 
 // Schema de validação para Filtros de Cliente
@@ -122,8 +124,8 @@ export const OrderFiltersSchema = z.object({
 
 // Schema de validação para Filtros de Produto
 export const ProductFiltersSchema = z.object({
-  codigo: z.string().optional(),
-  nome: z.string().optional(),
+  codigoProduto: z.string().optional(),
+  nomeProduto: z.string().optional(),
   categoria: z.string().optional(),
   fornecedor: z.string().optional(),
   ativo: z.boolean().optional(),
@@ -132,12 +134,12 @@ export const ProductFiltersSchema = z.object({
 
 // Schema de validação para Filtros de Ticket
 export const TicketFiltersSchema = z.object({
-  titulo: z.string().optional(),
-  prioridade: z.enum(['baixa', 'media', 'alta', 'critica']).optional(),
-  status: z.enum(['aberto', 'em_andamento', 'resolvido', 'fechado']).optional(),
-  categoria: z.string().optional(),
-  criadoPor: z.string().optional(),
-  atribuidoPara: z.string().optional(),
+  search: z.string().optional(),
+  priority: z.string().optional(),
+  status: z.enum(['todo', 'inProgress', 'inReview', 'done']).optional(),
+  category: z.string().optional(),
+  reporter: z.string().optional(),
+  assignee: z.string().optional(),
   dataInicial: z.date().optional(),
   dataFinal: z.date().optional(),
 });

@@ -39,10 +39,10 @@ describe('clientsStore', () => {
         email: 'joao@email.com',
         telefone: '(11) 99999-9999',
         instagram: '@joaosilva',
-        dataUltimaCompra: new Date(),
+        dataUltimaCompra: '2024-01-15',
         quantidadeCompras: 5,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: '2024-01-01T00:00:00.000Z',
+        updatedAt: '2024-01-15T00:00:00.000Z',
       },
     ];
 
@@ -70,10 +70,10 @@ describe('clientsStore', () => {
       email: 'joao@email.com',
       telefone: '(11) 99999-9999',
       instagram: '@joaosilva',
-      dataUltimaCompra: new Date(),
+      dataUltimaCompra: '2024-01-15',
       quantidadeCompras: 5,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: '2024-01-01T00:00:00.000Z',
+      updatedAt: '2024-01-15T00:00:00.000Z',
     };
 
     act(() => {
@@ -101,10 +101,10 @@ describe('clientsStore', () => {
       email: 'joao@email.com',
       telefone: '(11) 99999-9999',
       instagram: '@joaosilva',
-      dataUltimaCompra: new Date(),
+      dataUltimaCompra: '2024-01-15',
       quantidadeCompras: 5,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: '2024-01-01T00:00:00.000Z',
+      updatedAt: '2024-01-15T00:00:00.000Z',
     };
 
     act(() => {
@@ -137,10 +137,10 @@ describe('clientsStore', () => {
       email: 'joao@email.com',
       telefone: '(11) 99999-9999',
       instagram: '@joaosilva',
-      dataUltimaCompra: new Date(),
+      dataUltimaCompra: '2024-01-15',
       quantidadeCompras: 5,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: '2024-01-01T00:00:00.000Z',
+      updatedAt: '2024-01-15T00:00:00.000Z',
     };
 
     act(() => {
@@ -234,10 +234,10 @@ describe('clientsStore', () => {
       email: 'joao@email.com',
       telefone: '(11) 99999-9999',
       instagram: '@joaosilva',
-      dataUltimaCompra: new Date(),
+      dataUltimaCompra: '2024-01-15',
       quantidadeCompras: 5,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: '2024-01-01T00:00:00.000Z',
+      updatedAt: '2024-01-15T00:00:00.000Z',
     };
 
     act(() => {

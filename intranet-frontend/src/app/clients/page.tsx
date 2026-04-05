@@ -152,7 +152,7 @@ export default function ClientsPage() {
 
       // Filtro de data
       let dataMatch = true;
-      if (filters.dataInicial || filters.dataFinal) {
+      if ((filters.dataInicial || filters.dataFinal) && client.dataUltimaCompra) {
         const dataUltimaCompra = new Date(client.dataUltimaCompra);
 
         if (filters.dataInicial && filters.dataFinal) {
@@ -163,6 +163,8 @@ export default function ClientsPage() {
         } else if (filters.dataFinal) {
           dataMatch = dataUltimaCompra <= filters.dataFinal;
         }
+      } else if ((filters.dataInicial || filters.dataFinal) && !client.dataUltimaCompra) {
+        dataMatch = false;
       }
 
       return codigoMatch && nomeMatch && cidadeMatch && dataMatch;
@@ -323,7 +325,7 @@ export default function ClientsPage() {
         <FilterPanel
           title="Filtros de Busca"
           fields={filterFields}
-          filters={filters}
+          filters={filters as unknown as Record<string, unknown>}
           onFiltersChange={handleFilterChange}
           onClearFilters={clearFilters}
           showClearButton={false}
@@ -334,7 +336,7 @@ export default function ClientsPage() {
         {/* Tabela de Clientes */}
         <DataTable
           columns={columns}
-          data={filteredClients}
+          data={filteredClients as unknown as Record<string, unknown>[]}
           title="Lista de Clientes"
           emptyMessage="Nenhum cliente encontrado com os filtros aplicados."
           getRowKey={(row) => (row.codigo as string) || String(row)}

@@ -1,48 +1,44 @@
-export interface Ticket {
-  id: string;
-  titulo: string;
-  descricao: string;
-  prioridade: TicketPriority;
-  status: TicketStatus;
-  categoria: string;
-  tags: string[];
-  criadoPor: string;
-  atribuidoPara?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  fechadoEm?: Date;
-}
+import type {
+  Attachment,
+  Message,
+  Priority,
+  Tag,
+  Ticket as BaseTicket,
+  TicketStatus,
+} from '@/types/ticket';
 
-export type TicketPriority = 'baixa' | 'media' | 'alta' | 'critica';
-export type TicketStatus = 'aberto' | 'em_andamento' | 'resolvido' | 'fechado';
+export interface Ticket extends BaseTicket {}
+
+export type TicketPriority = string;
+export type { Attachment, Message, Priority, Tag, TicketStatus };
 
 export interface TicketFilters {
-  titulo?: string;
-  prioridade?: TicketPriority;
+  search?: string;
+  priority?: string;
   status?: TicketStatus;
-  categoria?: string;
-  criadoPor?: string;
-  atribuidoPara?: string;
-  dataInicial?: Date;
-  dataFinal?: Date;
+  category?: string;
+  assignee?: string;
+  reporter?: string;
+  dataInicial?: Date | null;
+  dataFinal?: Date | null;
 }
 
 export interface CreateTicketRequest {
-  titulo: string;
-  descricao: string;
-  prioridade: TicketPriority;
-  categoria: string;
+  title: string;
+  description: string;
+  priority: string;
+  category: string;
   tags?: string[];
-  atribuidoPara?: string;
+  assignee?: string;
 }
 
 export interface UpdateTicketRequest {
   id: string;
-  titulo?: string;
-  descricao?: string;
-  prioridade?: TicketPriority;
+  title?: string;
+  description?: string;
+  priority?: string;
   status?: TicketStatus;
-  categoria?: string;
+  category?: string;
   tags?: string[];
-  atribuidoPara?: string;
+  assignee?: string;
 }

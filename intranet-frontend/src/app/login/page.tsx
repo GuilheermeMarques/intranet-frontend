@@ -1,8 +1,10 @@
 'use client';
 
+import { useAuth } from '@/presentation/hooks/useAuth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Email, Lock, Visibility, VisibilityOff } from '@mui/icons-material';
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -29,6 +31,8 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState<string | null>(null);
+  const { login } = useAuth();
 
   const {
     control,
@@ -45,13 +49,17 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      console.log('Dados do formulário:', data);
-      // Aqui você implementará a lógica de autenticação
-      // Por enquanto, apenas simulamos um delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log('Login realizado com sucesso!');
+      setSubmitError(null);
+      await login(data.email, data.password);
     } catch (error) {
-      console.error('Erro no login:', error);
+      const message =
+        error instanceof Error && error.message === 'CredentialsSignin'
+          ? 'Email ou senha inválidos.'
+          : error instanceof Error
+            ? error.message
+            : 'Não foi possível realizar o login.';
+
+      setSubmitError(message);
     }
   };
 
@@ -95,6 +103,8 @@ export default function LoginPage() {
           <CardContent sx={{ p: 4 }}>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                {submitError && <Alert severity="error">{submitError}</Alert>}
+
                 <Controller
                   name="email"
                   control={control}

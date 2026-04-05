@@ -54,7 +54,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 interface OrderItem {
-  productId: number;
+  productId: string | number;
   productCode: string;
   productName: string;
   quantity: number;

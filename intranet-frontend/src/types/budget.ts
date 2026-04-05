@@ -1,9 +1,12 @@
 export interface Budget {
   id: string;
   number: string;
-  client: string;
-  responsible: string;
+  clientId: string;
+  clientName: string;
+  responsibleId: string;
+  responsibleName: string;
   createdAt: string;
+  validityDate?: string;
   status: 'pending' | 'approved' | 'rejected' | 'expired';
   total: number;
   items: BudgetItem[];
@@ -11,7 +14,9 @@ export interface Budget {
 
 export interface BudgetItem {
   id: string;
-  product: string;
+  productId: string | number;
+  productCode?: string;
+  productName: string;
   quantity: number;
   unitPrice: number;
   total: number;
@@ -19,15 +24,16 @@ export interface BudgetItem {
 
 export interface BudgetFilters {
   budgetNumber?: string;
-  client?: string;
-  responsible?: string;
-  startDate?: string;
-  endDate?: string;
+  clientId?: string;
+  responsibleId?: string;
+  status?: Budget['status'] | '';
+  startDate?: Date | null;
+  endDate?: Date | null;
 }
 
 export interface BudgetFilterProps {
   filters: BudgetFilters;
   onFiltersChange: (filters: BudgetFilters) => void;
-  clients: string[];
-  responsibles: string[];
+  clients: Array<{ value: string; label: string }>;
+  responsibles: Array<{ value: string; label: string }>;
 }

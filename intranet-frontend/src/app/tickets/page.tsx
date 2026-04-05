@@ -277,6 +277,13 @@ export default function TicketsPage() {
   // Filtros disponíveis
   const categories = [...new Set(tickets.map((ticket) => ticket.category))];
   const assignees = [...new Set(tickets.map((ticket) => ticket.assignee))];
+  const availablePriorities = priorities
+    .filter((priority) => priority.isActive)
+    .sort((left, right) => right.level - left.level)
+    .map((priority) => ({
+      value: priority.id,
+      label: priority.name,
+    }));
 
   // Filtrar tickets
   const filteredTickets = tickets.filter((ticket) => {
@@ -597,12 +604,7 @@ export default function TicketsPage() {
               id: 'priority',
               type: 'select',
               label: 'Prioridade',
-              options: [
-                { value: 'low', label: 'Baixa' },
-                { value: 'medium', label: 'Média' },
-                { value: 'high', label: 'Alta' },
-                { value: 'critical', label: 'Crítica' },
-              ],
+              options: availablePriorities,
             },
             {
               id: 'category',

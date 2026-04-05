@@ -7,7 +7,7 @@ import { FormModal } from '@/components/Modal';
 import budgetsData from '@/mocks/budgets.json';
 import productsData from '@/mocks/products.json';
 import representativesData from '@/mocks/representatives.json';
-import { Budget } from '@/types/budget';
+import { Budget, BudgetFilters } from '@/types/budget';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {
   Box,
@@ -31,67 +31,141 @@ import {
 } from '@mui/material';
 import { useMemo, useState } from 'react';
 
+type Option = {
+  value: string;
+  label: string;
+};
+
+type NewBudgetItem = {
+  productId: string;
+  productCode?: string;
+  productName: string;
+  quantity: number;
+  unitPrice: number;
+  total: number;
+};
+
+type NewBudgetForm = {
+  clientId: string;
+  responsibleId: string;
+  validityDate: string;
+  items: NewBudgetItem[];
+};
+
+const slugify = (value: string) =>
+  value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+const buildInitialBudget = (): NewBudgetForm => ({
+  clientId: '',
+  responsibleId: '',
+  validityDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+  items: [],
+});
+
+const buildEmptyItem = (): NewBudgetItem => ({
+  productId: '',
+  productCode: '',
+  productName: '',
+  quantity: 1,
+  unitPrice: 0,
+  total: 0,
+});
+
 export default function BudgetsPage() {
-  const [filters, setFilters] = useState<Record<string, unknown>>({
+  const [filters, setFilters] = useState<BudgetFilters>({
     budgetNumber: '',
-    client: '',
-    responsible: '',
+    clientId: '',
+    responsibleId: '',
     status: '',
     startDate: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
     endDate: new Date(),
   });
-
-  // Estado para controlar o modal de novo orçamento
   const [isNewBudgetModalOpen, setIsNewBudgetModalOpen] = useState(false);
-  const [newBudget, setNewBudget] = useState({
-    client: '',
-    responsible: '',
-    validityDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 dias por padrão
-    items: [] as Array<{
-      productId: string;
-      productName: string;
-      quantity: number;
-      unitPrice: number;
-      total: number;
-    }>,
-  });
+  const [newBudget, setNewBudget] = useState<NewBudgetForm>(buildInitialBudget);
 
-  // Extrair listas únicas de clientes e responsáveis dos dados
-  const clients = useMemo(() => {
-    const uniqueClients = [...new Set(budgetsData.budgets.map((budget) => budget.client))];
-    return uniqueClients.sort();
+  const normalizedBudgets = useMemo<Budget[]>(() => {
+    return budgetsData.budgets.map((budget) => {
+      const matchedRepresentative = representativesData.representatives.find(
+        (rep) => rep.name === budget.responsible,
+      );
+
+      return {
+        id: budget.id,
+        number: budget.number,
+        clientId: `client-${slugify(budget.client)}`,
+        clientName: budget.client,
+        responsibleId:
+          matchedRepresentative?.id ?? `representative-${slugify(budget.responsible)}`,
+        responsibleName: budget.responsible,
+        createdAt: budget.createdAt,
+        status: budget.status as Budget['status'],
+        total: budget.total,
+        items: budget.items.map((item) => {
+          const matchedProduct = productsData.products.find(
+            (product) =>
+              product.nomeProduto === item.product ||
+              product.nomeProduto.includes(item.product) ||
+              item.product.includes(product.nomeProduto),
+          );
+
+          return {
+            id: item.id,
+            productId: String(matchedProduct?.id ?? `product-${slugify(item.product)}`),
+            productCode: matchedProduct?.codigoProduto,
+            productName: matchedProduct?.nomeProduto ?? item.product,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            total: item.total,
+          };
+        }),
+      };
+    });
   }, []);
 
-  const responsibles = useMemo(() => {
-    const uniqueResponsibles = [
-      ...new Set(budgetsData.budgets.map((budget) => budget.responsible)),
-    ];
-    return uniqueResponsibles.sort();
-  }, []);
+  const clients = useMemo<Option[]>(() => {
+    const clientMap = new Map<string, Option>();
 
-  // Extrair representantes ativos
-  const activeRepresentatives = useMemo(() => {
+    normalizedBudgets.forEach((budget) => {
+      clientMap.set(budget.clientId, { value: budget.clientId, label: budget.clientName });
+    });
+
+    return Array.from(clientMap.values()).sort((a, b) => a.label.localeCompare(b.label));
+  }, [normalizedBudgets]);
+
+  const responsibles = useMemo<Option[]>(() => {
+    const responsibleMap = new Map<string, Option>();
+
+    normalizedBudgets.forEach((budget) => {
+      responsibleMap.set(budget.responsibleId, {
+        value: budget.responsibleId,
+        label: budget.responsibleName,
+      });
+    });
+
+    return Array.from(responsibleMap.values()).sort((a, b) => a.label.localeCompare(b.label));
+  }, [normalizedBudgets]);
+
+  const activeRepresentatives = useMemo<Option[]>(() => {
     return representativesData.representatives
       .filter((rep) => rep.status === 'active')
-      .map((rep) => ({ value: rep.name, label: rep.name }));
+      .map((rep) => ({ value: rep.id, label: rep.name }));
   }, []);
 
-  // Funções para gerenciar o novo orçamento
   const handleOpenNewBudgetModal = () => {
     setIsNewBudgetModalOpen(true);
   };
 
   const handleCloseNewBudgetModal = () => {
     setIsNewBudgetModalOpen(false);
-    setNewBudget({
-      client: '',
-      responsible: '',
-      validityDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      items: [],
-    });
+    setNewBudget(buildInitialBudget());
   };
 
-  const handleNewBudgetChange = (field: string, value: string) => {
+  const handleNewBudgetChange = (field: keyof Omit<NewBudgetForm, 'items'>, value: string) => {
     setNewBudget((prev) => ({
       ...prev,
       [field]: value,
@@ -101,88 +175,88 @@ export default function BudgetsPage() {
   const handleAddItem = () => {
     setNewBudget((prev) => ({
       ...prev,
-      items: [
-        ...prev.items,
-        {
-          productId: '',
-          productName: '',
-          quantity: 1,
-          unitPrice: 0,
-          total: 0,
-        },
-      ],
+      items: [...prev.items, buildEmptyItem()],
     }));
   };
 
   const handleRemoveItem = (index: number) => {
     setNewBudget((prev) => ({
       ...prev,
-      items: prev.items.filter((_, i) => i !== index),
+      items: prev.items.filter((_, itemIndex) => itemIndex !== index),
     }));
   };
 
-  const handleItemChange = (index: number, field: string, value: string | number) => {
+  const handleItemChange = (index: number, field: keyof NewBudgetItem, value: string | number) => {
     setNewBudget((prev) => {
-      const newItems = [...prev.items];
-      newItems[index] = {
-        ...newItems[index],
+      const nextItems = [...prev.items];
+      const currentItem = nextItems[index];
+
+      if (!currentItem) {
+        return prev;
+      }
+
+      const updatedItem: NewBudgetItem = {
+        ...currentItem,
         [field]: value,
       };
 
-      // Calcular total do item
-      if (field === 'quantity' || field === 'unitPrice') {
-        const quantity = field === 'quantity' ? Number(value) : newItems[index].quantity;
-        const unitPrice = field === 'unitPrice' ? Number(value) : newItems[index].unitPrice;
-        newItems[index].total = quantity * unitPrice;
-      }
-
-      // Atualizar nome do produto se o ID mudou
       if (field === 'productId') {
-        const product = productsData.products.find((p) => p.id.toString() === value);
-        if (product) {
-          newItems[index].productName = product.nomeProduto;
-          newItems[index].unitPrice = product.preco;
-          newItems[index].total = newItems[index].quantity * product.preco;
+        const selectedProduct = productsData.products.find((product) => String(product.id) === value);
+
+        if (selectedProduct) {
+          updatedItem.productCode = selectedProduct.codigoProduto;
+          updatedItem.productName = selectedProduct.nomeProduto;
+          updatedItem.unitPrice = selectedProduct.preco;
         }
       }
 
+      if (field === 'quantity' || field === 'unitPrice' || field === 'productId') {
+        updatedItem.total = updatedItem.quantity * updatedItem.unitPrice;
+      }
+
+      nextItems[index] = updatedItem;
+
       return {
         ...prev,
-        items: newItems,
+        items: nextItems,
       };
     });
   };
 
   const handleCreateBudget = () => {
-    // Validar se todos os campos obrigatórios estão preenchidos
-    if (!newBudget.client || !newBudget.responsible || newBudget.items.length === 0) {
+    if (!newBudget.clientId || !newBudget.responsibleId || newBudget.items.length === 0) {
       alert('Por favor, preencha todos os campos obrigatórios e adicione pelo menos um item.');
       return;
     }
 
-    // Validar se todos os itens têm produto selecionado
     const hasInvalidItems = newBudget.items.some((item) => !item.productId);
     if (hasInvalidItems) {
       alert('Por favor, selecione um produto para todos os itens.');
       return;
     }
 
-    // Gerar número do orçamento
-    const nextNumber = `ORC-2025-${String(budgetsData.budgets.length + 1).padStart(3, '0')}`;
+    const selectedClient = clients.find((client) => client.value === newBudget.clientId);
+    const selectedRepresentative = activeRepresentatives.find(
+      (representative) => representative.value === newBudget.responsibleId,
+    );
+    const nextNumber = `ORC-2025-${String(normalizedBudgets.length + 1).padStart(3, '0')}`;
 
-    // Criar novo orçamento
-    const budgetToCreate = {
-      id: String(budgetsData.budgets.length + 1),
+    const budgetToCreate: Budget = {
+      id: String(normalizedBudgets.length + 1),
       number: nextNumber,
-      client: newBudget.client,
-      responsible: newBudget.responsible,
+      clientId: newBudget.clientId,
+      clientName: selectedClient?.label ?? '',
+      responsibleId: newBudget.responsibleId,
+      responsibleName: selectedRepresentative?.label ?? '',
       createdAt: new Date().toISOString().split('T')[0],
       validityDate: newBudget.validityDate,
-      status: 'pending' as const,
+      status: 'pending',
       total: newBudget.items.reduce((sum, item) => sum + item.total, 0),
       items: newBudget.items.map((item, index) => ({
         id: String(index + 1),
-        product: item.productName,
+        productId: item.productId,
+        productCode: item.productCode,
+        productName: item.productName,
         quantity: item.quantity,
         unitPrice: item.unitPrice,
         total: item.total,
@@ -190,45 +264,39 @@ export default function BudgetsPage() {
     };
 
     console.log('Novo orçamento criado:', budgetToCreate);
-
-    // Aqui você faria a chamada para a API para salvar o orçamento
-    // Por enquanto, apenas fechamos o modal
     handleCloseNewBudgetModal();
   };
 
-  // Aplicar filtros
-  const handleFiltersChange = (newFilters: Record<string, unknown>) => {
-    setFilters(newFilters);
+  const handleFiltersChange = (nextFilters: Record<string, unknown>) => {
+    setFilters({
+      budgetNumber: (nextFilters.budgetNumber as string) || '',
+      clientId: (nextFilters.clientId as string) || '',
+      responsibleId: (nextFilters.responsibleId as string) || '',
+      status: ((nextFilters.status as Budget['status'] | '') || '') as Budget['status'] | '',
+      startDate: (nextFilters.startDate as Date) || null,
+      endDate: (nextFilters.endDate as Date) || null,
+    });
   };
 
-  // Filtrar orçamentos baseado nos filtros aplicados
   const filteredBudgets = useMemo(() => {
-    return (budgetsData.budgets as Budget[]).filter((budget) => {
+    return normalizedBudgets.filter((budget) => {
       const budgetNumberMatch =
         !filters.budgetNumber ||
-        (filters.budgetNumber as string).trim() === '' ||
-        budget.number.toLowerCase().includes((filters.budgetNumber as string).toLowerCase());
+        filters.budgetNumber.trim() === '' ||
+        budget.number.toLowerCase().includes(filters.budgetNumber.toLowerCase());
 
       const clientMatch =
-        !filters.client ||
-        (filters.client as string).trim() === '' ||
-        budget.client === filters.client;
+        !filters.clientId || filters.clientId.trim() === '' || budget.clientId === filters.clientId;
 
       const responsibleMatch =
-        !filters.responsible ||
-        (filters.responsible as string).trim() === '' ||
-        budget.responsible === filters.responsible;
+        !filters.responsibleId ||
+        filters.responsibleId.trim() === '' ||
+        budget.responsibleId === filters.responsibleId;
 
-      const statusMatch =
-        !filters.status ||
-        (filters.status as string).trim() === '' ||
-        budget.status === filters.status;
-
-      const startDateMatch =
-        !filters.startDate || new Date(budget.createdAt) >= new Date(filters.startDate as Date);
-
-      const endDateMatch =
-        !filters.endDate || new Date(budget.createdAt) <= new Date(filters.endDate as Date);
+      const statusMatch = !filters.status || budget.status === filters.status;
+      const createdAt = new Date(budget.createdAt);
+      const startDateMatch = !filters.startDate || createdAt >= filters.startDate;
+      const endDateMatch = !filters.endDate || createdAt <= filters.endDate;
 
       return (
         budgetNumberMatch &&
@@ -239,10 +307,9 @@ export default function BudgetsPage() {
         endDateMatch
       );
     });
-  }, [filters]);
+  }, [filters, normalizedBudgets]);
 
-  // Função para obter a cor do status
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: Budget['status']) => {
     switch (status) {
       case 'pending':
         return 'warning';
@@ -257,8 +324,7 @@ export default function BudgetsPage() {
     }
   };
 
-  // Função para traduzir o status
-  const getStatusLabel = (status: string) => {
+  const getStatusLabel = (status: Budget['status']) => {
     switch (status) {
       case 'pending':
         return 'Pendente';
@@ -273,7 +339,6 @@ export default function BudgetsPage() {
     }
   };
 
-  // Formatar valor monetário
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -281,30 +346,28 @@ export default function BudgetsPage() {
     }).format(value);
   };
 
-  // Formatar data
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
-  // Configuração dos campos de filtro
   const filterFields: FilterField[] = [
     {
       id: 'budgetNumber',
       type: 'text',
-      label: 'Número do Orçamento',
-      placeholder: 'Digite o número do orçamento',
+      label: 'Numero do Orcamento',
+      placeholder: 'Digite o numero do orcamento',
     },
     {
-      id: 'client',
+      id: 'clientId',
       type: 'select',
       label: 'Cliente',
-      options: clients.map((client) => ({ value: client, label: client })),
+      options: clients,
     },
     {
-      id: 'responsible',
+      id: 'responsibleId',
       type: 'select',
-      label: 'Responsável',
-      options: responsibles.map((responsible) => ({ value: responsible, label: responsible })),
+      label: 'Responsavel',
+      options: responsibles,
     },
     {
       id: 'status',
@@ -329,24 +392,23 @@ export default function BudgetsPage() {
     },
   ];
 
-  // Configuração das colunas da tabela
-  const columns: Column[] = [
+  const columns: Column<Budget>[] = [
     {
       id: 'number',
-      label: 'Número',
+      label: 'Numero',
       sortable: true,
       render: (value) => (
         <Chip label={value as string} size="small" color="primary" variant="outlined" />
       ),
     },
     {
-      id: 'client',
+      id: 'clientName',
       label: 'Cliente',
       sortable: true,
     },
     {
-      id: 'responsible',
-      label: 'Responsável',
+      id: 'responsibleName',
+      label: 'Responsavel',
       sortable: true,
     },
     {
@@ -355,8 +417,8 @@ export default function BudgetsPage() {
       sortable: true,
       render: (value) => (
         <Chip
-          label={getStatusLabel(value as string)}
-          color={getStatusColor(value as string) as 'warning' | 'success' | 'error' | 'default'}
+          label={getStatusLabel(value as Budget['status'])}
+          color={getStatusColor(value as Budget['status'])}
           size="small"
         />
       ),
@@ -381,13 +443,12 @@ export default function BudgetsPage() {
       id: 'items',
       label: 'Itens',
       sortable: false,
-      render: (value) => `${(value as unknown[]).length} produto(s)`,
+      render: (value) => `${(value as Budget['items']).length} produto(s)`,
     },
   ];
 
-  const handleRowClick = (budget: Record<string, unknown>) => {
-    // Implementar ação ao clicar na linha (ex: abrir modal de detalhes)
-    console.log('Orçamento selecionado:', budget as unknown as Budget);
+  const handleRowClick = (budget: Budget) => {
+    console.log('Orcamento selecionado:', budget);
   };
 
   return (
@@ -407,27 +468,24 @@ export default function BudgetsPage() {
           </Button>
         </Box>
 
-        {/* Filtros */}
         <FilterPanel
           title="Filtros de Orçamentos"
           fields={filterFields}
-          filters={filters}
+          filters={filters as unknown as Record<string, unknown>}
           onFiltersChange={handleFiltersChange}
           showClearButton={false}
           resultsCount={filteredBudgets.length}
           resultsLabel="orçamento(s) encontrado(s)"
         />
 
-        {/* Tabela de Orçamentos */}
         <DataTable
           columns={columns}
-          data={filteredBudgets as unknown as Record<string, unknown>[]}
+          data={filteredBudgets}
           title="Orçamentos"
           onRowClick={handleRowClick}
           emptyMessage="Nenhum orçamento encontrado com os filtros aplicados."
         />
 
-        {/* Modal de Novo Orçamento */}
         <FormModal
           open={isNewBudgetModalOpen}
           onClose={handleCloseNewBudgetModal}
@@ -441,43 +499,40 @@ export default function BudgetsPage() {
         >
           <Box sx={{ p: 2 }}>
             <Grid container spacing={3}>
-              {/* Cliente */}
               <Grid item xs={12} md={4}>
                 <FormControl fullWidth>
                   <InputLabel>Cliente</InputLabel>
                   <Select
-                    value={newBudget.client}
+                    value={newBudget.clientId}
                     label="Cliente"
-                    onChange={(e) => handleNewBudgetChange('client', e.target.value)}
+                    onChange={(e) => handleNewBudgetChange('clientId', e.target.value)}
                   >
                     {clients.map((client) => (
-                      <MenuItem key={client} value={client}>
-                        {client}
+                      <MenuItem key={client.value} value={client.value}>
+                        {client.label}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
 
-              {/* Representante */}
               <Grid item xs={12} md={4}>
                 <FormControl fullWidth>
                   <InputLabel>Representante</InputLabel>
                   <Select
-                    value={newBudget.responsible}
+                    value={newBudget.responsibleId}
                     label="Representante"
-                    onChange={(e) => handleNewBudgetChange('responsible', e.target.value)}
+                    onChange={(e) => handleNewBudgetChange('responsibleId', e.target.value)}
                   >
-                    {activeRepresentatives.map((rep) => (
-                      <MenuItem key={rep.value} value={rep.value}>
-                        {rep.label}
+                    {activeRepresentatives.map((representative) => (
+                      <MenuItem key={representative.value} value={representative.value}>
+                        {representative.label}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
 
-              {/* Data de Validade */}
               <Grid item xs={12} md={4}>
                 <TextField
                   type="date"
@@ -491,7 +546,6 @@ export default function BudgetsPage() {
                 />
               </Grid>
 
-              {/* Itens do Orçamento */}
               <Grid item xs={12}>
                 <Box
                   sx={{
@@ -533,7 +587,7 @@ export default function BudgetsPage() {
                       </TableHead>
                       <TableBody>
                         {newBudget.items.map((item, index) => (
-                          <TableRow key={index}>
+                          <TableRow key={`${item.productId}-${index}`}>
                             <TableCell>
                               <FormControl fullWidth size="small">
                                 <Select
@@ -547,8 +601,8 @@ export default function BudgetsPage() {
                                     Selecione um produto
                                   </MenuItem>
                                   {productsData.products.map((product) => (
-                                    <MenuItem key={product.id} value={product.id.toString()}>
-                                      {product.nomeProduto} - R$ {product.preco.toFixed(2)}
+                                    <MenuItem key={product.id} value={String(product.id)}>
+                                      {product.codigoProduto} - {product.nomeProduto}
                                     </MenuItem>
                                   ))}
                                 </Select>
@@ -599,7 +653,6 @@ export default function BudgetsPage() {
                   </TableContainer>
                 )}
 
-                {/* Total do Orçamento */}
                 {newBudget.items.length > 0 && (
                   <Box
                     sx={{
@@ -619,8 +672,7 @@ export default function BudgetsPage() {
                       fontWeight={700}
                       sx={{ textShadow: '1px 1px 2px rgba(0,0,0,0.3)' }}
                     >
-                      Total: R${' '}
-                      {newBudget.items.reduce((sum, item) => sum + item.total, 0).toFixed(2)}
+                      Total: R$ {newBudget.items.reduce((sum, item) => sum + item.total, 0).toFixed(2)}
                     </Typography>
                     <Typography
                       variant="body2"

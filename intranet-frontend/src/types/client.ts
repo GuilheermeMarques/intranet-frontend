@@ -1,4 +1,5 @@
-export interface Client extends Record<string, unknown> {
+export interface Client {
+  id?: string;
   codigo: string;
   nome: string;
   cpf: string;
@@ -12,11 +13,13 @@ export interface Client extends Record<string, unknown> {
   email: string;
   telefone: string;
   instagram: string;
-  dataUltimaCompra: string;
+  dataUltimaCompra: string | null;
   quantidadeCompras: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export interface ClientFilters extends Record<string, unknown> {
+export interface ClientFilters {
   codigo: string;
   nome: string;
   cidade: string;
