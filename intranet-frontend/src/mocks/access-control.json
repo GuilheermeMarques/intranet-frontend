@@ -1,0 +1,79 @@
+{
+  "users": [
+    {
+      "id": "user-1",
+      "name": "Guilherme Almeida",
+      "email": "guilherme.almeida@empresa.com",
+      "jobTitle": "Administrador da Intranet",
+      "department": "Operações",
+      "status": "active",
+      "lastLogin": "Hoje às 15:42",
+      "avatar": "GA",
+      "permissions": [
+        "settings.permissions.manage",
+        "menu.dashboard",
+        "menu.catalog",
+        "menu.clients",
+        "menu.tickets",
+        "menu.tickets.list",
+        "menu.tickets.priorities",
+        "menu.tickets.tags",
+        "menu.budgets",
+        "menu.inventory",
+        "menu.sales",
+        "menu.sales.representatives",
+        "menu.sales.orders"
+      ]
+    },
+    {
+      "id": "user-2",
+      "name": "Marina Lopes",
+      "email": "marina.lopes@empresa.com",
+      "jobTitle": "Coordenadora Comercial",
+      "department": "Comercial",
+      "status": "active",
+      "lastLogin": "Hoje às 14:10",
+      "avatar": "ML",
+      "permissions": [
+        "menu.dashboard",
+        "menu.clients",
+        "menu.budgets",
+        "menu.sales",
+        "menu.sales.representatives",
+        "menu.sales.orders"
+      ]
+    },
+    {
+      "id": "user-3",
+      "name": "Rafael Nunes",
+      "email": "rafael.nunes@empresa.com",
+      "jobTitle": "Analista de Suporte",
+      "department": "Atendimento",
+      "status": "active",
+      "lastLogin": "Hoje às 11:26",
+      "avatar": "RN",
+      "permissions": [
+        "menu.dashboard",
+        "menu.tickets",
+        "menu.tickets.list",
+        "menu.tickets.tags",
+        "menu.clients"
+      ]
+    },
+    {
+      "id": "user-4",
+      "name": "Patricia Gomes",
+      "email": "patricia.gomes@empresa.com",
+      "jobTitle": "Assistente Financeira",
+      "department": "Financeiro",
+      "status": "inactive",
+      "lastLogin": "Ontem às 18:03",
+      "avatar": "PG",
+      "permissions": [
+        "menu.dashboard",
+        "menu.budgets",
+        "menu.inventory"
+      ]
+    }
+  ]
+}

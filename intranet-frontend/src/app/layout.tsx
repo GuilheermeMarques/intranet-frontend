@@ -1,4 +1,5 @@
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { AccessControlProvider } from '@/contexts/AccessControlContext';
 import { QueryProvider } from '@/presentation/components/QueryProvider';
 import { SessionProvider } from '@/presentation/components/SessionProvider';
 import type { Metadata } from 'next';
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SessionProvider>
           <QueryProvider>
-            <ThemeProvider>{children}</ThemeProvider>
+            <AccessControlProvider>
+              <ThemeProvider>{children}</ThemeProvider>
+            </AccessControlProvider>
           </QueryProvider>
         </SessionProvider>
       </body>

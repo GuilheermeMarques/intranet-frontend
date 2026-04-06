@@ -24,6 +24,7 @@ Rotas ativas do frontend:
 - `/tickets/priorities`
 - `/tickets/tags`
 - `/settings`
+- `/settings/permissions`
 
 Arquivos-chave usados como base:
 
@@ -60,11 +61,9 @@ Para a integracao funcionar com o frontend atual, o backend deve priorizar os co
 
 Essas divergencias precisam ser consideradas no backend ou corrigidas depois no frontend:
 
-- `src/types/ticket.ts` usa `priority` como ID de prioridade (`priority-4`), mas o filtro da pagina `/tickets` ainda usa valores semanticos (`low`, `medium`, `high`, `critical`). Na integracao, o frontend deve mapear isso, ou o backend precisa aceitar alias temporarios.
-- `src/domain/entities/Ticket.ts` usa nomes em portugues (`titulo`, `descricao`, `prioridade`), mas a tela ativa usa os nomes em ingles do mock.
-- `src/domain/entities/Product.ts` e `src/types/product.ts` sao diferentes.
-- `src/domain/entities/Order.ts` usa `clientId`, mas a UI ativa trabalha com `clientCode` e `clientName`.
-- a pagina `/login` ainda nao esta ligada ao hook `useAuth`, mas o projeto ja tem NextAuth configurado.
+- ainda existem contratos paralelos entre `src/types/*` e `src/domain/entities/*`; para integracao, o backend deve seguir `src/types/*`
+- o frontend agora trabalha com permissao por chave em `permissions[]`, e nao mais com `role` como criterio primario de exibicao de menu
+- a pagina `/settings/permissions` ainda esta mockada com `localStorage`; o backend real precisa assumir persistencia e autorizacao
 
 ## 3. Convencoes globais da API
 
@@ -181,14 +180,16 @@ Backend deve suportar:
 | `/tickets/priorities`    | CRUD de prioridades                              | CRUD de prioridades                                              |
 | `/tickets/tags`          | CRUD de tags                                     | CRUD de tags                                                     |
 | `/settings`              | dados da conta e preferencias                    | perfil do usuario e preferencias salvas                          |
+| `/settings/permissions`  | editar permissoes por usuario                    | usuarios + permissoes + regra administrativa                     |
 
 ## 5. Autenticacao, usuario e preferencias
 
 ## 5.1 Necessidades da UI
 
 - login com email e senha
-- sessao com `id`, `name`, `email`, `role`
+- sessao com `id`, `name`, `email`, `permissions[]`
 - pagina de configuracoes com dados do usuario
+- tela administrativa `/settings/permissions` para editar acessos por usuario
 - preferencias opcionais:
   - tema
   - idioma
@@ -208,8 +209,13 @@ Backend deve suportar:
 | GET    | `/auth/me`        | usuario logado                                         |
 | GET    | `/me/profile`     | perfil do usuario atual                                |
 | PATCH  | `/me/profile`     | editar perfil                                          |
+| GET    | `/me/permissions` | permissoes do usuario logado                           |
 | GET    | `/me/preferences` | carregar preferencias                                  |
 | PATCH  | `/me/preferences` | salvar preferencias                                    |
+| GET    | `/users`          | listagem de usuarios para a tela de permissoes         |
+| GET    | `/users/:id`      | detalhe do usuario para gestao                         |
+| GET    | `/users/:id/permissions` | permissoes consolidadas do usuario               |
+| PUT    | `/users/:id/permissions` | substituir permissoes do usuario                 |
 | GET    | `/users/lookup`   | selects de usuarios para tickets, responsaveis e afins |
 
 ## 5.3 Contrato minimo
@@ -233,7 +239,11 @@ Response:
     "id": "uuid",
     "name": "Administrador",
     "email": "admin@empresa.com",
-    "role": "admin"
+    "permissions": [
+      "settings.permissions.manage",
+      "menu.dashboard",
+      "menu.clients"
+    ]
   },
   "accessToken": "jwt",
   "refreshToken": "jwt",
@@ -249,9 +259,67 @@ Response:
     "id": "uuid",
     "name": "Administrador",
     "email": "admin@empresa.com",
-    "role": "admin",
+    "permissions": [
+      "settings.permissions.manage",
+      "menu.dashboard",
+      "menu.clients"
+    ],
     "lastLoginAt": "2026-04-05T17:00:00Z"
   }
+}
+```
+
+### GET `/me/permissions`
+
+```json
+{
+  "permissions": [
+    "settings.permissions.manage",
+    "menu.dashboard",
+    "menu.catalog",
+    "menu.clients",
+    "menu.tickets",
+    "menu.tickets.list",
+    "menu.tickets.priorities",
+    "menu.tickets.tags",
+    "menu.budgets",
+    "menu.inventory",
+    "menu.sales",
+    "menu.sales.representatives",
+    "menu.sales.orders"
+  ]
+}
+```
+
+### PUT `/users/:id/permissions`
+
+Request:
+
+```json
+{
+  "permissions": [
+    "settings.permissions.manage",
+    "menu.dashboard",
+    "menu.clients",
+    "menu.sales",
+    "menu.sales.orders"
+  ]
+}
+```
+
+Response:
+
+```json
+{
+  "userId": "uuid",
+  "permissions": [
+    "settings.permissions.manage",
+    "menu.dashboard",
+    "menu.clients",
+    "menu.sales",
+    "menu.sales.orders"
+  ],
+  "updatedAt": "2026-04-05T18:30:00Z"
 }
 ```
 
@@ -284,7 +352,7 @@ Response:
 | name          | varchar(150)         |                                                       |
 | email         | varchar(255) unique  |                                                       |
 | password_hash | varchar(255)         |                                                       |
-| role          | varchar(50)          | `admin`, `user`, `support`, `sales`, `representative` |
+| role          | varchar(50) nullable | legado/opcional; frontend atual nao depende de role   |
 | is_active     | boolean              |                                                       |
 | avatar_url    | text nullable        |                                                       |
 | last_login_at | timestamptz nullable |                                                       |
@@ -319,6 +387,33 @@ Response:
 | color_secondary  | varchar(20) nullable      |
 | created_at       | timestamptz               |
 | updated_at       | timestamptz               |
+
+### `permissions`
+
+| Coluna      | Tipo                 | Observacao                                  |
+| ----------- | -------------------- | ------------------------------------------- |
+| id          | uuid pk              |                                             |
+| key         | varchar(150) unique  | ex.: `menu.sales.orders`                    |
+| name        | varchar(150)         | nome amigavel                               |
+| description | text nullable        |                                             |
+| category    | varchar(50)          | `menu`, `administrative`, `feature`         |
+| created_at  | timestamptz          |                                             |
+| updated_at  | timestamptz          |                                             |
+
+### `user_permissions`
+
+| Coluna        | Tipo                    | Observacao                     |
+| ------------- | ----------------------- | ------------------------------ |
+| id            | uuid pk                 |                                |
+| user_id       | uuid fk `users.id`      |                                |
+| permission_id | uuid fk `permissions.id`|                                |
+| created_at    | timestamptz             |                                |
+
+Restricoes recomendadas:
+
+- unique `(user_id, permission_id)`
+- chave `settings.permissions.manage` obrigatoria para editar permissoes de outros usuarios
+- bloquear remocao da ultima permissao administrativa critica sem validacao extra
 
 ## 6. Dashboard
 
@@ -1678,12 +1773,16 @@ Fluxos:
 Pagina:
 
 - `/settings`
+- `/settings/permissions`
 
 A tela atual precisa de:
 
 - nome do usuario
 - email do usuario
 - ultimo login
+- lista de usuarios para administracao de permissoes
+- permissoes administrativas e permissoes de menu/submenu
+- bloqueio da tela quando o usuario nao possuir `settings.permissions.manage`
 
 Persistencia de tema e preferencias e desejavel, mas nao bloqueia a UI atual porque hoje isso esta em storage local.
 
@@ -1693,16 +1792,23 @@ Persistencia de tema e preferencias e desejavel, mas nao bloqueia a UI atual por
 | ------ | ----------------- |
 | GET    | `/me/profile`     |
 | PATCH  | `/me/profile`     |
+| GET    | `/me/permissions` |
 | GET    | `/me/preferences` |
 | PATCH  | `/me/preferences` |
+| GET    | `/users`          |
+| GET    | `/users/:id/permissions` |
+| PUT    | `/users/:id/permissions` |
 
 ## 17.3 Response minimo
 
 ```json
 {
   "userInfo": {
+    "id": "uuid",
     "name": "Usuario Exemplo",
     "email": "usuario@exemplo.com",
+    "jobTitle": "Administrador da Intranet",
+    "department": "Operacoes",
     "lastLogin": "2026-04-05T14:30:00Z"
   }
 }
@@ -1712,6 +1818,30 @@ Observacao:
 
 - a UI atual mostra `lastLogin` como string pronta
 - idealmente o backend envia `lastLoginAt` ISO e a UI formata
+
+### GET `/users`
+
+```json
+{
+  "users": [
+    {
+      "id": "uuid",
+      "name": "Guilherme Almeida",
+      "email": "guilherme.almeida@empresa.com",
+      "jobTitle": "Administrador da Intranet",
+      "department": "Operacoes",
+      "status": "active",
+      "lastLogin": "2026-04-05T15:42:00Z",
+      "avatar": "GA",
+      "permissions": [
+        "settings.permissions.manage",
+        "menu.dashboard",
+        "menu.clients"
+      ]
+    }
+  ]
+}
+```
 
 ## 18. Lookups auxiliares
 
@@ -1773,10 +1903,10 @@ Se a entrega for fatiada, esta e a ordem mais segura:
 ## 21. Gaps que o backend deve conhecer antes da integracao
 
 - o frontend ainda tem mocks em praticamente todas as paginas
-- a tela de login ainda nao chama `useAuth`, apesar de o projeto ter NextAuth configurado
-- ha contratos duplicados entre `src/types` e `src/domain`
-- a pagina de tickets mistura IDs de prioridade/tag com filtros semanticos antigos
-- a pagina de orcamentos ainda trabalha com `client` e `responsible` por nome, nao por ID
+- a tela de login ja chama `useAuth`, mas ainda precisa trocar o mock pelo backend real
+- ha contratos duplicados entre `src/types` e `src/domain` em alguns modulos legados
+- a pagina `/settings/permissions` hoje persiste em `localStorage`; o backend passara a ser a fonte de verdade
+- o frontend agora depende de `permissions[]` por usuario e de uma permissao administrativa especifica: `settings.permissions.manage`
 - a pagina de novo pedido ainda nao envia o payload real; so monta o estado local
 - a pagina de representantes ainda nao implementa criacao/edicao
 
@@ -1785,6 +1915,8 @@ Se a entrega for fatiada, esta e a ordem mais segura:
 Para este monolito funcionar bem, a modelagem mais pragmatica e:
 
 - `users`
+- `permissions`
+- `user_permissions`
 - `user_preferences`
 - `clients`
 - `products`

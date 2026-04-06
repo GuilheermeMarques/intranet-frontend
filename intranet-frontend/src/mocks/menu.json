@@ -4,43 +4,50 @@
       "id": "dashboard",
       "label": "Dashboard",
       "icon": "Dashboard",
-      "href": "/home"
+      "href": "/home",
+      "permissionKey": "menu.dashboard"
     },
     {
       "id": "catalog",
       "label": "Catálogo",
       "icon": "Inventory",
-      "href": "/catalog"
+      "href": "/catalog",
+      "permissionKey": "menu.catalog"
     },
     {
       "id": "clients",
       "label": "Clientes",
       "icon": "People",
-      "href": "/clients"
+      "href": "/clients",
+      "permissionKey": "menu.clients"
     },
     {
       "id": "tickets",
       "label": "Chamados",
       "icon": "Support",
       "href": "#",
+      "permissionKey": "menu.tickets",
       "children": [
         {
           "id": "tickets-list",
           "label": "Lista de Chamados",
           "icon": "Support",
-          "href": "/tickets"
+          "href": "/tickets",
+          "permissionKey": "menu.tickets.list"
         },
         {
           "id": "priorities",
           "label": "Prioridades",
           "icon": "PriorityHigh",
-          "href": "/tickets/priorities"
+          "href": "/tickets/priorities",
+          "permissionKey": "menu.tickets.priorities"
         },
         {
           "id": "tags",
           "label": "Tags",
           "icon": "Label",
-          "href": "/tickets/tags"
+          "href": "/tickets/tags",
+          "permissionKey": "menu.tickets.tags"
         }
       ]
     },
@@ -48,31 +55,36 @@
       "id": "budgets",
       "label": "Orçamentos",
       "icon": "AttachMoney",
-      "href": "/budgets"
+      "href": "/budgets",
+      "permissionKey": "menu.budgets"
     },
     {
       "id": "inventory",
       "label": "Estoque",
       "icon": "Inventory",
-      "href": "/inventory"
+      "href": "/inventory",
+      "permissionKey": "menu.inventory"
     },
     {
       "id": "sales",
       "label": "Vendas",
       "icon": "ShoppingCart",
       "href": "#",
+      "permissionKey": "menu.sales",
       "children": [
         {
           "id": "representatives",
           "label": "Representantes",
           "icon": "People",
-          "href": "/sales/representatives"
+          "href": "/sales/representatives",
+          "permissionKey": "menu.sales.representatives"
         },
         {
           "id": "orders",
           "label": "Pedidos",
           "icon": "ShoppingCart",
-          "href": "/sales/orders"
+          "href": "/sales/orders",
+          "permissionKey": "menu.sales.orders"
         }
       ]
     }

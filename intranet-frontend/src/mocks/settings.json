@@ -19,6 +19,12 @@
       "icon": "Security"
     },
     {
+      "id": "access-control",
+      "title": "Controle de Acesso",
+      "description": "Libere menus e submenus por usuário",
+      "icon": "Security"
+    },
+    {
       "id": "language",
       "title": "Idioma",
       "description": "Altere o idioma da interface",

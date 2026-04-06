@@ -3,6 +3,7 @@
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { ConfirmModal } from '@/components/Modal';
 import { ThemeCustomizer } from '@/components/ThemeCustomizer';
+import { useAccessControl } from '@/contexts/AccessControlContext';
 import settingsData from '@/mocks/settings.json';
 import { Help, Language, Notifications, Palette, Security, Storage } from '@mui/icons-material';
 import {
@@ -17,6 +18,7 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 interface SettingsSection {
@@ -44,6 +46,8 @@ const settingsSections: SettingsSection[] = settingsData.settingsSections.map((s
 }));
 
 export default function SettingsPage() {
+  const router = useRouter();
+  const { canManagePermissions, currentUser } = useAccessControl();
   const [themeCustomizerOpen, setThemeCustomizerOpen] = useState(false);
   const [confirmEditProfileOpen, setConfirmEditProfileOpen] = useState(false);
 
@@ -51,6 +55,11 @@ export default function SettingsPage() {
     switch (sectionId) {
       case 'theme':
         setThemeCustomizerOpen(true);
+        break;
+      case 'access-control':
+        if (canManagePermissions) {
+          router.push('/settings/permissions');
+        }
         break;
       default:
         console.log('Seção clicada:', sectionId);
@@ -85,25 +94,38 @@ export default function SettingsPage() {
                 Configurações Gerais
               </Typography>
               <List>
-                {settingsSections.map((section, index) => (
-                  <React.Fragment key={section.id}>
-                    <ListItem
-                      onClick={() => handleSectionClick(section.id)}
-                      sx={{
-                        borderRadius: 1,
-                        mb: 1,
-                        cursor: 'pointer',
-                        '&:hover': {
-                          bgcolor: 'action.hover',
-                        },
-                      }}
-                    >
-                      <ListItemIcon sx={{ color: 'primary.main' }}>{section.icon}</ListItemIcon>
-                      <ListItemText primary={section.title} secondary={section.description} />
-                    </ListItem>
-                    {index < settingsSections.length - 1 && <Divider />}
-                  </React.Fragment>
-                ))}
+                {settingsSections.map((section, index) => {
+                  const isRestrictedSection =
+                    section.id === 'access-control' && !canManagePermissions;
+
+                  return (
+                    <React.Fragment key={section.id}>
+                      <ListItem
+                        onClick={() => !isRestrictedSection && handleSectionClick(section.id)}
+                        sx={{
+                          borderRadius: 1,
+                          mb: 1,
+                          cursor: isRestrictedSection ? 'not-allowed' : 'pointer',
+                          opacity: isRestrictedSection ? 0.55 : 1,
+                          '&:hover': {
+                            bgcolor: isRestrictedSection ? 'transparent' : 'action.hover',
+                          },
+                        }}
+                      >
+                        <ListItemIcon sx={{ color: 'primary.main' }}>{section.icon}</ListItemIcon>
+                        <ListItemText
+                          primary={section.title}
+                          secondary={
+                            isRestrictedSection
+                              ? `${section.description} • Requer permissão administrativa`
+                              : section.description
+                          }
+                        />
+                      </ListItem>
+                      {index < settingsSections.length - 1 && <Divider />}
+                    </React.Fragment>
+                  );
+                })}
               </List>
             </CardContent>
           </Card>
@@ -118,7 +140,7 @@ export default function SettingsPage() {
                   Nome
                 </Typography>
                 <Typography variant="body1" fontWeight={500}>
-                  {settingsData.userInfo.name}
+                  {currentUser?.name ?? settingsData.userInfo.name}
                 </Typography>
               </Box>
               <Box sx={{ mb: 3 }}>
@@ -126,7 +148,7 @@ export default function SettingsPage() {
                   Email
                 </Typography>
                 <Typography variant="body1" fontWeight={500}>
-                  {settingsData.userInfo.email}
+                  {currentUser?.email ?? settingsData.userInfo.email}
                 </Typography>
               </Box>
               <Box sx={{ mb: 3 }}>
@@ -134,9 +156,19 @@ export default function SettingsPage() {
                   Último Login
                 </Typography>
                 <Typography variant="body1" fontWeight={500}>
-                  {settingsData.userInfo.lastLogin}
+                  {currentUser?.lastLogin ?? settingsData.userInfo.lastLogin}
                 </Typography>
               </Box>
+              {canManagePermissions && (
+                <Button
+                  variant="contained"
+                  fullWidth
+                  sx={{ mb: 1.5 }}
+                  onClick={() => router.push('/settings/permissions')}
+                >
+                  Gerenciar Permissões
+                </Button>
+              )}
               <Button variant="outlined" fullWidth onClick={handleEditProfile}>
                 Editar Perfil
               </Button>

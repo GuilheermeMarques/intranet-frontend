@@ -1,7 +1,8 @@
 'use client';
 
+import { useAccessControl } from '@/contexts/AccessControlContext';
 import { useTheme as useAppTheme } from '@/contexts/ThemeContext';
-import menuData from '@/mocks/menu.json';
+import type { MenuPermissionItem } from '@/types/accessControl';
 import {
   AccountCircle,
   AttachMoney,
@@ -37,7 +38,7 @@ import {
   useTheme as useMuiTheme,
 } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 interface SidebarProps {
   open: boolean;
@@ -52,6 +53,7 @@ interface MenuItem {
   label: string;
   icon: React.ReactNode;
   href: string;
+  permissionKey: string;
   children?: MenuItem[];
 }
 
@@ -67,15 +69,15 @@ const iconMap: Record<string, React.ReactNode> = {
   Label: <Label />,
 };
 
-// Usar dados do mock
-const menuItems: MenuItem[] = menuData.menuItems.map((item) => ({
-  ...item,
-  icon: iconMap[item.icon as keyof typeof iconMap] || <Dashboard />,
-  children: item.children?.map((child) => ({
-    ...child,
-    icon: iconMap[child.icon as keyof typeof iconMap] || <Dashboard />,
-  })),
-}));
+const mapMenuItemsWithIcons = (items: MenuPermissionItem[]): MenuItem[] =>
+  items.map((item) => ({
+    ...item,
+    icon: iconMap[item.icon as keyof typeof iconMap] || <Dashboard />,
+    children: item.children?.map((child) => ({
+      ...child,
+      icon: iconMap[child.icon as keyof typeof iconMap] || <Dashboard />,
+    })),
+  }));
 
 export function Sidebar({
   open,
@@ -88,9 +90,11 @@ export function Sidebar({
   const router = useRouter();
   const pathname = usePathname();
   const { mode, toggleTheme } = useAppTheme();
+  const { currentUser, visibleMenuItems } = useAccessControl();
   const [hoverExpanded, setHoverExpanded] = useState(false);
   const [openSubmenus, setOpenSubmenus] = useState<string[]>([]);
   const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
+  const menuItems = useMemo(() => mapMenuItemsWithIcons(visibleMenuItems), [visibleMenuItems]);
 
   const isExpanded = expanded || hoverExpanded;
   const drawerWidth = isExpanded ? 280 : 80;
@@ -308,7 +312,15 @@ export function Sidebar({
 
       {/* Itens de navegação */}
       <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
-        <List>{menuItems.map((item) => renderMenuItem(item))}</List>
+        {menuItems.length > 0 ? (
+          <List>{menuItems.map((item) => renderMenuItem(item))}</List>
+        ) : (
+          <Box sx={{ px: 2.5, py: 3 }}>
+            <Typography variant="body2" color="text.secondary">
+              Nenhum menu liberado para o usuário selecionado.
+            </Typography>
+          </Box>
+        )}
       </Box>
 
       {/* Rodapé: usuário + copyright */}
@@ -338,13 +350,13 @@ export function Sidebar({
               }}
             >
               <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
-                <AccountCircle />
+                {currentUser?.avatar ?? <AccountCircle />}
               </Avatar>
             </ListItemIcon>
             {showExpandedUi && (
               <ListItemText
-                primary="Conta"
-                secondary="Perfil e sair"
+                primary={currentUser?.name ?? 'Conta'}
+                secondary={currentUser?.jobTitle ?? 'Perfil e sair'}
                 slotProps={{
                   primary: { fontSize: '0.875rem', fontWeight: 600 },
                   secondary: { fontSize: '0.75rem' },
