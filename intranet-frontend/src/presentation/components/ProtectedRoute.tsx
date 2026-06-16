@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@/presentation/hooks/useAuth';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 import { Box, Button, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
