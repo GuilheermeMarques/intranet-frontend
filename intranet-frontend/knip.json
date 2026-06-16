@@ -1,0 +1,14 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/app/**/{page,layout,route,not-found,error,loading}.tsx",
+    "src/app/**/route.ts",
+    "src/middleware.ts",
+    "jest.setup.js",
+    "cypress.config.ts",
+    "cypress/**/*.cy.ts"
+  ],
+  "project": ["src/**/*.{ts,tsx}"],
+  "ignore": ["src/**/*.d.ts"],
+  "ignoreDependencies": []
+}
