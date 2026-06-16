@@ -4,13 +4,14 @@ import { DashboardLayout } from '@/components/DashboardLayout';
 import { Column, DataTable } from '@/components/DataTable';
 import { FilterField, FilterPanel } from '@/components/FilterPanel';
 import { FormModal } from '@/components/Modal';
-import clientsData from '@/mocks/clients.json';
-import { Client, ClientFilters } from '@/types/client';
+import { useClientsQuery } from '@/features/clients/hooks/useClientsQuery';
+import { ClientFilters } from '@/features/clients/types';
 import { Add, LocationOn, Search, Visibility } from '@mui/icons-material';
 import {
   Box,
   Button,
   Chip,
+  CircularProgress,
   Divider,
   FormControl,
   Grid,
@@ -21,52 +22,56 @@ import {
   Typography,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 interface NewClientForm {
-  nome: string;
-  cpf: string;
-  cep: string;
-  endereco: string;
-  cidade: string;
-  estado: string;
-  bairro: string;
-  numero: string;
-  complemento: string;
+  name: string;
+  document: string;
+  zipCode: string;
+  street: string;
+  city: string;
+  state: string;
+  neighborhood: string;
+  number: string;
+  complement: string;
   email: string;
-  telefone: string;
+  phone: string;
   instagram: string;
 }
 
 export default function ClientsPage() {
   const router = useRouter();
   const [filters, setFilters] = useState<ClientFilters>({
-    codigo: '',
-    nome: '',
-    cidade: '',
-    dataInicial: null,
-    dataFinal: null,
+    code: '',
+    name: '',
+    city: '',
+    startDate: null,
+    endDate: null,
   });
+
+  const { data, isLoading } = useClientsQuery(filters);
+  const filteredClients = data?.clients ?? [];
+  const cities = data?.cities ?? [];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newClient, setNewClient] = useState<NewClientForm>({
-    nome: '',
-    cpf: '',
-    cep: '',
-    endereco: '',
-    cidade: '',
-    estado: '',
-    bairro: '',
-    numero: '',
-    complemento: '',
+    name: '',
+    document: '',
+    zipCode: '',
+    street: '',
+    city: '',
+    state: '',
+    neighborhood: '',
+    number: '',
+    complement: '',
     email: '',
-    telefone: '',
+    phone: '',
     instagram: '',
   });
 
   const columns: Column[] = [
     {
-      id: 'codigo',
+      id: 'code',
       label: 'Código',
       sortable: true,
       render: (value) => (
@@ -74,7 +79,7 @@ export default function ClientsPage() {
       ),
     },
     {
-      id: 'nome',
+      id: 'name',
       label: 'Nome',
       sortable: true,
       render: (value) => (
@@ -84,7 +89,7 @@ export default function ClientsPage() {
       ),
     },
     {
-      id: 'cidade',
+      id: 'city',
       label: 'Cidade',
       sortable: true,
       render: (value) => (
@@ -97,13 +102,13 @@ export default function ClientsPage() {
       ),
     },
     {
-      id: 'dataUltimaCompra',
+      id: 'lastPurchaseAt',
       label: 'Data Última Compra',
       sortable: true,
       render: (value) => formatDate(value as string),
     },
     {
-      id: 'quantidadeCompras',
+      id: 'purchaseCount',
       label: 'Quantidade de Compras',
       sortable: true,
       render: (value) => (
@@ -126,7 +131,7 @@ export default function ClientsPage() {
           variant="outlined"
           size="small"
           startIcon={<Visibility />}
-          onClick={() => router.push(`/clients/${row.codigo}`)}
+          onClick={() => router.push(`/clients/${row.code}`)}
         >
           Detalhes
         </Button>
@@ -134,60 +139,23 @@ export default function ClientsPage() {
     },
   ];
 
-  // Filtrar clientes baseado nos filtros aplicados
-  const filteredClients = useMemo(() => {
-    return (clientsData.clients as Client[]).filter((client) => {
-      const codigoMatch =
-        !filters.codigo ||
-        filters.codigo.trim() === '' ||
-        client.codigo.toLowerCase().includes(filters.codigo.toLowerCase());
-
-      const nomeMatch =
-        !filters.nome ||
-        filters.nome.trim() === '' ||
-        client.nome.toLowerCase().includes(filters.nome.toLowerCase());
-
-      const cidadeMatch =
-        !filters.cidade || filters.cidade.trim() === '' || client.cidade === filters.cidade;
-
-      // Filtro de data
-      let dataMatch = true;
-      if ((filters.dataInicial || filters.dataFinal) && client.dataUltimaCompra) {
-        const dataUltimaCompra = new Date(client.dataUltimaCompra);
-
-        if (filters.dataInicial && filters.dataFinal) {
-          dataMatch =
-            dataUltimaCompra >= filters.dataInicial && dataUltimaCompra <= filters.dataFinal;
-        } else if (filters.dataInicial) {
-          dataMatch = dataUltimaCompra >= filters.dataInicial;
-        } else if (filters.dataFinal) {
-          dataMatch = dataUltimaCompra <= filters.dataFinal;
-        }
-      } else if ((filters.dataInicial || filters.dataFinal) && !client.dataUltimaCompra) {
-        dataMatch = false;
-      }
-
-      return codigoMatch && nomeMatch && cidadeMatch && dataMatch;
-    });
-  }, [filters]);
-
   const handleFilterChange = (newFilters: Record<string, unknown>) => {
     setFilters({
-      codigo: (newFilters.codigo as string) || '',
-      nome: (newFilters.nome as string) || '',
-      cidade: (newFilters.cidade as string) || '',
-      dataInicial: (newFilters.dataInicial as Date) || null,
-      dataFinal: (newFilters.dataFinal as Date) || null,
+      code: (newFilters.code as string) || '',
+      name: (newFilters.name as string) || '',
+      city: (newFilters.city as string) || '',
+      startDate: (newFilters.startDate as Date) || null,
+      endDate: (newFilters.endDate as Date) || null,
     });
   };
 
   const clearFilters = () => {
     setFilters({
-      codigo: '',
-      nome: '',
-      cidade: '',
-      dataInicial: null,
-      dataFinal: null,
+      code: '',
+      name: '',
+      city: '',
+      startDate: null,
+      endDate: null,
     });
   };
 
@@ -202,17 +170,17 @@ export default function ClientsPage() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setNewClient({
-      nome: '',
-      cpf: '',
-      cep: '',
-      endereco: '',
-      cidade: '',
-      estado: '',
-      bairro: '',
-      numero: '',
-      complemento: '',
+      name: '',
+      document: '',
+      zipCode: '',
+      street: '',
+      city: '',
+      state: '',
+      neighborhood: '',
+      number: '',
+      complement: '',
       email: '',
-      telefone: '',
+      phone: '',
       instagram: '',
     });
   };
@@ -265,35 +233,35 @@ export default function ClientsPage() {
   // Configuração dos campos de filtro
   const filterFields: FilterField[] = [
     {
-      id: 'codigo',
+      id: 'code',
       type: 'text',
       label: 'Código do Cliente',
       placeholder: 'Digite o código do cliente',
       startAdornment: <Search />,
     },
     {
-      id: 'nome',
+      id: 'name',
       type: 'text',
       label: 'Nome do Cliente',
       placeholder: 'Digite o nome do cliente',
       startAdornment: <Search />,
     },
     {
-      id: 'cidade',
+      id: 'city',
       type: 'select',
       label: 'Cidade',
-      options: (clientsData.cidades as string[]).map((cidade) => ({
-        value: cidade,
-        label: cidade,
+      options: cities.map((city) => ({
+        value: city,
+        label: city,
       })),
     },
     {
-      id: 'dataInicial',
+      id: 'startDate',
       type: 'date',
       label: 'Data Inicial',
     },
     {
-      id: 'dataFinal',
+      id: 'endDate',
       type: 'date',
       label: 'Data Final',
     },
@@ -334,13 +302,19 @@ export default function ClientsPage() {
         />
 
         {/* Tabela de Clientes */}
-        <DataTable
-          columns={columns}
-          data={filteredClients as unknown as Record<string, unknown>[]}
-          title="Lista de Clientes"
-          emptyMessage="Nenhum cliente encontrado com os filtros aplicados."
-          getRowKey={(row) => (row.codigo as string) || String(row)}
-        />
+        {isLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={filteredClients as unknown as Record<string, unknown>[]}
+            title="Lista de Clientes"
+            emptyMessage="Nenhum cliente encontrado com os filtros aplicados."
+            getRowKey={(row) => (row.code as string) || String(row)}
+          />
+        )}
 
         {/* Modal para Adicionar Cliente */}
         <FormModal
@@ -364,8 +338,8 @@ export default function ClientsPage() {
                 <TextField
                   fullWidth
                   label="Nome Completo"
-                  value={newClient.nome}
-                  onChange={(e) => handleInputChange('nome', e.target.value)}
+                  value={newClient.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
                   placeholder="Nome completo do cliente"
                   required
                 />
@@ -375,8 +349,8 @@ export default function ClientsPage() {
                 <TextField
                   fullWidth
                   label="CPF"
-                  value={newClient.cpf}
-                  onChange={(e) => handleInputChange('cpf', e.target.value)}
+                  value={newClient.document}
+                  onChange={(e) => handleInputChange('document', e.target.value)}
                   placeholder="000.000.000-00"
                   required
                 />
@@ -385,8 +359,8 @@ export default function ClientsPage() {
                 <TextField
                   fullWidth
                   label="CEP"
-                  value={newClient.cep}
-                  onChange={(e) => handleInputChange('cep', e.target.value)}
+                  value={newClient.zipCode}
+                  onChange={(e) => handleInputChange('zipCode', e.target.value)}
                   placeholder="00000-000"
                   required
                 />
@@ -395,8 +369,8 @@ export default function ClientsPage() {
                 <TextField
                   fullWidth
                   label="Endereço"
-                  value={newClient.endereco}
-                  onChange={(e) => handleInputChange('endereco', e.target.value)}
+                  value={newClient.street}
+                  onChange={(e) => handleInputChange('street', e.target.value)}
                   placeholder="Endereço do cliente"
                 />
               </Grid>
@@ -404,9 +378,9 @@ export default function ClientsPage() {
                 <FormControl fullWidth required>
                   <InputLabel>Estado</InputLabel>
                   <Select
-                    value={newClient.estado}
+                    value={newClient.state}
                     label="Estado"
-                    onChange={(e) => handleInputChange('estado', e.target.value)}
+                    onChange={(e) => handleInputChange('state', e.target.value)}
                   >
                     {estados.map((estado) => (
                       <MenuItem key={estado} value={estado}>
@@ -420,13 +394,13 @@ export default function ClientsPage() {
                 <FormControl fullWidth required>
                   <InputLabel>Cidade</InputLabel>
                   <Select
-                    value={newClient.cidade}
+                    value={newClient.city}
                     label="Cidade"
-                    onChange={(e) => handleInputChange('cidade', e.target.value)}
+                    onChange={(e) => handleInputChange('city', e.target.value)}
                   >
-                    {(clientsData.cidades as string[]).map((cidade) => (
-                      <MenuItem key={cidade} value={cidade}>
-                        {cidade}
+                    {cities.map((city) => (
+                      <MenuItem key={city} value={city}>
+                        {city}
                       </MenuItem>
                     ))}
                   </Select>
@@ -436,8 +410,8 @@ export default function ClientsPage() {
                 <TextField
                   fullWidth
                   label="Bairro"
-                  value={newClient.bairro}
-                  onChange={(e) => handleInputChange('bairro', e.target.value)}
+                  value={newClient.neighborhood}
+                  onChange={(e) => handleInputChange('neighborhood', e.target.value)}
                   placeholder="Nome do bairro"
                   required
                 />
@@ -446,8 +420,8 @@ export default function ClientsPage() {
                 <TextField
                   fullWidth
                   label="Complemento"
-                  value={newClient.complemento}
-                  onChange={(e) => handleInputChange('complemento', e.target.value)}
+                  value={newClient.complement}
+                  onChange={(e) => handleInputChange('complement', e.target.value)}
                   placeholder="Complemento"
                 />
               </Grid>
@@ -455,8 +429,8 @@ export default function ClientsPage() {
                 <TextField
                   fullWidth
                   label="Número"
-                  value={newClient.numero}
-                  onChange={(e) => handleInputChange('numero', e.target.value)}
+                  value={newClient.number}
+                  onChange={(e) => handleInputChange('number', e.target.value)}
                   placeholder="Número da residência"
                   required
                 />
@@ -485,8 +459,8 @@ export default function ClientsPage() {
                 <TextField
                   fullWidth
                   label="Telefone"
-                  value={newClient.telefone}
-                  onChange={(e) => handleInputChange('telefone', e.target.value)}
+                  value={newClient.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
                   placeholder="(00) 00000-0000"
                   required
                 />
