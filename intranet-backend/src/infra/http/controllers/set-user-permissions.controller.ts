@@ -1,4 +1,4 @@
-import { Body, Controller, NotFoundException, Param, Put, UsePipes } from '@nestjs/common'
+import { Body, Controller, NotFoundException, Param, Put } from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { RequirePermissions } from '@/infra/auth/require-permissions.decorator'
@@ -13,8 +13,10 @@ export class SetUserPermissionsController {
 
   @Put()
   @RequirePermissions('settings.permissions.manage')
-  @UsePipes(new ZodValidationPipe(bodySchema))
-  async handle(@Param('id') id: string, @Body() body: BodySchema) {
+  async handle(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(bodySchema)) body: BodySchema,
+  ) {
     const result = await this.setUserPermissions.execute({ userId: id, permissions: body.permissions })
     if (result.isLeft()) throw new NotFoundException(result.value.message)
     return { permissions: result.value.permissions }
