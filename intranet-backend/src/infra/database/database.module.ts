@@ -6,6 +6,8 @@ import { RefreshTokensRepository } from '@/domain/iam/application/repositories/r
 import { PrismaRefreshTokensRepository } from './prisma/repositories/prisma-refresh-tokens-repository'
 import { PermissionsRepository } from '@/domain/iam/application/repositories/permissions-repository'
 import { PrismaPermissionsRepository } from './prisma/repositories/prisma-permissions-repository'
+import { PreferencesRepository } from '@/domain/iam/application/repositories/preferences-repository'
+import { PrismaPreferencesRepository } from './prisma/repositories/prisma-preferences-repository'
 
 @Module({
   providers: [
@@ -13,7 +15,8 @@ import { PrismaPermissionsRepository } from './prisma/repositories/prisma-permis
     { provide: UsersRepository, useClass: PrismaUsersRepository },
     { provide: RefreshTokensRepository, useClass: PrismaRefreshTokensRepository },
     { provide: PermissionsRepository, useClass: PrismaPermissionsRepository },
+    { provide: PreferencesRepository, useClass: PrismaPreferencesRepository },
   ],
-  exports: [PrismaService, UsersRepository, RefreshTokensRepository, PermissionsRepository],
+  exports: [PrismaService, UsersRepository, RefreshTokensRepository, PermissionsRepository, PreferencesRepository],
 })
 export class DatabaseModule {}
