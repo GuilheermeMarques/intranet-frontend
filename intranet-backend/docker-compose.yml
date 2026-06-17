@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  postgres:
+    container_name: intranet-pg
+    image: postgres:16
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: intranet
+      PGDATA: /data/postgres
+    volumes:
+      - ./data/pg:/data/postgres
+  minio:
+    container_name: intranet-minio
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    volumes:
+      - ./data/minio:/data
