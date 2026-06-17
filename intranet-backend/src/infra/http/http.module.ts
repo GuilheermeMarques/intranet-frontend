@@ -20,6 +20,12 @@ import { CreateClientController } from './controllers/create-client.controller'
 import { GetClientByIdController } from './controllers/get-client-by-id.controller'
 import { EditClientController } from './controllers/edit-client.controller'
 import { DeleteClientController } from './controllers/delete-client.controller'
+import { FetchProductsController } from './controllers/fetch-products.controller'
+import { GetProductLookupsController } from './controllers/get-product-lookups.controller'
+import { CreateProductController } from './controllers/create-product.controller'
+import { GetProductByIdController } from './controllers/get-product-by-id.controller'
+import { EditProductController } from './controllers/edit-product.controller'
+import { DeleteProductController } from './controllers/delete-product.controller'
 import { AuthenticateUseCase } from '@/domain/iam/application/use-cases/authenticate'
 import { RefreshTokenUseCase } from '@/domain/iam/application/use-cases/refresh-token'
 import { LogoutUseCase } from '@/domain/iam/application/use-cases/logout'
@@ -37,6 +43,12 @@ import { CreateClientUseCase } from '@/domain/sales/application/use-cases/create
 import { GetClientByIdUseCase } from '@/domain/sales/application/use-cases/get-client-by-id'
 import { EditClientUseCase } from '@/domain/sales/application/use-cases/edit-client'
 import { DeleteClientUseCase } from '@/domain/sales/application/use-cases/delete-client'
+import { FetchProductsUseCase } from '@/domain/sales/application/use-cases/fetch-products'
+import { FetchProductLookupsUseCase } from '@/domain/sales/application/use-cases/fetch-product-lookups'
+import { CreateProductUseCase } from '@/domain/sales/application/use-cases/create-product'
+import { GetProductByIdUseCase } from '@/domain/sales/application/use-cases/get-product-by-id'
+import { EditProductUseCase } from '@/domain/sales/application/use-cases/edit-product'
+import { DeleteProductUseCase } from '@/domain/sales/application/use-cases/delete-product'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -58,6 +70,12 @@ import { DeleteClientUseCase } from '@/domain/sales/application/use-cases/delete
     GetClientByIdController,
     EditClientController,
     DeleteClientController,
+    FetchProductsController,
+    GetProductLookupsController,
+    CreateProductController,
+    GetProductByIdController,
+    EditProductController,
+    DeleteProductController,
   ],
   providers: [
     AuthenticateUseCase,
@@ -77,6 +95,12 @@ import { DeleteClientUseCase } from '@/domain/sales/application/use-cases/delete
     GetClientByIdUseCase,
     EditClientUseCase,
     DeleteClientUseCase,
+    FetchProductsUseCase,
+    FetchProductLookupsUseCase,
+    CreateProductUseCase,
+    GetProductByIdUseCase,
+    EditProductUseCase,
+    DeleteProductUseCase,
     { provide: APP_GUARD, useClass: PermissionsGuard },
   ],
 })
