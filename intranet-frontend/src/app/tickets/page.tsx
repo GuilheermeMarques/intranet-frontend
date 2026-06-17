@@ -3,10 +3,10 @@
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { FilterPanel } from '@/components/FilterPanel';
 import { FormModal, Modal } from '@/components/Modal';
-import prioritiesData from '@/mocks/priorities.json';
-import tagsData from '@/mocks/tags.json';
-import ticketsData from '@/mocks/tickets.json';
-import { Attachment, Message, Priority, Tag, Ticket } from '@/types/ticket';
+import { usePrioritiesQuery } from '@/features/tickets/hooks/usePrioritiesQuery';
+import { useTagsQuery } from '@/features/tickets/hooks/useTagsQuery';
+import { useTicketsQuery } from '@/features/tickets/hooks/useTicketsQuery';
+import { Attachment, Message, Priority, Tag, Ticket } from '@/features/tickets/types';
 import {
   closestCorners,
   DndContext,
@@ -61,18 +61,10 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
-
-// Dados das prioridades e tags
-const priorities: Priority[] = prioritiesData.priorities;
-const tags: Tag[] = tagsData.tags;
-
-// Usar dados do mock
-const mockTickets: Ticket[] = ticketsData.tickets as Ticket[];
-const statusConfig = ticketsData.statusConfig;
+import { useEffect, useState } from 'react';
 
 // Função para obter configuração de prioridade
-const getPriorityConfig = (priorityId: string) => {
+const getPriorityConfig = (priorityId: string, priorities: Priority[]) => {
   const priority = priorities.find((p) => p.id === priorityId);
   return priority
     ? {
@@ -88,12 +80,22 @@ const getPriorityConfig = (priorityId: string) => {
 };
 
 // Função para obter tag por ID
-const getTagById = (tagId: string) => {
+const getTagById = (tagId: string, tags: Tag[]) => {
   return tags.find((t) => t.id === tagId);
 };
 
 // Componente Sortable para os tickets
-const SortableTicketCard = ({ ticket, onClick }: { ticket: Ticket; onClick: () => void }) => {
+const SortableTicketCard = ({
+  ticket,
+  onClick,
+  priorities,
+  tags,
+}: {
+  ticket: Ticket;
+  onClick: () => void;
+  priorities: Priority[];
+  tags: Tag[];
+}) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: ticket.id,
   });
@@ -142,10 +144,10 @@ const SortableTicketCard = ({ ticket, onClick }: { ticket: Ticket; onClick: () =
             {ticket.title}
           </Typography>
           <Chip
-            label={getPriorityConfig(ticket.priority).label}
+            label={getPriorityConfig(ticket.priority, priorities).label}
             size="small"
             sx={{
-              backgroundColor: getPriorityConfig(ticket.priority).color,
+              backgroundColor: getPriorityConfig(ticket.priority, priorities).color,
               color: 'white',
               fontSize: '0.7rem',
             }}
@@ -182,7 +184,7 @@ const SortableTicketCard = ({ ticket, onClick }: { ticket: Ticket; onClick: () =
         {ticket.tags.length > 0 && (
           <Box sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
             {ticket.tags.slice(0, 2).map((tagId) => {
-              const tag = getTagById(tagId);
+              const tag = getTagById(tagId, tags);
               return tag ? (
                 <Chip
                   key={`${ticket.id}-tag-${tagId}`}
@@ -239,7 +241,17 @@ export default function TicketsPage() {
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(today.getMonth() - 1);
 
-  const [tickets, setTickets] = useState<Ticket[]>(mockTickets);
+  const { data: priorities = [] } = usePrioritiesQuery();
+  const { data: tags = [] } = useTagsQuery();
+  const { data: ticketsResult } = useTicketsQuery();
+
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+  useEffect(() => {
+    if (ticketsResult?.tickets) setTickets(ticketsResult.tickets);
+  }, [ticketsResult]);
+  const statusConfig =
+    ticketsResult?.statusConfig ?? ({} as NonNullable<typeof ticketsResult>['statusConfig']);
+
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNewTicketModalOpen, setIsNewTicketModalOpen] = useState(false);
@@ -688,6 +700,8 @@ export default function TicketsPage() {
                             key={ticket.id}
                             ticket={ticket}
                             onClick={() => handleTicketClick(ticket)}
+                            priorities={priorities}
+                            tags={tags}
                           />
                         ))}
                       </Box>
@@ -721,10 +735,10 @@ export default function TicketsPage() {
                       {activeTicket.title}
                     </Typography>
                     <Chip
-                      label={getPriorityConfig(activeTicket.priority).label}
+                      label={getPriorityConfig(activeTicket.priority, priorities).label}
                       size="small"
                       sx={{
-                        backgroundColor: getPriorityConfig(activeTicket.priority).color,
+                        backgroundColor: getPriorityConfig(activeTicket.priority, priorities).color,
                         color: 'white',
                         fontSize: '0.7rem',
                       }}
@@ -804,7 +818,7 @@ export default function TicketsPage() {
 
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 3 }}>
                     {selectedTicket.tags.map((tagId) => {
-                      const tag = getTagById(tagId);
+                      const tag = getTagById(tagId, tags);
                       return tag ? (
                         <Chip
                           key={`${selectedTicket.id}-tag-${tagId}`}
@@ -1072,9 +1086,10 @@ export default function TicketsPage() {
                         Prioridade
                       </Typography>
                       <Chip
-                        label={getPriorityConfig(selectedTicket.priority).label}
+                        label={getPriorityConfig(selectedTicket.priority, priorities).label}
                         sx={{
-                          backgroundColor: getPriorityConfig(selectedTicket.priority).color,
+                          backgroundColor: getPriorityConfig(selectedTicket.priority, priorities)
+                            .color,
                           color: 'white',
                         }}
                       />
@@ -1245,7 +1260,7 @@ export default function TicketsPage() {
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 1 }}>
                   {newTicketForm.tags.map((tagId) => {
-                    const tag = getTagById(tagId);
+                    const tag = getTagById(tagId, tags);
                     return tag ? (
                       <Chip
                         key={`new-ticket-tag-${tagId}`}
