@@ -3,7 +3,7 @@
 import { DashboardLayout } from '@/components/DashboardLayout';
 import inventoryData from '@/mocks/inventory.json';
 import productsData from '@/mocks/products.json';
-import { Product } from '@/types/product';
+import { Product } from '@/features/products/types';
 import { ArrowBack, Save } from '@mui/icons-material';
 import {
   Autocomplete,
@@ -55,8 +55,8 @@ export default function NewInventoryMovementPage() {
     if (newValue) {
       setFormData((prev) => ({
         ...prev,
-        codigoProduto: newValue.codigoProduto,
-        descricao: newValue.nomeProduto,
+        codigoProduto: newValue.code,
+        descricao: newValue.name,
       }));
     } else {
       setFormData((prev) => ({
@@ -117,7 +117,7 @@ export default function NewInventoryMovementPage() {
               <Autocomplete
                 fullWidth
                 options={productOptions}
-                getOptionLabel={(option) => `${option.codigoProduto} - ${option.nomeProduto}`}
+                getOptionLabel={(option) => `${option.code} - ${option.name}`}
                 value={selectedProduct}
                 onChange={handleProductChange}
                 renderInput={(params) => (
@@ -133,13 +133,13 @@ export default function NewInventoryMovementPage() {
                   if (params.inputValue !== '') {
                     return filtered.filter(
                       (option) =>
-                        option.codigoProduto
+                        option.code
                           .toLowerCase()
                           .includes(params.inputValue.toLowerCase()) ||
-                        option.nomeProduto
+                        option.name
                           .toLowerCase()
                           .includes(params.inputValue.toLowerCase()) ||
-                        option.descricaoProduto
+                        option.description
                           .toLowerCase()
                           .includes(params.inputValue.toLowerCase()),
                     );
@@ -152,10 +152,10 @@ export default function NewInventoryMovementPage() {
                     <Box component="li" key={key} {...otherProps}>
                       <Box>
                         <Typography variant="body2" fontWeight={500}>
-                          {option.codigoProduto} - {option.nomeProduto}
+                          {option.code} - {option.name}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          {option.descricaoProduto}
+                          {option.description}
                         </Typography>
                       </Box>
                     </Box>
@@ -275,7 +275,7 @@ export default function NewInventoryMovementPage() {
                     Estoque Atual:
                   </Typography>
                   <Typography variant="body1" fontWeight={500}>
-                    {selectedProduct.quantidadeEstoque} unidades
+                    {selectedProduct.stockQuantity} unidades
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={4}>
@@ -283,7 +283,7 @@ export default function NewInventoryMovementPage() {
                     Preço Unitário:
                   </Typography>
                   <Typography variant="body1" fontWeight={500}>
-                    R$ {selectedProduct.preco.toFixed(2)}
+                    R$ {selectedProduct.price.toFixed(2)}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={4}>
@@ -291,7 +291,7 @@ export default function NewInventoryMovementPage() {
                     Fornecedor:
                   </Typography>
                   <Typography variant="body1" fontWeight={500}>
-                    {selectedProduct.fornecedor}
+                    {selectedProduct.supplier}
                   </Typography>
                 </Grid>
               </Grid>

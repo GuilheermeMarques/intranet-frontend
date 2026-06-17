@@ -108,16 +108,16 @@ export default function BudgetsPage() {
         items: budget.items.map((item) => {
           const matchedProduct = productsData.products.find(
             (product) =>
-              product.nomeProduto === item.product ||
-              product.nomeProduto.includes(item.product) ||
-              item.product.includes(product.nomeProduto),
+              product.name === item.product ||
+              product.name.includes(item.product) ||
+              item.product.includes(product.name),
           );
 
           return {
             id: item.id,
             productId: String(matchedProduct?.id ?? `product-${slugify(item.product)}`),
-            productCode: matchedProduct?.codigoProduto,
-            productName: matchedProduct?.nomeProduto ?? item.product,
+            productCode: matchedProduct?.code,
+            productName: matchedProduct?.name ?? item.product,
             quantity: item.quantity,
             unitPrice: item.unitPrice,
             total: item.total,
@@ -204,9 +204,9 @@ export default function BudgetsPage() {
         const selectedProduct = productsData.products.find((product) => String(product.id) === value);
 
         if (selectedProduct) {
-          updatedItem.productCode = selectedProduct.codigoProduto;
-          updatedItem.productName = selectedProduct.nomeProduto;
-          updatedItem.unitPrice = selectedProduct.preco;
+          updatedItem.productCode = selectedProduct.code;
+          updatedItem.productName = selectedProduct.name;
+          updatedItem.unitPrice = selectedProduct.price;
         }
       }
 
@@ -602,7 +602,7 @@ export default function BudgetsPage() {
                                   </MenuItem>
                                   {productsData.products.map((product) => (
                                     <MenuItem key={product.id} value={String(product.id)}>
-                                      {product.codigoProduto} - {product.nomeProduto}
+                                      {product.code} - {product.name}
                                     </MenuItem>
                                   ))}
                                 </Select>
