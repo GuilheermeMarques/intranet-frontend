@@ -1,4 +1,5 @@
 import { InMemoryUsersRepository } from 'test/repositories/in-memory-users-repository'
+import { InMemoryRefreshTokensRepository } from 'test/repositories/in-memory-refresh-tokens-repository'
 import { FakeHasher } from 'test/cryptography/fake-hasher'
 import { FakeEncrypter } from 'test/cryptography/fake-encrypter'
 import { makeUser } from 'test/factories/make-user'
@@ -6,6 +7,7 @@ import { AuthenticateUseCase } from './authenticate'
 import { WrongCredentialsError } from './errors/wrong-credentials-error'
 
 let inMemoryUsersRepository: InMemoryUsersRepository
+let inMemoryRefreshTokensRepository: InMemoryRefreshTokensRepository
 let fakeHasher: FakeHasher
 let encrypter: FakeEncrypter
 let sut: AuthenticateUseCase
@@ -13,12 +15,18 @@ let sut: AuthenticateUseCase
 describe('Authenticate', () => {
   beforeEach(() => {
     inMemoryUsersRepository = new InMemoryUsersRepository()
+    inMemoryRefreshTokensRepository = new InMemoryRefreshTokensRepository()
     fakeHasher = new FakeHasher()
     encrypter = new FakeEncrypter()
-    sut = new AuthenticateUseCase(inMemoryUsersRepository, fakeHasher, encrypter)
+    sut = new AuthenticateUseCase(
+      inMemoryUsersRepository,
+      fakeHasher,
+      encrypter,
+      inMemoryRefreshTokensRepository,
+    )
   })
 
-  it('should authenticate a user with valid credentials', async () => {
+  it('should authenticate and issue access + refresh tokens', async () => {
     const user = makeUser({
       email: 'admin@empresa.com',
       passwordHash: await fakeHasher.hash('admin123'),
@@ -29,8 +37,12 @@ describe('Authenticate', () => {
 
     expect(result.isRight()).toBe(true)
     if (result.isRight()) {
-      expect(result.value).toEqual({ accessToken: expect.any(String) })
+      expect(result.value).toEqual({
+        accessToken: expect.any(String),
+        refreshToken: expect.any(String),
+      })
     }
+    expect(inMemoryRefreshTokensRepository.items).toHaveLength(1)
   })
 
   it('should not authenticate with a wrong password', async () => {
