@@ -3,8 +3,8 @@
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { DataTable } from '@/components/DataTable';
 import { ConfirmModal, FormModal } from '@/components/Modal';
-import prioritiesData from '@/mocks/priorities.json';
-import { Priority } from '@/types/ticket';
+import { usePrioritiesQuery } from '@/features/tickets/hooks/usePrioritiesQuery';
+import { Priority } from '@/features/tickets/types';
 import {
   Add as AddIcon,
   Delete as DeleteIcon,
@@ -26,10 +26,14 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function PrioritiesPage() {
-  const [priorities, setPriorities] = useState<Priority[]>(prioritiesData.priorities);
+  const { data: prioritiesData } = usePrioritiesQuery();
+  const [priorities, setPriorities] = useState<Priority[]>([]);
+  useEffect(() => {
+    if (prioritiesData) setPriorities(prioritiesData);
+  }, [prioritiesData]);
   const [openModal, setOpenModal] = useState(false);
   const [editingPriority, setEditingPriority] = useState<Priority | null>(null);
   const [deleteModal, setDeleteModal] = useState<Priority | null>(null);
