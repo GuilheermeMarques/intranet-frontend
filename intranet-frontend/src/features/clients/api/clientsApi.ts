@@ -26,6 +26,17 @@ export const clientsApi = {
       result = result.filter((c) => c.city === filters.city);
     }
 
+    const { startDate, endDate } = filters ?? {};
+    if (startDate || endDate) {
+      result = result.filter((c) => {
+        if (!c.lastPurchaseAt) return false;
+        const purchase = new Date(c.lastPurchaseAt);
+        if (startDate && purchase < startDate) return false;
+        if (endDate && purchase > endDate) return false;
+        return true;
+      });
+    }
+
     return { clients: result, cities: deriveCities(clients) };
   },
 

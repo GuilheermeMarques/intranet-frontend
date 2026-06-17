@@ -32,3 +32,53 @@ describe('clientsApi', () => {
     expect(client?.code).toBe(code);
   });
 });
+
+describe('clientsApi date filtering', () => {
+  // Mock data lastPurchaseAt spans 2024-01-02 .. 2024-01-30; 2024-01-15 splits it.
+  it('keeps only clients whose lastPurchaseAt is on/after startDate', async () => {
+    const startDate = new Date('2024-01-15');
+    const { clients } = await clientsApi.list({ startDate, endDate: null });
+    expect(clients.length).toBeGreaterThan(0);
+    expect(
+      clients.every((c) => c.lastPurchaseAt && new Date(c.lastPurchaseAt) >= startDate),
+    ).toBe(true);
+  });
+
+  it('keeps only clients whose lastPurchaseAt is on/before endDate', async () => {
+    const endDate = new Date('2024-01-15');
+    const { clients } = await clientsApi.list({ startDate: null, endDate });
+    expect(clients.length).toBeGreaterThan(0);
+    expect(
+      clients.every((c) => c.lastPurchaseAt && new Date(c.lastPurchaseAt) <= endDate),
+    ).toBe(true);
+  });
+
+  it('keeps only clients within the range when both dates are set', async () => {
+    const startDate = new Date('2024-01-10');
+    const endDate = new Date('2024-01-20');
+    const { clients } = await clientsApi.list({ startDate, endDate });
+    expect(clients.length).toBeGreaterThan(0);
+    expect(
+      clients.every(
+        (c) =>
+          c.lastPurchaseAt &&
+          new Date(c.lastPurchaseAt) >= startDate &&
+          new Date(c.lastPurchaseAt) <= endDate,
+      ),
+    ).toBe(true);
+  });
+
+  it('excludes clients with null lastPurchaseAt when a date filter is set', async () => {
+    const { clients } = await clientsApi.list({
+      startDate: new Date('2000-01-01'),
+      endDate: null,
+    });
+    expect(clients.every((c) => c.lastPurchaseAt !== null)).toBe(true);
+  });
+
+  it('applies no date filtering when both dates are null', async () => {
+    const withoutDates = await clientsApi.list({ startDate: null, endDate: null });
+    const all = await clientsApi.list();
+    expect(withoutDates.clients.length).toBe(all.clients.length);
+  });
+});
