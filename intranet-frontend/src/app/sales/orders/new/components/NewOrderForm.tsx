@@ -4,7 +4,7 @@
 import { DashboardLayout } from '@/components/DashboardLayout';
 import clientsData from '@/mocks/clients.json';
 import productsData from '@/mocks/products.json';
-import { Client } from '@/types/client';
+import { Client } from '@/features/clients/types';
 import { Product } from '@/types/product';
 import { Add as AddIcon, ArrowBack, Delete as DeleteIcon, Search } from '@mui/icons-material';
 import {
@@ -78,7 +78,7 @@ export function NewOrderForm() {
   const [shippingCost, setShippingCost] = useState<number | null>(null);
 
   const clientOptions = useMemo(() => {
-    return (clientsData.clients as Client[]).map((client) => client.nome);
+    return (clientsData.clients as Client[]).map((client) => client.name);
   }, []);
 
   const productOptions = useMemo(() => {
@@ -92,8 +92,8 @@ export function NewOrderForm() {
   const handleSearchClient = () => {
     const foundClient = (clientsData.clients as Client[]).find(
       (client) =>
-        (searchClientCode && client.codigo.toLowerCase() === searchClientCode.toLowerCase()) ||
-        (searchClientName && client.nome.toLowerCase() === searchClientName.toLowerCase()),
+        (searchClientCode && client.code.toLowerCase() === searchClientCode.toLowerCase()) ||
+        (searchClientName && client.name.toLowerCase() === searchClientName.toLowerCase()),
     );
     setSelectedClient(foundClient || null);
   };
@@ -102,7 +102,7 @@ export function NewOrderForm() {
     setSearchClientName(value || '');
     if (value) {
       const foundClient = (clientsData.clients as Client[]).find(
-        (client) => client.nome.toLowerCase() === value.toLowerCase(),
+        (client) => client.name.toLowerCase() === value.toLowerCase(),
       );
       setSelectedClient(foundClient || null);
     } else {
@@ -230,47 +230,47 @@ export function NewOrderForm() {
                     Nome:
                   </Typography>
                   <Typography variant="body1" fontWeight={500}>
-                    {selectedClient.nome}
+                    {selectedClient.name}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={3}>
                   <Typography variant="body2" color="text.secondary">
                     CPF:
                   </Typography>
-                  <Typography variant="body1">{selectedClient.cpf}</Typography>
+                  <Typography variant="body1">{selectedClient.document}</Typography>
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <Typography variant="body2" color="text.secondary">
                     CEP:
                   </Typography>
-                  <Typography variant="body1">{selectedClient.cep}</Typography>
+                  <Typography variant="body1">{selectedClient.zipCode}</Typography>
                 </Grid>
                 <Grid item xs={12} md={8}>
                   <Typography variant="body2" color="text.secondary">
                     Endereço:
                   </Typography>
                   <Typography variant="body1">
-                    {selectedClient.endereco}, {selectedClient.numero}
-                    {selectedClient.complemento && ` - ${selectedClient.complemento}`}
+                    {selectedClient.street}, {selectedClient.number}
+                    {selectedClient.complement && ` - ${selectedClient.complement}`}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <Typography variant="body2" color="text.secondary">
                     Bairro:
                   </Typography>
-                  <Typography variant="body1">{selectedClient.bairro}</Typography>
+                  <Typography variant="body1">{selectedClient.neighborhood}</Typography>
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <Typography variant="body2" color="text.secondary">
                     Cidade:
                   </Typography>
-                  <Typography variant="body1">{selectedClient.cidade}</Typography>
+                  <Typography variant="body1">{selectedClient.city}</Typography>
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <Typography variant="body2" color="text.secondary">
                     Estado:
                   </Typography>
-                  <Typography variant="body1">{selectedClient.estado}</Typography>
+                  <Typography variant="body1">{selectedClient.state}</Typography>
                 </Grid>
               </Grid>
             </Paper>
@@ -490,23 +490,23 @@ export function NewOrderForm() {
                     Nome:
                   </Typography>
                   <Typography variant="body1" fontWeight={500}>
-                    {selectedClient.nome}
+                    {selectedClient.name}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Typography variant="body2" color="text.secondary">
                     CPF:
                   </Typography>
-                  <Typography variant="body1">{selectedClient.cpf}</Typography>
+                  <Typography variant="body1">{selectedClient.document}</Typography>
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <Typography variant="body2" color="text.secondary">
                     Endereço:
                   </Typography>
                   <Typography variant="body1">
-                    {selectedClient.endereco}, {selectedClient.numero}
-                    {selectedClient.complemento && ` - ${selectedClient.complemento}`},{' '}
-                    {selectedClient.bairro}, {selectedClient.cidade} - {selectedClient.estado}
+                    {selectedClient.street}, {selectedClient.number}
+                    {selectedClient.complement && ` - ${selectedClient.complement}`},{' '}
+                    {selectedClient.neighborhood}, {selectedClient.city} - {selectedClient.state}
                   </Typography>
                 </Grid>
               </Grid>

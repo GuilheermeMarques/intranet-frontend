@@ -18,7 +18,8 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "test:e2e": "cypress run",
-    "test:e2e:open": "cypress open"
+    "test:e2e:open": "cypress open",
+    "knip": "knip"
   },
   "dependencies": {
     "@auth/core": "^0.34.2",
@@ -51,8 +52,7 @@
     "react-dom": "19.1.0",
     "react-hook-form": "^7.61.1",
     "react-window": "^1.8.11",
-    "zod": "^4.0.14",
-    "zustand": "^5.0.7"
+    "zod": "^4.0.14"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -73,6 +73,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
+    "knip": "^6.17.1",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "typescript": "^5"

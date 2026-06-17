@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@/presentation/hooks/useAuth';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Email, Lock, Visibility, VisibilityOff } from '@mui/icons-material';
 import {

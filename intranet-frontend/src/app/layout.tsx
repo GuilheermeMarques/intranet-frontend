@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AccessControlProvider } from '@/contexts/AccessControlContext';
-import { QueryProvider } from '@/presentation/components/QueryProvider';
-import { SessionProvider } from '@/presentation/components/SessionProvider';
+import { QueryProvider } from '@/app/providers/QueryProvider';
+import { SessionProvider } from '@/app/providers/SessionProvider';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
