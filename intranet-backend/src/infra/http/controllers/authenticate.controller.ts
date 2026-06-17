@@ -41,7 +41,7 @@ export class AuthenticateController {
       }
     }
 
-    const { accessToken } = result.value
-    return { accessToken }
+    const { accessToken, refreshToken } = result.value
+    return { accessToken, refreshToken }
   }
 }
