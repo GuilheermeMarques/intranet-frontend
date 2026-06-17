@@ -3,21 +3,19 @@
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Column, DataTable } from '@/components/DataTable';
 import { FilterField, FilterPanel } from '@/components/FilterPanel';
-import ordersData from '@/mocks/orders.json';
-import { Order, OrderItem } from '@/types/order';
+import { useOrdersQuery } from '@/features/orders/hooks/useOrdersQuery';
+import { OrderFilters, OrderItem } from '@/features/orders/types';
 import { Visibility } from '@mui/icons-material';
-import { Box, Button, Chip, Typography } from '@mui/material';
+import { Box, Button, Chip, CircularProgress, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 export default function OrdersPage() {
   const router = useRouter();
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<OrderFilters>({
     orderCode: '',
     clientName: '',
     status: '',
-    startDate: new Date(new Date().setMonth(new Date().getMonth() - 3)),
-    endDate: new Date(),
   });
 
   const handleFiltersChange = (newFilters: Record<string, unknown>) => {
@@ -25,29 +23,11 @@ export default function OrdersPage() {
       orderCode: (newFilters.orderCode as string) || '',
       clientName: (newFilters.clientName as string) || '',
       status: (newFilters.status as string) || '',
-      startDate: (newFilters.startDate as Date) || null,
-      endDate: (newFilters.endDate as Date) || null,
     });
   };
 
-  const filteredOrders = useMemo(() => {
-    return (ordersData.orders as Order[]).filter((order) => {
-      const orderCodeMatch =
-        !filters.orderCode ||
-        filters.orderCode.trim() === '' ||
-        order.id.toLowerCase().includes(filters.orderCode.toLowerCase());
-
-      const clientNameMatch =
-        !filters.clientName ||
-        filters.clientName.trim() === '' ||
-        order.clientName.toLowerCase().includes(filters.clientName.toLowerCase());
-
-      const statusMatch =
-        !filters.status || filters.status.trim() === '' || order.status === filters.status;
-
-      return orderCodeMatch && clientNameMatch && statusMatch;
-    });
-  }, [filters]);
+  const { data, isLoading } = useOrdersQuery(filters);
+  const filteredOrders = data ?? [];
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -224,19 +204,25 @@ export default function OrdersPage() {
         <FilterPanel
           title="Filtros de Pedidos"
           fields={filterFields}
-          filters={filters}
+          filters={filters as unknown as Record<string, unknown>}
           onFiltersChange={handleFiltersChange}
           showClearButton={false}
           resultsCount={filteredOrders.length}
           resultsLabel="pedido(s) encontrado(s)"
         />
 
-        <DataTable
-          columns={columns}
-          data={filteredOrders as unknown as Record<string, unknown>[]}
-          title="Pedidos"
-          emptyMessage="Nenhum pedido encontrado com os filtros aplicados."
-        />
+        {isLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={filteredOrders as unknown as Record<string, unknown>[]}
+            title="Pedidos"
+            emptyMessage="Nenhum pedido encontrado com os filtros aplicados."
+          />
+        )}
       </Box>
     </DashboardLayout>
   );

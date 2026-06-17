@@ -5,7 +5,7 @@ import { FormModal } from '@/components/Modal';
 import clientsData from '@/mocks/clients.json';
 import ordersData from '@/mocks/orders.json';
 import { Client } from '@/features/clients/types';
-import { Order } from '@/types/order';
+import { Order } from '@/features/orders/types';
 import { ArrowBack, Assignment, Email, LocationOn, Person, Phone } from '@mui/icons-material';
 import {
   Alert,

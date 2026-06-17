@@ -1,3 +1,5 @@
+export type OrderStatus = 'pending' | 'shipped' | 'delivered' | 'canceled';
+
 export interface OrderItem {
   id: string;
   productId?: string | number;
@@ -18,8 +20,14 @@ export interface Order {
   items: OrderItem[];
   total: number;
   shippingCost: number;
-  status: 'pending' | 'shipped' | 'delivered' | 'canceled';
+  status: OrderStatus;
   createdAt: string;
   updatedAt?: string;
   notes?: string;
+}
+
+export interface OrderFilters {
+  orderCode: string;
+  clientName: string;
+  status: string;
 }
