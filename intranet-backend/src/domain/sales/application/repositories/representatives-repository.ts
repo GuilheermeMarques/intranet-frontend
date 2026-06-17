@@ -8,5 +8,6 @@ export interface RepresentativeFilters {
 
 export abstract class RepresentativesRepository {
   abstract findMany(filters: RepresentativeFilters): Promise<Representative[]>
+  abstract findById(id: string): Promise<Representative | null>
   abstract findDistinctRegions(): Promise<string[]>
 }

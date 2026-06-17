@@ -24,6 +24,10 @@ export class InMemoryRepresentativesRepository
     })
   }
 
+  async findById(id: string) {
+    return this.items.find((r) => r.id.toString() === id) ?? null
+  }
+
   async findDistinctRegions(): Promise<string[]> {
     return [...new Set(this.items.map((r) => r.region))].sort()
   }
