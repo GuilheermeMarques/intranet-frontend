@@ -5,9 +5,9 @@ export const envSchema = z.object({
   PORT: z.coerce.number().optional().default(3001),
   DATABASE_URL: z.string().url(),
   FRONTEND_URL: z.string().url().default('http://localhost:3000'),
-  // Tightened in later phases: JWT (F2), S3 (F7)
-  JWT_PRIVATE_KEY: z.string().optional(),
-  JWT_PUBLIC_KEY: z.string().optional(),
+  // Tightened in later phases: S3 (F7)
+  JWT_PRIVATE_KEY: z.string(),
+  JWT_PUBLIC_KEY: z.string(),
   JWT_ACCESS_EXPIRES_IN: z.string().optional().default('15m'),
   JWT_REFRESH_EXPIRES_IN: z.string().optional().default('7d'),
   S3_ENDPOINT: z.string().url().optional(),
