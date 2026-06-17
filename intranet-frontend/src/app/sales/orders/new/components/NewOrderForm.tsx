@@ -5,7 +5,7 @@ import { DashboardLayout } from '@/components/DashboardLayout';
 import clientsData from '@/mocks/clients.json';
 import productsData from '@/mocks/products.json';
 import { Client } from '@/features/clients/types';
-import { Product } from '@/types/product';
+import { Product } from '@/features/products/types';
 import { Add as AddIcon, ArrowBack, Delete as DeleteIcon, Search } from '@mui/icons-material';
 import {
   Autocomplete,
@@ -114,11 +114,11 @@ export function NewOrderForm() {
     if (selectedProduct) {
       const newItem: OrderItem = {
         productId: selectedProduct.id,
-        productCode: selectedProduct.codigoProduto,
-        productName: selectedProduct.nomeProduto,
+        productCode: selectedProduct.code,
+        productName: selectedProduct.name,
         quantity: productQuantity,
-        unitPrice: selectedProduct.preco,
-        total: productQuantity * selectedProduct.preco,
+        unitPrice: selectedProduct.price,
+        total: productQuantity * selectedProduct.price,
       };
       setOrderItems((prevItems) => [...prevItems, newItem]);
       setSelectedProduct(null); // Clear selected product after adding
@@ -295,7 +295,7 @@ export function NewOrderForm() {
                 <Autocomplete
                   fullWidth
                   options={productOptions}
-                  getOptionLabel={(option) => option.nomeProduto}
+                  getOptionLabel={(option) => option.name}
                   onChange={(event, newValue) => {
                     setSelectedProduct(newValue);
                     setProductQuantity(1);
@@ -312,10 +312,10 @@ export function NewOrderForm() {
                     if (params.inputValue !== '') {
                       return filtered.filter(
                         (option) =>
-                          option.codigoProduto
+                          option.code
                             .toLowerCase()
                             .includes(params.inputValue.toLowerCase()) ||
-                          option.nomeProduto
+                          option.name
                             .toLowerCase()
                             .includes(params.inputValue.toLowerCase()),
                       );
@@ -340,7 +340,7 @@ export function NewOrderForm() {
                     <TextField
                       fullWidth
                       label="Preço Unitário"
-                      value={formatCurrency(selectedProduct.preco)}
+                      value={formatCurrency(selectedProduct.price)}
                       InputProps={{ readOnly: true }}
                     />
                   </Grid>
@@ -364,9 +364,9 @@ export function NewOrderForm() {
                 <Typography variant="body2" color="text.secondary">
                   Produto Selecionado:{' '}
                   <Typography component="span" fontWeight={500}>
-                    {selectedProduct.nomeProduto}
+                    {selectedProduct.name}
                   </Typography>{' '}
-                  (R$ {selectedProduct.preco.toFixed(2)})
+                  (R$ {selectedProduct.price.toFixed(2)})
                 </Typography>
               </Box>
             )}

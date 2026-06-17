@@ -2,21 +2,31 @@
 
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Column, DataTable } from '@/components/DataTable';
-import productsData from '@/mocks/products.json';
+import { useProductsQuery } from '@/features/products/hooks/useProductsQuery';
+import { Product, ProductFilters } from '@/features/products/types';
 import { Search } from '@mui/icons-material';
-import { Box, Card, CardContent, Chip, Grid, TextField, Typography } from '@mui/material';
-import { useMemo, useState } from 'react';
+import {
+  Box,
+  Card,
+  CardContent,
+  Chip,
+  CircularProgress,
+  Grid,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useState } from 'react';
 
 export default function CatalogPage() {
-  const [filters, setFilters] = useState({
-    codigoProduto: '',
-    nomeProduto: '',
-    fornecedor: '',
+  const [filters, setFilters] = useState<ProductFilters>({
+    code: '',
+    name: '',
+    supplier: '',
   });
 
-  const columns: Column[] = [
+  const columns: Column<Product>[] = [
     {
-      id: 'codigoProduto',
+      id: 'code',
       label: 'Código',
       sortable: true,
       render: (value) => (
@@ -24,7 +34,7 @@ export default function CatalogPage() {
       ),
     },
     {
-      id: 'nomeProduto',
+      id: 'name',
       label: 'Nome do Produto',
       sortable: true,
       render: (value) => (
@@ -34,7 +44,7 @@ export default function CatalogPage() {
       ),
     },
     {
-      id: 'descricaoProduto',
+      id: 'description',
       label: 'Descrição',
       sortable: true,
       render: (value) => (
@@ -44,7 +54,7 @@ export default function CatalogPage() {
       ),
     },
     {
-      id: 'preco',
+      id: 'price',
       label: 'Preço',
       sortable: true,
       render: (value) => (
@@ -54,7 +64,7 @@ export default function CatalogPage() {
       ),
     },
     {
-      id: 'quantidadeEstoque',
+      id: 'stockQuantity',
       label: 'Estoque',
       sortable: true,
       render: (value) => (
@@ -66,13 +76,13 @@ export default function CatalogPage() {
       ),
     },
     {
-      id: 'ultimaDataVenda',
+      id: 'lastSaleAt',
       label: 'Última Venda',
       sortable: true,
       render: (value) => formatDate(value as string),
     },
     {
-      id: 'fornecedor',
+      id: 'supplier',
       label: 'Fornecedor',
       sortable: true,
       render: (value) => (
@@ -83,28 +93,11 @@ export default function CatalogPage() {
     },
   ];
 
-  // Filtrar produtos baseado nos filtros aplicados
-  const filteredProducts = useMemo(() => {
-    return productsData.products.filter((product) => {
-      const codigoMatch =
-        !filters.codigoProduto ||
-        filters.codigoProduto.trim() === '' ||
-        product.codigoProduto.toLowerCase().includes(filters.codigoProduto.toLowerCase());
-      const nomeMatch =
-        !filters.nomeProduto ||
-        filters.nomeProduto.trim() === '' ||
-        product.nomeProduto.toLowerCase().includes(filters.nomeProduto.toLowerCase());
-      const fornecedorMatch =
-        !filters.fornecedor ||
-        filters.fornecedor.trim() === '' ||
-        product.fornecedor.toLowerCase().includes(filters.fornecedor.toLowerCase());
+  const { data, isLoading } = useProductsQuery(filters);
+  const filteredProducts = data ?? [];
 
-      return codigoMatch && nomeMatch && fornecedorMatch;
-    });
-  }, [filters]);
-
-  const handleFilterChange = (newFilters: Record<string, unknown>) => {
-    setFilters(newFilters as typeof filters);
+  const handleFilterChange = (newFilters: ProductFilters) => {
+    setFilters(newFilters);
   };
 
   const formatCurrency = (value: number) => {
@@ -141,10 +134,8 @@ export default function CatalogPage() {
                   fullWidth
                   label="Código do Produto"
                   placeholder="Digite o código do produto"
-                  value={filters.codigoProduto}
-                  onChange={(e) =>
-                    handleFilterChange({ ...filters, codigoProduto: e.target.value })
-                  }
+                  value={filters.code}
+                  onChange={(e) => handleFilterChange({ ...filters, code: e.target.value })}
                   InputProps={{
                     startAdornment: <Search />,
                   }}
@@ -156,8 +147,8 @@ export default function CatalogPage() {
                   fullWidth
                   label="Nome do Produto"
                   placeholder="Digite o nome do produto"
-                  value={filters.nomeProduto}
-                  onChange={(e) => handleFilterChange({ ...filters, nomeProduto: e.target.value })}
+                  value={filters.name}
+                  onChange={(e) => handleFilterChange({ ...filters, name: e.target.value })}
                   InputProps={{
                     startAdornment: <Search />,
                   }}
@@ -169,8 +160,8 @@ export default function CatalogPage() {
                   fullWidth
                   label="Fornecedor"
                   placeholder="Digite o nome do fornecedor"
-                  value={filters.fornecedor}
-                  onChange={(e) => handleFilterChange({ ...filters, fornecedor: e.target.value })}
+                  value={filters.supplier}
+                  onChange={(e) => handleFilterChange({ ...filters, supplier: e.target.value })}
                   InputProps={{
                     startAdornment: <Search />,
                   }}
@@ -187,12 +178,18 @@ export default function CatalogPage() {
         </Card>
 
         {/* Tabela de Produtos */}
-        <DataTable
-          columns={columns}
-          data={filteredProducts}
-          title="Produtos do Catálogo"
-          emptyMessage="Nenhum produto encontrado com os filtros aplicados."
-        />
+        {isLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={filteredProducts}
+            title="Produtos do Catálogo"
+            emptyMessage="Nenhum produto encontrado com os filtros aplicados."
+          />
+        )}
       </Box>
     </DashboardLayout>
   );
