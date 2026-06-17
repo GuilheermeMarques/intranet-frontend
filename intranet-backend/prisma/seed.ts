@@ -117,6 +117,84 @@ async function main() {
   }
 
   console.log(`Seeded ${CLIENTS.length} sample clients`)
+
+  const PRODUCTS = [
+    {
+      code: 'PROD001',
+      name: 'Farinha de Trigo 1kg',
+      description: 'Farinha de trigo tipo 1, pacote de 1kg',
+      price: 5.49,
+      stockQuantity: 120,
+      supplier: 'Moinho Central',
+      category: 'Alimentos',
+      imageUrl: null as string | null,
+      active: true,
+      lastSaleAt: new Date('2026-05-12T00:00:00.000Z'),
+    },
+    {
+      code: 'PROD002',
+      name: 'Açúcar Refinado 1kg',
+      description: 'Açúcar refinado especial, pacote de 1kg',
+      price: 4.29,
+      stockQuantity: 80,
+      supplier: 'Usina Doce',
+      category: 'Alimentos',
+      imageUrl: null as string | null,
+      active: true,
+      lastSaleAt: new Date('2026-06-02T00:00:00.000Z'),
+    },
+    {
+      code: 'PROD003',
+      name: 'Detergente Neutro 500ml',
+      description: 'Detergente líquido neutro, frasco de 500ml',
+      price: 2.19,
+      stockQuantity: 200,
+      supplier: 'Química Limpa',
+      category: 'Limpeza',
+      imageUrl: null as string | null,
+      active: true,
+      lastSaleAt: null as Date | null,
+    },
+  ]
+
+  for (const product of PRODUCTS) {
+    await prisma.product.upsert({
+      where: { code: product.code },
+      update: product,
+      create: product,
+    })
+  }
+
+  console.log(`Seeded ${PRODUCTS.length} sample products`)
+
+  const movementsCount = await prisma.inventoryMovement.count()
+  if (movementsCount === 0) {
+    await prisma.inventoryMovement.createMany({
+      data: [
+        {
+          productCode: 'PROD001',
+          description: 'Reposição de estoque de farinha',
+          quantity: 100,
+          type: 'inbound',
+          occurredAt: new Date('2026-05-01T00:00:00.000Z'),
+          reason: 'Compra de fornecedor',
+          handledBy: 'Administrador',
+          notes: 'Lote inicial',
+        },
+        {
+          productCode: 'PROD002',
+          description: 'Venda de açúcar para cliente',
+          quantity: 20,
+          type: 'outbound',
+          occurredAt: new Date('2026-06-02T00:00:00.000Z'),
+          reason: 'Venda',
+          handledBy: 'Administrador',
+          notes: null,
+        },
+      ],
+    })
+    console.log('Seeded 2 sample inventory movements')
+  }
 }
 
 main()

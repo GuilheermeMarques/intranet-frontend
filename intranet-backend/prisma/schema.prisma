@@ -93,6 +93,43 @@ model Client {
   @@map("clients")
 }
 
+model Product {
+  id            String    @id @default(uuid())
+  code          String    @unique
+  name          String
+  description   String
+  price         Float
+  stockQuantity Int       @default(0) @map("stock_quantity")
+  lastSaleAt    DateTime? @map("last_sale_at")
+  supplier      String
+  category      String?
+  imageUrl      String?   @map("image_url")
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
+
+  @@index([name])
+  @@index([category])
+  @@map("products")
+}
+
+model InventoryMovement {
+  id          String   @id @default(uuid())
+  productCode String   @map("product_code")
+  description String
+  quantity    Int
+  type        String
+  occurredAt  DateTime @map("occurred_at")
+  reason      String?
+  handledBy   String?  @map("handled_by")
+  notes       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([productCode])
+  @@index([occurredAt])
+  @@map("inventory_movements")
+}
+
 model RefreshToken {
   id        String    @id @default(uuid())
   token     String    @unique
