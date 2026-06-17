@@ -1,7 +1,7 @@
 'use client';
 
 import { DashboardLayout } from '@/components/DashboardLayout';
-import homeData from '@/mocks/home.json';
+import { useDashboardQuery } from '@/features/dashboard/hooks/useDashboardQuery';
 import {
   AttachMoney,
   Inventory,
@@ -17,6 +17,7 @@ import {
   Card,
   CardContent,
   Chip,
+  CircularProgress,
   LinearProgress,
   Typography,
   useTheme as useMuiTheme,
@@ -136,6 +137,20 @@ const iconMap: Record<string, React.ReactNode> = {
 
 export default function HomePage() {
   const theme = useMuiTheme();
+  const { data, isLoading } = useDashboardQuery();
+  const stats = data?.stats ?? [];
+  const progress = data?.progress ?? [];
+  const recentActivity = data?.recentActivity ?? [];
+
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: 6 }}>
+          <CircularProgress />
+        </Box>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -159,7 +174,7 @@ export default function HomePage() {
             mb: 4,
           }}
         >
-          {homeData.stats.map((stat, index) => (
+          {stats.map((stat, index) => (
             <StatCard
               key={index}
               title={stat.title}
@@ -183,7 +198,7 @@ export default function HomePage() {
             mb: 4,
           }}
         >
-          {homeData.progress.map((progress, index) => (
+          {progress.map((progress, index) => (
             <ProgressCard
               key={index}
               title={progress.title}
@@ -204,7 +219,7 @@ export default function HomePage() {
               Atividade Recente
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {homeData.recentActivity.map((activity, index) => (
+              {recentActivity.map((activity, index) => (
                 <Box
                   key={index}
                   sx={{
