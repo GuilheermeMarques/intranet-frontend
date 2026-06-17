@@ -28,6 +28,12 @@ export class PrismaRepresentativesRepository
     return rows.map(PrismaRepresentativeMapper.toDomain)
   }
 
+  async findById(id: string): Promise<Representative | null> {
+    const row = await this.prisma.representative.findUnique({ where: { id } })
+    if (!row) return null
+    return PrismaRepresentativeMapper.toDomain(row)
+  }
+
   async findDistinctRegions(): Promise<string[]> {
     const rows = await this.prisma.representative.findMany({
       distinct: ['region'],

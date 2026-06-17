@@ -35,6 +35,11 @@ import { GetOrderByIdController } from './controllers/get-order-by-id.controller
 import { CreateOrderController } from './controllers/create-order.controller'
 import { EditOrderController } from './controllers/edit-order.controller'
 import { ChangeOrderStatusController } from './controllers/change-order-status.controller'
+import { FetchBudgetsController } from './controllers/fetch-budgets.controller'
+import { GetBudgetByIdController } from './controllers/get-budget-by-id.controller'
+import { CreateBudgetController } from './controllers/create-budget.controller'
+import { EditBudgetController } from './controllers/edit-budget.controller'
+import { DeleteBudgetController } from './controllers/delete-budget.controller'
 import { AuthenticateUseCase } from '@/domain/iam/application/use-cases/authenticate'
 import { RefreshTokenUseCase } from '@/domain/iam/application/use-cases/refresh-token'
 import { LogoutUseCase } from '@/domain/iam/application/use-cases/logout'
@@ -67,6 +72,11 @@ import { GetOrderByIdUseCase } from '@/domain/sales/application/use-cases/get-or
 import { CreateOrderUseCase } from '@/domain/sales/application/use-cases/create-order'
 import { EditOrderUseCase } from '@/domain/sales/application/use-cases/edit-order'
 import { ChangeOrderStatusUseCase } from '@/domain/sales/application/use-cases/change-order-status'
+import { FetchBudgetsUseCase } from '@/domain/sales/application/use-cases/fetch-budgets'
+import { GetBudgetByIdUseCase } from '@/domain/sales/application/use-cases/get-budget-by-id'
+import { CreateBudgetUseCase } from '@/domain/sales/application/use-cases/create-budget'
+import { EditBudgetUseCase } from '@/domain/sales/application/use-cases/edit-budget'
+import { DeleteBudgetUseCase } from '@/domain/sales/application/use-cases/delete-budget'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -103,6 +113,11 @@ import { ChangeOrderStatusUseCase } from '@/domain/sales/application/use-cases/c
     CreateOrderController,
     EditOrderController,
     ChangeOrderStatusController,
+    FetchBudgetsController,
+    GetBudgetByIdController,
+    CreateBudgetController,
+    EditBudgetController,
+    DeleteBudgetController,
   ],
   providers: [
     AuthenticateUseCase,
@@ -137,6 +152,11 @@ import { ChangeOrderStatusUseCase } from '@/domain/sales/application/use-cases/c
     CreateOrderUseCase,
     EditOrderUseCase,
     ChangeOrderStatusUseCase,
+    FetchBudgetsUseCase,
+    GetBudgetByIdUseCase,
+    CreateBudgetUseCase,
+    EditBudgetUseCase,
+    DeleteBudgetUseCase,
     { provide: APP_GUARD, useClass: PermissionsGuard },
   ],
 })

@@ -18,6 +18,8 @@ import { RepresentativesRepository } from '@/domain/sales/application/repositori
 import { PrismaRepresentativesRepository } from './prisma/repositories/prisma-representatives-repository'
 import { OrdersRepository } from '@/domain/sales/application/repositories/orders-repository'
 import { PrismaOrdersRepository } from './prisma/repositories/prisma-orders-repository'
+import { BudgetsRepository } from '@/domain/sales/application/repositories/budgets-repository'
+import { PrismaBudgetsRepository } from './prisma/repositories/prisma-budgets-repository'
 
 @Module({
   providers: [
@@ -37,6 +39,7 @@ import { PrismaOrdersRepository } from './prisma/repositories/prisma-orders-repo
       useClass: PrismaRepresentativesRepository,
     },
     { provide: OrdersRepository, useClass: PrismaOrdersRepository },
+    { provide: BudgetsRepository, useClass: PrismaBudgetsRepository },
   ],
   exports: [
     PrismaService,
@@ -49,6 +52,7 @@ import { PrismaOrdersRepository } from './prisma/repositories/prisma-orders-repo
     InventoryMovementsRepository,
     RepresentativesRepository,
     OrdersRepository,
+    BudgetsRepository,
   ],
 })
 export class DatabaseModule {}

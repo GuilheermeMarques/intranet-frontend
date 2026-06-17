@@ -181,6 +181,38 @@ model OrderItem {
   @@map("order_items")
 }
 
+model Budget {
+  id              String    @id @default(uuid())
+  number          String    @unique
+  clientId        String    @map("client_id")
+  clientName      String    @map("client_name")
+  responsibleId   String    @map("responsible_id")
+  responsibleName String    @map("responsible_name")
+  validityDate    DateTime? @map("validity_date")
+  status          String
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime? @updatedAt @map("updated_at")
+
+  items BudgetItem[]
+
+  @@index([status, updatedAt])
+  @@map("budgets")
+}
+
+model BudgetItem {
+  id          String  @id @default(uuid())
+  budgetId    String  @map("budget_id")
+  productId   String? @map("product_id")
+  productCode String? @map("product_code")
+  productName String  @map("product_name")
+  quantity    Int
+  unitPrice   Float   @map("unit_price")
+
+  budget Budget @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+
+  @@map("budget_items")
+}
+
 model RefreshToken {
   id        String    @id @default(uuid())
   token     String    @unique
