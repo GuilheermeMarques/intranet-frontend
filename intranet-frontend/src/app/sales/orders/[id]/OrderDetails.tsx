@@ -4,7 +4,7 @@ import { DashboardLayout } from '@/components/DashboardLayout';
 import { FormModal } from '@/components/Modal';
 import clientsData from '@/mocks/clients.json';
 import ordersData from '@/mocks/orders.json';
-import { Client } from '@/types/client';
+import { Client } from '@/features/clients/types';
 import { Order } from '@/types/order';
 import { ArrowBack, Assignment, Email, LocationOn, Person, Phone } from '@mui/icons-material';
 import {
@@ -75,7 +75,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
 
   const client = useMemo(() => {
     if (!order?.clientCode) return null;
-    return (clientsData.clients as Client[]).find((c) => c.codigo === order.clientCode);
+    return (clientsData.clients as Client[]).find((c) => c.code === order.clientCode);
   }, [order?.clientCode]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -351,7 +351,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                       <LocationOn sx={{ mr: 1, color: 'text.secondary' }} />
                       <Typography variant="body2">
-                        {client.cidade}, {client.estado}
+                        {client.city}, {client.state}
                       </Typography>
                     </Box>
                   )}
@@ -377,7 +377,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                         Código:
                       </Typography>
                       <Typography variant="body1" fontWeight={500}>
-                        {client.codigo}
+                        {client.code}
                       </Typography>
                     </Box>
 
@@ -385,14 +385,14 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                       <Typography variant="body2" color="text.secondary">
                         Nome:
                       </Typography>
-                      <Typography variant="body1">{client.nome}</Typography>
+                      <Typography variant="body1">{client.name}</Typography>
                     </Box>
 
                     <Box sx={{ mb: 2 }}>
                       <Typography variant="body2" color="text.secondary">
                         CPF:
                       </Typography>
-                      <Typography variant="body1">{client.cpf}</Typography>
+                      <Typography variant="body1">{client.document}</Typography>
                     </Box>
 
                     <Box sx={{ mb: 2 }}>
@@ -406,7 +406,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                       <Typography variant="body2" color="text.secondary">
                         Telefone:
                       </Typography>
-                      <Typography variant="body1">{client.telefone}</Typography>
+                      <Typography variant="body1">{client.phone}</Typography>
                     </Box>
 
                     <Box sx={{ mb: 2 }}>
@@ -423,11 +423,11 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                         Endereço:
                       </Typography>
                       <Typography variant="body1">
-                        {client.endereco}, {client.numero}
+                        {client.street}, {client.number}
                       </Typography>
-                      {client.complemento && (
+                      {client.complement && (
                         <Typography variant="body2" color="text.secondary">
-                          {client.complemento}
+                          {client.complement}
                         </Typography>
                       )}
                     </Box>
@@ -436,7 +436,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                       <Typography variant="body2" color="text.secondary">
                         Bairro:
                       </Typography>
-                      <Typography variant="body1">{client.bairro}</Typography>
+                      <Typography variant="body1">{client.neighborhood}</Typography>
                     </Box>
 
                     <Box sx={{ mb: 2 }}>
@@ -444,7 +444,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                         Cidade/Estado:
                       </Typography>
                       <Typography variant="body1">
-                        {client.cidade}, {client.estado}
+                        {client.city}, {client.state}
                       </Typography>
                     </Box>
 
@@ -452,7 +452,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                       <Typography variant="body2" color="text.secondary">
                         CEP:
                       </Typography>
-                      <Typography variant="body1">{client.cep}</Typography>
+                      <Typography variant="body1">{client.zipCode}</Typography>
                     </Box>
 
                     <Box sx={{ mb: 2 }}>
@@ -460,7 +460,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                         Última Compra:
                       </Typography>
                       <Typography variant="body1">
-                        {client.dataUltimaCompra ? formatDate(client.dataUltimaCompra) : '-'}
+                        {client.lastPurchaseAt ? formatDate(client.lastPurchaseAt) : '-'}
                       </Typography>
                     </Box>
 
@@ -469,7 +469,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                         Total de Compras:
                       </Typography>
                       <Typography variant="body1" fontWeight={500} color="primary.main">
-                        {client.quantidadeCompras}
+                        {client.purchaseCount}
                       </Typography>
                     </Box>
                   </Grid>

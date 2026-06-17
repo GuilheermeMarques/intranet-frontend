@@ -4,7 +4,7 @@ import { DashboardLayout } from '@/components/DashboardLayout';
 import { Column, DataTable } from '@/components/DataTable';
 import clientsData from '@/mocks/clients.json';
 import purchasesData from '@/mocks/purchases.json';
-import { Client } from '@/types/client';
+import { Client } from '@/features/clients/types';
 import { Purchase } from '@/types/purchase';
 import { ArrowBack, Edit, Email, Instagram, Phone, Save } from '@mui/icons-material';
 import {
@@ -57,7 +57,7 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
 
   // Encontrar o cliente pelo código
   const client = useMemo(() => {
-    return (clientsData.clients as Client[]).find((c) => c.codigo === clientId);
+    return (clientsData.clients as Client[]).find((c) => c.code === clientId);
   }, [clientId]);
 
   // Encontrar as compras do cliente
@@ -176,10 +176,10 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
             </IconButton>
             <Box>
               <Typography variant="h4" fontWeight={600}>
-                {currentClient.nome}
+                {currentClient.name}
               </Typography>
               <Typography variant="body1" color="text.secondary">
-                Código: {currentClient.codigo}
+                Código: {currentClient.code}
               </Typography>
             </Box>
           </Box>
@@ -227,8 +227,8 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                       {isEditMode ? (
                         <input
                           type="text"
-                          value={currentClient.nome}
-                          onChange={(e) => handleInputChange('nome', e.target.value)}
+                          value={currentClient.name}
+                          onChange={(e) => handleInputChange('name', e.target.value)}
                           style={{
                             width: '100%',
                             padding: '8px',
@@ -239,7 +239,7 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                         />
                       ) : (
                         <Typography variant="body1" fontWeight={500}>
-                          {currentClient.nome}
+                          {currentClient.name}
                         </Typography>
                       )}
                     </Box>
@@ -250,8 +250,8 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                       {isEditMode ? (
                         <input
                           type="text"
-                          value={currentClient.cpf}
-                          onChange={(e) => handleInputChange('cpf', e.target.value)}
+                          value={currentClient.document}
+                          onChange={(e) => handleInputChange('document', e.target.value)}
                           style={{
                             width: '100%',
                             padding: '8px',
@@ -261,7 +261,7 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                           }}
                         />
                       ) : (
-                        <Typography variant="body1">{currentClient.cpf}</Typography>
+                        <Typography variant="body1">{currentClient.document}</Typography>
                       )}
                     </Box>
                     {/* Espaçador para alinhar com o card de contato */}
@@ -312,8 +312,8 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                         {isEditMode ? (
                           <input
                             type="text"
-                            value={currentClient.telefone}
-                            onChange={(e) => handleInputChange('telefone', e.target.value)}
+                            value={currentClient.phone}
+                            onChange={(e) => handleInputChange('phone', e.target.value)}
                             style={{
                               width: '100%',
                               padding: '8px',
@@ -323,7 +323,7 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                             }}
                           />
                         ) : (
-                          <Typography variant="body1">{currentClient.telefone}</Typography>
+                          <Typography variant="body1">{currentClient.phone}</Typography>
                         )}
                       </Box>
                     </Box>
@@ -371,8 +371,8 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                       {isEditMode ? (
                         <input
                           type="text"
-                          value={currentClient.cep}
-                          onChange={(e) => handleInputChange('cep', e.target.value)}
+                          value={currentClient.zipCode}
+                          onChange={(e) => handleInputChange('zipCode', e.target.value)}
                           style={{
                             width: '100%',
                             padding: '8px',
@@ -382,7 +382,7 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                           }}
                         />
                       ) : (
-                        <Typography variant="body1">{currentClient.cep}</Typography>
+                        <Typography variant="body1">{currentClient.zipCode}</Typography>
                       )}
                     </Grid>
                     <Grid item xs={12} md={4}>
@@ -392,8 +392,8 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                       {isEditMode ? (
                         <input
                           type="text"
-                          value={currentClient.endereco}
-                          onChange={(e) => handleInputChange('endereco', e.target.value)}
+                          value={currentClient.street}
+                          onChange={(e) => handleInputChange('street', e.target.value)}
                           style={{
                             width: '100%',
                             padding: '8px',
@@ -404,8 +404,8 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                         />
                       ) : (
                         <Typography variant="body1">
-                          {currentClient.endereco}
-                          {currentClient.complemento && ` - ${currentClient.complemento}`}
+                          {currentClient.street}
+                          {currentClient.complement && ` - ${currentClient.complement}`}
                         </Typography>
                       )}
                     </Grid>
@@ -416,8 +416,8 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                       {isEditMode ? (
                         <input
                           type="text"
-                          value={currentClient.numero}
-                          onChange={(e) => handleInputChange('numero', e.target.value)}
+                          value={currentClient.number}
+                          onChange={(e) => handleInputChange('number', e.target.value)}
                           style={{
                             width: '100%',
                             padding: '8px',
@@ -427,7 +427,7 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                           }}
                         />
                       ) : (
-                        <Typography variant="body1">{currentClient.numero}</Typography>
+                        <Typography variant="body1">{currentClient.number}</Typography>
                       )}
                     </Grid>
                     <Grid item xs={12} md={4}>
@@ -437,8 +437,8 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                       {isEditMode ? (
                         <input
                           type="text"
-                          value={currentClient.bairro}
-                          onChange={(e) => handleInputChange('bairro', e.target.value)}
+                          value={currentClient.neighborhood}
+                          onChange={(e) => handleInputChange('neighborhood', e.target.value)}
                           style={{
                             width: '100%',
                             padding: '8px',
@@ -448,7 +448,7 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                           }}
                         />
                       ) : (
-                        <Typography variant="body1">{currentClient.bairro}</Typography>
+                        <Typography variant="body1">{currentClient.neighborhood}</Typography>
                       )}
                     </Grid>
                     <Grid item xs={12} md={4}>
@@ -458,8 +458,8 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                       {isEditMode ? (
                         <input
                           type="text"
-                          value={currentClient.cidade}
-                          onChange={(e) => handleInputChange('cidade', e.target.value)}
+                          value={currentClient.city}
+                          onChange={(e) => handleInputChange('city', e.target.value)}
                           style={{
                             width: '100%',
                             padding: '8px',
@@ -469,7 +469,7 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                           }}
                         />
                       ) : (
-                        <Typography variant="body1">{currentClient.cidade}</Typography>
+                        <Typography variant="body1">{currentClient.city}</Typography>
                       )}
                     </Grid>
                     <Grid item xs={12} md={4}>
@@ -479,8 +479,8 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                       {isEditMode ? (
                         <input
                           type="text"
-                          value={currentClient.estado}
-                          onChange={(e) => handleInputChange('estado', e.target.value)}
+                          value={currentClient.state}
+                          onChange={(e) => handleInputChange('state', e.target.value)}
                           style={{
                             width: '100%',
                             padding: '8px',
@@ -490,7 +490,7 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                           }}
                         />
                       ) : (
-                        <Typography variant="body1">{currentClient.estado}</Typography>
+                        <Typography variant="body1">{currentClient.state}</Typography>
                       )}
                     </Grid>
                   </Grid>
@@ -509,7 +509,7 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                     <Grid item xs={12} md={6}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography variant="h4" color="primary.main" fontWeight={600}>
-                          {currentClient.quantidadeCompras}
+                          {currentClient.purchaseCount}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Total de Compras
@@ -519,8 +519,8 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
                     <Grid item xs={12} md={6}>
                       <Box sx={{ textAlign: 'center' }}>
                         <Typography variant="h4" color="success.main" fontWeight={600}>
-                          {currentClient.dataUltimaCompra
-                            ? formatDate(currentClient.dataUltimaCompra)
+                          {currentClient.lastPurchaseAt
+                            ? formatDate(currentClient.lastPurchaseAt)
                             : '-'}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
