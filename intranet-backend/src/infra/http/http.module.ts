@@ -30,6 +30,11 @@ import { FetchInventoryMovementsController } from './controllers/fetch-inventory
 import { CreateInventoryMovementController } from './controllers/create-inventory-movement.controller'
 import { GetInventoryLookupsController } from './controllers/get-inventory-lookups.controller'
 import { FetchRepresentativesController } from './controllers/fetch-representatives.controller'
+import { FetchOrdersController } from './controllers/fetch-orders.controller'
+import { GetOrderByIdController } from './controllers/get-order-by-id.controller'
+import { CreateOrderController } from './controllers/create-order.controller'
+import { EditOrderController } from './controllers/edit-order.controller'
+import { ChangeOrderStatusController } from './controllers/change-order-status.controller'
 import { AuthenticateUseCase } from '@/domain/iam/application/use-cases/authenticate'
 import { RefreshTokenUseCase } from '@/domain/iam/application/use-cases/refresh-token'
 import { LogoutUseCase } from '@/domain/iam/application/use-cases/logout'
@@ -57,6 +62,11 @@ import { FetchInventoryMovementsUseCase } from '@/domain/sales/application/use-c
 import { CreateInventoryMovementUseCase } from '@/domain/sales/application/use-cases/create-inventory-movement'
 import { FetchInventoryLookupsUseCase } from '@/domain/sales/application/use-cases/fetch-inventory-lookups'
 import { FetchRepresentativesUseCase } from '@/domain/sales/application/use-cases/fetch-representatives'
+import { FetchOrdersUseCase } from '@/domain/sales/application/use-cases/fetch-orders'
+import { GetOrderByIdUseCase } from '@/domain/sales/application/use-cases/get-order-by-id'
+import { CreateOrderUseCase } from '@/domain/sales/application/use-cases/create-order'
+import { EditOrderUseCase } from '@/domain/sales/application/use-cases/edit-order'
+import { ChangeOrderStatusUseCase } from '@/domain/sales/application/use-cases/change-order-status'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -88,6 +98,11 @@ import { FetchRepresentativesUseCase } from '@/domain/sales/application/use-case
     FetchInventoryMovementsController,
     CreateInventoryMovementController,
     FetchRepresentativesController,
+    FetchOrdersController,
+    GetOrderByIdController,
+    CreateOrderController,
+    EditOrderController,
+    ChangeOrderStatusController,
   ],
   providers: [
     AuthenticateUseCase,
@@ -117,6 +132,11 @@ import { FetchRepresentativesUseCase } from '@/domain/sales/application/use-case
     CreateInventoryMovementUseCase,
     FetchInventoryLookupsUseCase,
     FetchRepresentativesUseCase,
+    FetchOrdersUseCase,
+    GetOrderByIdUseCase,
+    CreateOrderUseCase,
+    EditOrderUseCase,
+    ChangeOrderStatusUseCase,
     { provide: APP_GUARD, useClass: PermissionsGuard },
   ],
 })

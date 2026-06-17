@@ -147,6 +147,40 @@ model Representative {
   @@map("representatives")
 }
 
+model Order {
+  id           String    @id @default(uuid())
+  orderCode    String    @unique @map("order_code")
+  clientId     String?   @map("client_id")
+  clientCode   String    @map("client_code")
+  clientName   String    @map("client_name")
+  clientEmail  String?   @map("client_email")
+  clientPhone  String?   @map("client_phone")
+  shippingCost Float     @default(0) @map("shipping_cost")
+  status       String
+  notes        String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime? @updatedAt @map("updated_at")
+
+  items OrderItem[]
+
+  @@index([status, updatedAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String  @id @default(uuid())
+  orderId     String  @map("order_id")
+  productId   String? @map("product_id")
+  productCode String? @map("product_code")
+  productName String  @map("product_name")
+  quantity    Int
+  unitPrice   Float   @map("unit_price")
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("order_items")
+}
+
 model RefreshToken {
   id        String    @id @default(uuid())
   token     String    @unique
