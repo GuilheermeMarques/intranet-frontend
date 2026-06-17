@@ -22,8 +22,23 @@ model User {
 
   refreshTokens RefreshToken[]
   userPermissions UserPermission[]
+  preferences UserPreferences?
 
   @@map("users")
+}
+
+model UserPreferences {
+  id               String    @id @default(uuid())
+  userId           String    @unique @map("user_id")
+  theme            String    @default("light")
+  language         String    @default("pt-BR")
+  sidebarCollapsed Boolean   @default(false) @map("sidebar_collapsed")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime? @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("user_preferences")
 }
 
 model Permission {
