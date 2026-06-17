@@ -21,8 +21,7 @@
       "@/*": ["src/*"]
     },
     "types": [
-      "vitest/globals",
-      "multer"
+      "vitest/globals"
     ]
   }
 }
