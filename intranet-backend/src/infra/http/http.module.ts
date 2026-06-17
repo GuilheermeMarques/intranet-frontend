@@ -26,6 +26,9 @@ import { CreateProductController } from './controllers/create-product.controller
 import { GetProductByIdController } from './controllers/get-product-by-id.controller'
 import { EditProductController } from './controllers/edit-product.controller'
 import { DeleteProductController } from './controllers/delete-product.controller'
+import { FetchInventoryMovementsController } from './controllers/fetch-inventory-movements.controller'
+import { CreateInventoryMovementController } from './controllers/create-inventory-movement.controller'
+import { GetInventoryLookupsController } from './controllers/get-inventory-lookups.controller'
 import { AuthenticateUseCase } from '@/domain/iam/application/use-cases/authenticate'
 import { RefreshTokenUseCase } from '@/domain/iam/application/use-cases/refresh-token'
 import { LogoutUseCase } from '@/domain/iam/application/use-cases/logout'
@@ -49,6 +52,9 @@ import { CreateProductUseCase } from '@/domain/sales/application/use-cases/creat
 import { GetProductByIdUseCase } from '@/domain/sales/application/use-cases/get-product-by-id'
 import { EditProductUseCase } from '@/domain/sales/application/use-cases/edit-product'
 import { DeleteProductUseCase } from '@/domain/sales/application/use-cases/delete-product'
+import { FetchInventoryMovementsUseCase } from '@/domain/sales/application/use-cases/fetch-inventory-movements'
+import { CreateInventoryMovementUseCase } from '@/domain/sales/application/use-cases/create-inventory-movement'
+import { FetchInventoryLookupsUseCase } from '@/domain/sales/application/use-cases/fetch-inventory-lookups'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -76,6 +82,9 @@ import { DeleteProductUseCase } from '@/domain/sales/application/use-cases/delet
     GetProductByIdController,
     EditProductController,
     DeleteProductController,
+    GetInventoryLookupsController,
+    FetchInventoryMovementsController,
+    CreateInventoryMovementController,
   ],
   providers: [
     AuthenticateUseCase,
@@ -101,6 +110,9 @@ import { DeleteProductUseCase } from '@/domain/sales/application/use-cases/delet
     GetProductByIdUseCase,
     EditProductUseCase,
     DeleteProductUseCase,
+    FetchInventoryMovementsUseCase,
+    CreateInventoryMovementUseCase,
+    FetchInventoryLookupsUseCase,
     { provide: APP_GUARD, useClass: PermissionsGuard },
   ],
 })

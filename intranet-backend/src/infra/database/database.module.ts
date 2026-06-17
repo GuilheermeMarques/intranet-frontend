@@ -12,6 +12,8 @@ import { ClientsRepository } from '@/domain/sales/application/repositories/clien
 import { PrismaClientsRepository } from './prisma/repositories/prisma-clients-repository'
 import { ProductsRepository } from '@/domain/sales/application/repositories/products-repository'
 import { PrismaProductsRepository } from './prisma/repositories/prisma-products-repository'
+import { InventoryMovementsRepository } from '@/domain/sales/application/repositories/inventory-movements-repository'
+import { PrismaInventoryMovementsRepository } from './prisma/repositories/prisma-inventory-movements-repository'
 
 @Module({
   providers: [
@@ -22,6 +24,10 @@ import { PrismaProductsRepository } from './prisma/repositories/prisma-products-
     { provide: PreferencesRepository, useClass: PrismaPreferencesRepository },
     { provide: ClientsRepository, useClass: PrismaClientsRepository },
     { provide: ProductsRepository, useClass: PrismaProductsRepository },
+    {
+      provide: InventoryMovementsRepository,
+      useClass: PrismaInventoryMovementsRepository,
+    },
   ],
   exports: [
     PrismaService,
@@ -31,6 +37,7 @@ import { PrismaProductsRepository } from './prisma/repositories/prisma-products-
     PreferencesRepository,
     ClientsRepository,
     ProductsRepository,
+    InventoryMovementsRepository,
   ],
 })
 export class DatabaseModule {}
