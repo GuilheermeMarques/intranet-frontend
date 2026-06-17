@@ -130,6 +130,23 @@ model InventoryMovement {
   @@map("inventory_movements")
 }
 
+model Representative {
+  id           String    @id @default(uuid())
+  name         String
+  email        String
+  phone        String
+  region       String
+  status       String
+  totalSales   Float     @default(0) @map("total_sales")
+  monthlyGoal  Float     @default(0) @map("monthly_goal")
+  clientsCount Int       @default(0) @map("clients_count")
+  lastActivity DateTime? @map("last_activity")
+  avatar       String?
+
+  @@index([region])
+  @@map("representatives")
+}
+
 model RefreshToken {
   id        String    @id @default(uuid())
   token     String    @unique

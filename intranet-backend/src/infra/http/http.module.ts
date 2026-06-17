@@ -29,6 +29,7 @@ import { DeleteProductController } from './controllers/delete-product.controller
 import { FetchInventoryMovementsController } from './controllers/fetch-inventory-movements.controller'
 import { CreateInventoryMovementController } from './controllers/create-inventory-movement.controller'
 import { GetInventoryLookupsController } from './controllers/get-inventory-lookups.controller'
+import { FetchRepresentativesController } from './controllers/fetch-representatives.controller'
 import { AuthenticateUseCase } from '@/domain/iam/application/use-cases/authenticate'
 import { RefreshTokenUseCase } from '@/domain/iam/application/use-cases/refresh-token'
 import { LogoutUseCase } from '@/domain/iam/application/use-cases/logout'
@@ -55,6 +56,7 @@ import { DeleteProductUseCase } from '@/domain/sales/application/use-cases/delet
 import { FetchInventoryMovementsUseCase } from '@/domain/sales/application/use-cases/fetch-inventory-movements'
 import { CreateInventoryMovementUseCase } from '@/domain/sales/application/use-cases/create-inventory-movement'
 import { FetchInventoryLookupsUseCase } from '@/domain/sales/application/use-cases/fetch-inventory-lookups'
+import { FetchRepresentativesUseCase } from '@/domain/sales/application/use-cases/fetch-representatives'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -85,6 +87,7 @@ import { FetchInventoryLookupsUseCase } from '@/domain/sales/application/use-cas
     GetInventoryLookupsController,
     FetchInventoryMovementsController,
     CreateInventoryMovementController,
+    FetchRepresentativesController,
   ],
   providers: [
     AuthenticateUseCase,
@@ -113,6 +116,7 @@ import { FetchInventoryLookupsUseCase } from '@/domain/sales/application/use-cas
     FetchInventoryMovementsUseCase,
     CreateInventoryMovementUseCase,
     FetchInventoryLookupsUseCase,
+    FetchRepresentativesUseCase,
     { provide: APP_GUARD, useClass: PermissionsGuard },
   ],
 })

@@ -195,6 +195,51 @@ async function main() {
     })
     console.log('Seeded 2 sample inventory movements')
   }
+
+  const REPRESENTATIVES = [
+    {
+      name: 'João Silva',
+      email: 'joao.silva@empresa.com',
+      phone: '(11) 98888-1001',
+      region: 'Sudeste',
+      status: 'active',
+      totalSales: 125000,
+      monthlyGoal: 150000,
+      clientsCount: 32,
+      lastActivity: new Date('2026-06-15T00:00:00.000Z'),
+      avatar: null as string | null,
+    },
+    {
+      name: 'Maria Souza',
+      email: 'maria.souza@empresa.com',
+      phone: '(21) 97777-2002',
+      region: 'Sul',
+      status: 'vacation',
+      totalSales: 98000,
+      monthlyGoal: 120000,
+      clientsCount: 24,
+      lastActivity: new Date('2026-05-30T00:00:00.000Z'),
+      avatar: null as string | null,
+    },
+    {
+      name: 'Carlos Pereira',
+      email: 'carlos.pereira@empresa.com',
+      phone: '(31) 96666-3003',
+      region: 'Nordeste',
+      status: 'training',
+      totalSales: 45000,
+      monthlyGoal: 90000,
+      clientsCount: 11,
+      lastActivity: null as Date | null,
+      avatar: null as string | null,
+    },
+  ]
+
+  const representativesCount = await prisma.representative.count()
+  if (representativesCount === 0) {
+    await prisma.representative.createMany({ data: REPRESENTATIVES })
+    console.log(`Seeded ${REPRESENTATIVES.length} sample representatives`)
+  }
 }
 
 main()
