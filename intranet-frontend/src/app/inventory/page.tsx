@@ -3,26 +3,26 @@
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Column, DataTable } from '@/components/DataTable';
 import { FilterField, FilterPanel } from '@/components/FilterPanel';
-import inventoryData from '@/mocks/inventory.json';
-import { InventoryFilters, InventoryMovement } from '@/types/inventory';
+import { useInventoryQuery } from '@/features/inventory/hooks/useInventoryQuery';
+import { InventoryFilters } from '@/features/inventory/types';
 import { Add, ArrowDownward, ArrowUpward, Search } from '@mui/icons-material';
-import { Box, Button, Chip, Typography } from '@mui/material';
+import { Box, Button, Chip, CircularProgress, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 export default function InventoryPage() {
   const router = useRouter();
   const [filters, setFilters] = useState<InventoryFilters>({
-    codigoProduto: '',
-    descricao: '',
-    tipo: '',
-    dataInicial: null,
-    dataFinal: null,
+    productCode: '',
+    description: '',
+    type: '',
+    startDate: null,
+    endDate: null,
   });
 
   const columns: Column[] = [
     {
-      id: 'codigoProduto',
+      id: 'productCode',
       label: 'Código do Produto',
       sortable: true,
       render: (value) => (
@@ -30,7 +30,7 @@ export default function InventoryPage() {
       ),
     },
     {
-      id: 'descricao',
+      id: 'description',
       label: 'Descrição',
       sortable: true,
       render: (value) => (
@@ -40,7 +40,7 @@ export default function InventoryPage() {
       ),
     },
     {
-      id: 'quantidade',
+      id: 'quantity',
       label: 'Quantidade',
       sortable: true,
       render: (value) => (
@@ -50,11 +50,11 @@ export default function InventoryPage() {
       ),
     },
     {
-      id: 'tipo',
+      id: 'type',
       label: 'Tipo',
       sortable: true,
       render: (value) => {
-        const isEntrada = value === 'entrada';
+        const isEntrada = value === 'inbound';
         return (
           <Chip
             label={isEntrada ? 'Entrada' : 'Saída'}
@@ -67,7 +67,7 @@ export default function InventoryPage() {
       },
     },
     {
-      id: 'data',
+      id: 'occurredAt',
       label: 'Data (Entrada/Saída)',
       sortable: true,
       render: (value) => formatDate(value as string),
@@ -94,57 +94,26 @@ export default function InventoryPage() {
     },
   ];
 
-  // Filtrar movimentações baseado nos filtros aplicados
-  const filteredMovements = useMemo(() => {
-    return (inventoryData.movements as InventoryMovement[]).filter((movement) => {
-      const codigoMatch =
-        !filters.codigoProduto ||
-        filters.codigoProduto.trim() === '' ||
-        movement.codigoProduto.toLowerCase().includes(filters.codigoProduto.toLowerCase());
-
-      const descricaoMatch =
-        !filters.descricao ||
-        filters.descricao.trim() === '' ||
-        movement.descricao.toLowerCase().includes(filters.descricao.toLowerCase());
-
-      const tipoMatch =
-        !filters.tipo || filters.tipo.trim() === '' || movement.tipo === filters.tipo;
-
-      // Filtro de data
-      let dataMatch = true;
-      if (filters.dataInicial || filters.dataFinal) {
-        const dataMovimento = new Date(movement.data);
-
-        if (filters.dataInicial && filters.dataFinal) {
-          dataMatch = dataMovimento >= filters.dataInicial && dataMovimento <= filters.dataFinal;
-        } else if (filters.dataInicial) {
-          dataMatch = dataMovimento >= filters.dataInicial;
-        } else if (filters.dataFinal) {
-          dataMatch = dataMovimento <= filters.dataFinal;
-        }
-      }
-
-      return codigoMatch && descricaoMatch && tipoMatch && dataMatch;
-    });
-  }, [filters]);
+  const { data, isLoading } = useInventoryQuery(filters);
+  const filteredMovements = data?.movements ?? [];
 
   const handleFilterChange = (newFilters: Record<string, unknown>) => {
     setFilters({
-      codigoProduto: (newFilters.codigoProduto as string) || '',
-      descricao: (newFilters.descricao as string) || '',
-      tipo: (newFilters.tipo as string) || '',
-      dataInicial: (newFilters.dataInicial as Date) || null,
-      dataFinal: (newFilters.dataFinal as Date) || null,
+      productCode: (newFilters.productCode as string) || '',
+      description: (newFilters.description as string) || '',
+      type: (newFilters.type as string) || '',
+      startDate: (newFilters.startDate as Date) || null,
+      endDate: (newFilters.endDate as Date) || null,
     });
   };
 
   const clearFilters = () => {
     setFilters({
-      codigoProduto: '',
-      descricao: '',
-      tipo: '',
-      dataInicial: null,
-      dataFinal: null,
+      productCode: '',
+      description: '',
+      type: '',
+      startDate: null,
+      endDate: null,
     });
   };
 
@@ -165,36 +134,36 @@ export default function InventoryPage() {
   // Configuração dos campos de filtro
   const filterFields: FilterField[] = [
     {
-      id: 'codigoProduto',
+      id: 'productCode',
       type: 'text',
       label: 'Código do Produto',
       placeholder: 'Digite o código do produto',
       startAdornment: <Search />,
     },
     {
-      id: 'descricao',
+      id: 'description',
       type: 'text',
       label: 'Descrição do Produto',
       placeholder: 'Digite a descrição do produto',
       startAdornment: <Search />,
     },
     {
-      id: 'tipo',
+      id: 'type',
       type: 'select',
       label: 'Tipo de Movimentação',
       options: [
         { value: '', label: 'Todos' },
-        { value: 'entrada', label: 'Entrada' },
-        { value: 'saida', label: 'Saída' },
+        { value: 'inbound', label: 'Entrada' },
+        { value: 'outbound', label: 'Saída' },
       ],
     },
     {
-      id: 'dataInicial',
+      id: 'startDate',
       type: 'date',
       label: 'Data Inicial',
     },
     {
-      id: 'dataFinal',
+      id: 'endDate',
       type: 'date',
       label: 'Data Final',
     },
@@ -226,7 +195,7 @@ export default function InventoryPage() {
         <FilterPanel
           title="Filtros de Busca"
           fields={filterFields}
-          filters={filters}
+          filters={filters as unknown as Record<string, unknown>}
           onFiltersChange={handleFilterChange}
           onClearFilters={clearFilters}
           showClearButton={false}
@@ -235,13 +204,19 @@ export default function InventoryPage() {
         />
 
         {/* Tabela de Movimentações */}
-        <DataTable
-          columns={columns}
-          data={filteredMovements}
-          title="Movimentações de Estoque"
-          emptyMessage="Nenhuma movimentação encontrada com os filtros aplicados."
-          getRowKey={(row) => (row.id as string) || String(row)}
-        />
+        {isLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={filteredMovements as unknown as Record<string, unknown>[]}
+            title="Movimentações de Estoque"
+            emptyMessage="Nenhuma movimentação encontrada com os filtros aplicados."
+            getRowKey={(row) => (row.id as string) || String(row)}
+          />
+        )}
       </Box>
     </DashboardLayout>
   );
