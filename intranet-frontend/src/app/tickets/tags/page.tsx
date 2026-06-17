@@ -3,8 +3,8 @@
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { DataTable } from '@/components/DataTable';
 import { ConfirmModal, FormModal } from '@/components/Modal';
-import tagsData from '@/mocks/tags.json';
-import { Tag } from '@/types/ticket';
+import { useTagsQuery } from '@/features/tickets/hooks/useTagsQuery';
+import { Tag } from '@/features/tickets/types';
 import {
   Add as AddIcon,
   Delete as DeleteIcon,
@@ -26,10 +26,15 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function TagsPage() {
-  const [tags, setTags] = useState<Tag[]>(tagsData.tags);
+  const { data: tagsData } = useTagsQuery();
+  const [tags, setTags] = useState<Tag[]>([]);
+
+  useEffect(() => {
+    if (tagsData) setTags(tagsData);
+  }, [tagsData]);
   const [openModal, setOpenModal] = useState(false);
   const [editingTag, setEditingTag] = useState<Tag | null>(null);
   const [deleteModal, setDeleteModal] = useState<Tag | null>(null);
