@@ -68,6 +68,31 @@ model UserPermission {
   @@map("user_permissions")
 }
 
+model Client {
+  id             String    @id @default(uuid())
+  code           String    @unique
+  name           String
+  document       String
+  zipCode        String    @map("zip_code")
+  street         String
+  city           String
+  state          String
+  neighborhood   String
+  number         String
+  complement     String
+  email          String
+  phone          String
+  instagram      String
+  lastPurchaseAt DateTime? @map("last_purchase_at")
+  purchaseCount  Int       @default(0) @map("purchase_count")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime? @updatedAt @map("updated_at")
+
+  @@index([name])
+  @@index([city])
+  @@map("clients")
+}
+
 model RefreshToken {
   id        String    @id @default(uuid())
   token     String    @unique

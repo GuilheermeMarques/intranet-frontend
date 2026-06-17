@@ -8,6 +8,8 @@ import { PermissionsRepository } from '@/domain/iam/application/repositories/per
 import { PrismaPermissionsRepository } from './prisma/repositories/prisma-permissions-repository'
 import { PreferencesRepository } from '@/domain/iam/application/repositories/preferences-repository'
 import { PrismaPreferencesRepository } from './prisma/repositories/prisma-preferences-repository'
+import { ClientsRepository } from '@/domain/sales/application/repositories/clients-repository'
+import { PrismaClientsRepository } from './prisma/repositories/prisma-clients-repository'
 
 @Module({
   providers: [
@@ -16,7 +18,15 @@ import { PrismaPreferencesRepository } from './prisma/repositories/prisma-prefer
     { provide: RefreshTokensRepository, useClass: PrismaRefreshTokensRepository },
     { provide: PermissionsRepository, useClass: PrismaPermissionsRepository },
     { provide: PreferencesRepository, useClass: PrismaPreferencesRepository },
+    { provide: ClientsRepository, useClass: PrismaClientsRepository },
   ],
-  exports: [PrismaService, UsersRepository, RefreshTokensRepository, PermissionsRepository, PreferencesRepository],
+  exports: [
+    PrismaService,
+    UsersRepository,
+    RefreshTokensRepository,
+    PermissionsRepository,
+    PreferencesRepository,
+    ClientsRepository,
+  ],
 })
 export class DatabaseModule {}
