@@ -24,13 +24,13 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 interface NewMovementForm {
-  codigoProduto: string;
-  descricao: string;
-  quantidade: number;
-  tipo: 'entrada' | 'saida';
-  motivo: string;
-  responsavel: string;
-  observacoes: string;
+  productCode: string;
+  description: string;
+  quantity: number;
+  type: 'inbound' | 'outbound';
+  reason: string;
+  handledBy: string;
+  notes: string;
 }
 
 const filterProducts = createFilterOptions<Product>();
@@ -39,13 +39,13 @@ export default function NewInventoryMovementPage() {
   const router = useRouter();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState<NewMovementForm>({
-    codigoProduto: '',
-    descricao: '',
-    quantidade: 0,
-    tipo: 'entrada',
-    motivo: '',
-    responsavel: '',
-    observacoes: '',
+    productCode: '',
+    description: '',
+    quantity: 0,
+    type: 'inbound',
+    reason: '',
+    handledBy: '',
+    notes: '',
   });
 
   const productOptions = productsData.products as Product[];
@@ -55,14 +55,14 @@ export default function NewInventoryMovementPage() {
     if (newValue) {
       setFormData((prev) => ({
         ...prev,
-        codigoProduto: newValue.code,
-        descricao: newValue.name,
+        productCode: newValue.code,
+        description: newValue.name,
       }));
     } else {
       setFormData((prev) => ({
         ...prev,
-        codigoProduto: '',
-        descricao: '',
+        productCode: '',
+        description: '',
       }));
     }
   };
@@ -169,7 +169,7 @@ export default function NewInventoryMovementPage() {
               <TextField
                 fullWidth
                 label="Código do Produto"
-                value={formData.codigoProduto}
+                value={formData.productCode}
                 InputProps={{ readOnly: true }}
                 placeholder="Selecione um produto"
               />
@@ -180,7 +180,7 @@ export default function NewInventoryMovementPage() {
               <TextField
                 fullWidth
                 label="Descrição do Produto"
-                value={formData.descricao}
+                value={formData.description}
                 InputProps={{ readOnly: true }}
                 placeholder="Selecione um produto"
                 multiline
@@ -200,8 +200,8 @@ export default function NewInventoryMovementPage() {
                 fullWidth
                 label="Quantidade"
                 type="number"
-                value={formData.quantidade}
-                onChange={(e) => handleInputChange('quantidade', parseInt(e.target.value) || 0)}
+                value={formData.quantity}
+                onChange={(e) => handleInputChange('quantity', parseInt(e.target.value) || 0)}
                 placeholder="0"
                 required
                 inputProps={{ min: 1 }}
@@ -212,12 +212,12 @@ export default function NewInventoryMovementPage() {
               <FormControl fullWidth required>
                 <InputLabel>Tipo de Movimentação</InputLabel>
                 <Select
-                  value={formData.tipo}
+                  value={formData.type}
                   label="Tipo de Movimentação"
-                  onChange={(e) => handleInputChange('tipo', e.target.value as 'entrada' | 'saida')}
+                  onChange={(e) => handleInputChange('type', e.target.value as 'inbound' | 'outbound')}
                 >
-                  <MenuItem value="entrada">Entrada</MenuItem>
-                  <MenuItem value="saida">Saída</MenuItem>
+                  <MenuItem value="inbound">Entrada</MenuItem>
+                  <MenuItem value="outbound">Saída</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -226,13 +226,13 @@ export default function NewInventoryMovementPage() {
               <FormControl fullWidth required>
                 <InputLabel>Motivo</InputLabel>
                 <Select
-                  value={formData.motivo}
+                  value={formData.reason}
                   label="Motivo"
-                  onChange={(e) => handleInputChange('motivo', e.target.value)}
+                  onChange={(e) => handleInputChange('reason', e.target.value)}
                 >
-                  {(inventoryData.motivos as string[]).map((motivo) => (
-                    <MenuItem key={motivo} value={motivo}>
-                      {motivo}
+                  {(inventoryData.reasons as string[]).map((reason) => (
+                    <MenuItem key={reason} value={reason}>
+                      {reason}
                     </MenuItem>
                   ))}
                 </Select>
@@ -243,8 +243,8 @@ export default function NewInventoryMovementPage() {
               <TextField
                 fullWidth
                 label="Responsável"
-                value={formData.responsavel}
-                onChange={(e) => handleInputChange('responsavel', e.target.value)}
+                value={formData.handledBy}
+                onChange={(e) => handleInputChange('handledBy', e.target.value)}
                 placeholder="Nome do responsável"
                 required
               />
@@ -254,8 +254,8 @@ export default function NewInventoryMovementPage() {
               <TextField
                 fullWidth
                 label="Observações"
-                value={formData.observacoes}
-                onChange={(e) => handleInputChange('observacoes', e.target.value)}
+                value={formData.notes}
+                onChange={(e) => handleInputChange('notes', e.target.value)}
                 placeholder="Observações adicionais sobre a movimentação"
                 multiline
                 rows={3}
@@ -309,9 +309,9 @@ export default function NewInventoryMovementPage() {
               onClick={handleSubmit}
               disabled={
                 !selectedProduct ||
-                formData.quantidade <= 0 ||
-                !formData.motivo ||
-                !formData.responsavel
+                formData.quantity <= 0 ||
+                !formData.reason ||
+                !formData.handledBy
               }
             >
               Salvar Movimentação
