@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, UsePipes } from '@nestjs/common'
+import { Body, Controller, Get, Patch } from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
@@ -28,8 +28,10 @@ export class PreferencesController {
   }
 
   @Patch()
-  @UsePipes(new ZodValidationPipe(updateBodySchema))
-  async patch(@CurrentUser() currentUser: UserPayload, @Body() body: UpdateBodySchema) {
+  async patch(
+    @CurrentUser() currentUser: UserPayload,
+    @Body(new ZodValidationPipe(updateBodySchema)) body: UpdateBodySchema,
+  ) {
     const result = await this.updatePreferences.execute({ userId: currentUser.sub, ...body })
     return { preferences: PreferencesPresenter.toHTTP(result.value!.preferences) }
   }

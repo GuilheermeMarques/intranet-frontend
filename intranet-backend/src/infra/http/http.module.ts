@@ -13,6 +13,13 @@ import { GetUserPermissionsController } from './controllers/get-user-permissions
 import { SetUserPermissionsController } from './controllers/set-user-permissions.controller'
 import { GetPermissionsCatalogController } from './controllers/get-permissions-catalog.controller'
 import { PreferencesController } from './controllers/preferences.controller'
+import { FetchClientsController } from './controllers/fetch-clients.controller'
+import { GetClientLookupsController } from './controllers/get-client-lookups.controller'
+import { GetClientByCodeController } from './controllers/get-client-by-code.controller'
+import { CreateClientController } from './controllers/create-client.controller'
+import { GetClientByIdController } from './controllers/get-client-by-id.controller'
+import { EditClientController } from './controllers/edit-client.controller'
+import { DeleteClientController } from './controllers/delete-client.controller'
 import { AuthenticateUseCase } from '@/domain/iam/application/use-cases/authenticate'
 import { RefreshTokenUseCase } from '@/domain/iam/application/use-cases/refresh-token'
 import { LogoutUseCase } from '@/domain/iam/application/use-cases/logout'
@@ -23,6 +30,13 @@ import { SetUserPermissionsUseCase } from '@/domain/iam/application/use-cases/se
 import { GetPermissionsCatalogUseCase } from '@/domain/iam/application/use-cases/get-permissions-catalog'
 import { GetPreferencesUseCase } from '@/domain/iam/application/use-cases/get-preferences'
 import { UpdatePreferencesUseCase } from '@/domain/iam/application/use-cases/update-preferences'
+import { FetchClientsUseCase } from '@/domain/sales/application/use-cases/fetch-clients'
+import { FetchCitiesUseCase } from '@/domain/sales/application/use-cases/fetch-cities'
+import { GetClientByCodeUseCase } from '@/domain/sales/application/use-cases/get-client-by-code'
+import { CreateClientUseCase } from '@/domain/sales/application/use-cases/create-client'
+import { GetClientByIdUseCase } from '@/domain/sales/application/use-cases/get-client-by-id'
+import { EditClientUseCase } from '@/domain/sales/application/use-cases/edit-client'
+import { DeleteClientUseCase } from '@/domain/sales/application/use-cases/delete-client'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -37,6 +51,13 @@ import { UpdatePreferencesUseCase } from '@/domain/iam/application/use-cases/upd
     SetUserPermissionsController,
     GetPermissionsCatalogController,
     PreferencesController,
+    FetchClientsController,
+    GetClientLookupsController,
+    GetClientByCodeController,
+    CreateClientController,
+    GetClientByIdController,
+    EditClientController,
+    DeleteClientController,
   ],
   providers: [
     AuthenticateUseCase,
@@ -49,6 +70,13 @@ import { UpdatePreferencesUseCase } from '@/domain/iam/application/use-cases/upd
     GetPermissionsCatalogUseCase,
     GetPreferencesUseCase,
     UpdatePreferencesUseCase,
+    FetchClientsUseCase,
+    FetchCitiesUseCase,
+    GetClientByCodeUseCase,
+    CreateClientUseCase,
+    GetClientByIdUseCase,
+    EditClientUseCase,
+    DeleteClientUseCase,
     { provide: APP_GUARD, useClass: PermissionsGuard },
   ],
 })

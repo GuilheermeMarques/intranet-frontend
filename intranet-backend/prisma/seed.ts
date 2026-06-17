@@ -53,6 +53,70 @@ async function main() {
   }
 
   console.log(`Seeded admin (admin@empresa.com / admin123) with ${allPermissions.length} permissions`)
+
+  const CLIENTS = [
+    {
+      code: 'CLI001',
+      name: 'Padaria Pão Quente',
+      document: '12.345.678/0001-90',
+      zipCode: '01001-000',
+      street: 'Praça da Sé',
+      city: 'São Paulo',
+      state: 'SP',
+      neighborhood: 'Sé',
+      number: '100',
+      complement: 'Loja 1',
+      email: 'contato@paoquente.com.br',
+      phone: '(11) 3333-1001',
+      instagram: '@paoquente',
+      lastPurchaseAt: new Date('2026-05-10T00:00:00.000Z'),
+      purchaseCount: 12,
+    },
+    {
+      code: 'CLI002',
+      name: 'Mercado Bom Preço',
+      document: '23.456.789/0001-01',
+      zipCode: '20040-002',
+      street: 'Avenida Rio Branco',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+      neighborhood: 'Centro',
+      number: '250',
+      complement: '',
+      email: 'compras@bompreco.com.br',
+      phone: '(21) 2222-2002',
+      instagram: '@mercadobompreco',
+      lastPurchaseAt: new Date('2026-06-01T00:00:00.000Z'),
+      purchaseCount: 34,
+    },
+    {
+      code: 'CLI003',
+      name: 'Farmácia Saúde Total',
+      document: '34.567.890/0001-12',
+      zipCode: '30110-013',
+      street: 'Avenida Afonso Pena',
+      city: 'Belo Horizonte',
+      state: 'MG',
+      neighborhood: 'Centro',
+      number: '1500',
+      complement: 'Sala 3',
+      email: 'sac@saudetotal.com.br',
+      phone: '(31) 3131-3003',
+      instagram: '@saudetotalbh',
+      lastPurchaseAt: null,
+      purchaseCount: 0,
+    },
+  ]
+
+  for (const client of CLIENTS) {
+    await prisma.client.upsert({
+      where: { code: client.code },
+      update: client,
+      create: client,
+    })
+  }
+
+  console.log(`Seeded ${CLIENTS.length} sample clients`)
 }
 
 main()
