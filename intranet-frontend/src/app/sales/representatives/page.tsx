@@ -3,52 +3,31 @@
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Column, DataTable } from '@/components/DataTable';
 import { FilterField, FilterPanel } from '@/components/FilterPanel';
-import representativesData from '@/mocks/representatives.json';
-import { Avatar, Box, Button, Chip, Typography } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useRepresentativesQuery } from '@/features/representatives/hooks/useRepresentativesQuery';
+import { RepresentativeFilters } from '@/features/representatives/types';
+import { Avatar, Box, Button, Chip, CircularProgress, Typography } from '@mui/material';
+import { useState } from 'react';
 
 export default function RepresentativesPage() {
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<RepresentativeFilters>({
     name: '',
     region: '',
     status: '',
   });
 
-  // Extrair listas únicas de regiões e status dos dados
-  const regions = useMemo(() => {
-    return representativesData.regions;
-  }, []);
-
-  const statusOptions = useMemo(() => {
-    return representativesData.statusOptions;
-  }, []);
+  const { data, isLoading } = useRepresentativesQuery(filters);
+  const filteredRepresentatives = data?.representatives ?? [];
+  const regions = data?.regions ?? [];
+  const statusOptions = data?.statusOptions ?? [];
 
   // Aplicar filtros
   const handleFiltersChange = (newFilters: Record<string, unknown>) => {
-    setFilters(newFilters as typeof filters);
-  };
-
-  // Filtrar representantes baseado nos filtros aplicados
-  const filteredRepresentatives = useMemo(() => {
-    return representativesData.representatives.filter((representative) => {
-      const nameMatch =
-        !filters.name ||
-        (filters.name as string).trim() === '' ||
-        representative.name.toLowerCase().includes((filters.name as string).toLowerCase());
-
-      const regionMatch =
-        !filters.region ||
-        (filters.region as string).trim() === '' ||
-        representative.region === filters.region;
-
-      const statusMatch =
-        !filters.status ||
-        (filters.status as string).trim() === '' ||
-        representative.status === filters.status;
-
-      return nameMatch && regionMatch && statusMatch;
+    setFilters({
+      name: (newFilters.name as string) || '',
+      region: (newFilters.region as string) || '',
+      status: (newFilters.status as string) || '',
     });
-  }, [filters]);
+  };
 
   // Função para obter a cor do status
   const getStatusColor = (status: string) => {
@@ -216,7 +195,7 @@ export default function RepresentativesPage() {
         <FilterPanel
           title="Filtros de Representantes"
           fields={filterFields}
-          filters={filters}
+          filters={filters as unknown as Record<string, unknown>}
           onFiltersChange={handleFiltersChange}
           showClearButton={false}
           resultsCount={filteredRepresentatives.length}
@@ -224,13 +203,19 @@ export default function RepresentativesPage() {
         />
 
         {/* Tabela de Representantes */}
-        <DataTable
-          columns={columns}
-          data={filteredRepresentatives as unknown as Record<string, unknown>[]}
-          title="Representantes de Vendas"
-          onRowClick={handleRowClick}
-          emptyMessage="Nenhum representante encontrado com os filtros aplicados."
-        />
+        {isLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={filteredRepresentatives as unknown as Record<string, unknown>[]}
+            title="Representantes de Vendas"
+            onRowClick={handleRowClick}
+            emptyMessage="Nenhum representante encontrado com os filtros aplicados."
+          />
+        )}
       </Box>
     </DashboardLayout>
   );
