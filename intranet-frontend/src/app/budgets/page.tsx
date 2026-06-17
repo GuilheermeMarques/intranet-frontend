@@ -4,15 +4,15 @@ import { DashboardLayout } from '@/components/DashboardLayout';
 import { Column, DataTable } from '@/components/DataTable';
 import { FilterField, FilterPanel } from '@/components/FilterPanel';
 import { FormModal } from '@/components/Modal';
-import budgetsData from '@/mocks/budgets.json';
+import { useBudgetsQuery } from '@/features/budgets/hooks/useBudgetsQuery';
+import { Budget, BudgetFilters } from '@/features/budgets/types';
 import productsData from '@/mocks/products.json';
-import representativesData from '@/mocks/representatives.json';
-import { Budget, BudgetFilters } from '@/types/budget';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {
   Box,
   Button,
   Chip,
+  CircularProgress,
   FormControl,
   Grid,
   IconButton,
@@ -29,12 +29,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useMemo, useState } from 'react';
-
-type Option = {
-  value: string;
-  label: string;
-};
+import { useState } from 'react';
 
 type NewBudgetItem = {
   productId: string;
@@ -51,14 +46,6 @@ type NewBudgetForm = {
   validityDate: string;
   items: NewBudgetItem[];
 };
-
-const slugify = (value: string) =>
-  value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
 
 const buildInitialBudget = (): NewBudgetForm => ({
   clientId: '',
@@ -88,73 +75,11 @@ export default function BudgetsPage() {
   const [isNewBudgetModalOpen, setIsNewBudgetModalOpen] = useState(false);
   const [newBudget, setNewBudget] = useState<NewBudgetForm>(buildInitialBudget);
 
-  const normalizedBudgets = useMemo<Budget[]>(() => {
-    return budgetsData.budgets.map((budget) => {
-      const matchedRepresentative = representativesData.representatives.find(
-        (rep) => rep.name === budget.responsible,
-      );
-
-      return {
-        id: budget.id,
-        number: budget.number,
-        clientId: `client-${slugify(budget.client)}`,
-        clientName: budget.client,
-        responsibleId:
-          matchedRepresentative?.id ?? `representative-${slugify(budget.responsible)}`,
-        responsibleName: budget.responsible,
-        createdAt: budget.createdAt,
-        status: budget.status as Budget['status'],
-        total: budget.total,
-        items: budget.items.map((item) => {
-          const matchedProduct = productsData.products.find(
-            (product) =>
-              product.name === item.product ||
-              product.name.includes(item.product) ||
-              item.product.includes(product.name),
-          );
-
-          return {
-            id: item.id,
-            productId: String(matchedProduct?.id ?? `product-${slugify(item.product)}`),
-            productCode: matchedProduct?.code,
-            productName: matchedProduct?.name ?? item.product,
-            quantity: item.quantity,
-            unitPrice: item.unitPrice,
-            total: item.total,
-          };
-        }),
-      };
-    });
-  }, []);
-
-  const clients = useMemo<Option[]>(() => {
-    const clientMap = new Map<string, Option>();
-
-    normalizedBudgets.forEach((budget) => {
-      clientMap.set(budget.clientId, { value: budget.clientId, label: budget.clientName });
-    });
-
-    return Array.from(clientMap.values()).sort((a, b) => a.label.localeCompare(b.label));
-  }, [normalizedBudgets]);
-
-  const responsibles = useMemo<Option[]>(() => {
-    const responsibleMap = new Map<string, Option>();
-
-    normalizedBudgets.forEach((budget) => {
-      responsibleMap.set(budget.responsibleId, {
-        value: budget.responsibleId,
-        label: budget.responsibleName,
-      });
-    });
-
-    return Array.from(responsibleMap.values()).sort((a, b) => a.label.localeCompare(b.label));
-  }, [normalizedBudgets]);
-
-  const activeRepresentatives = useMemo<Option[]>(() => {
-    return representativesData.representatives
-      .filter((rep) => rep.status === 'active')
-      .map((rep) => ({ value: rep.id, label: rep.name }));
-  }, []);
+  const { data, isLoading } = useBudgetsQuery(filters);
+  const filteredBudgets = data?.budgets ?? [];
+  const clients = data?.clients ?? [];
+  const responsibles = data?.responsibles ?? [];
+  const activeRepresentatives = data?.activeRepresentatives ?? [];
 
   const handleOpenNewBudgetModal = () => {
     setIsNewBudgetModalOpen(true);
@@ -239,10 +164,10 @@ export default function BudgetsPage() {
     const selectedRepresentative = activeRepresentatives.find(
       (representative) => representative.value === newBudget.responsibleId,
     );
-    const nextNumber = `ORC-2025-${String(normalizedBudgets.length + 1).padStart(3, '0')}`;
+    const nextNumber = `ORC-2025-${String(filteredBudgets.length + 1).padStart(3, '0')}`;
 
     const budgetToCreate: Budget = {
-      id: String(normalizedBudgets.length + 1),
+      id: String(filteredBudgets.length + 1),
       number: nextNumber,
       clientId: newBudget.clientId,
       clientName: selectedClient?.label ?? '',
@@ -277,37 +202,6 @@ export default function BudgetsPage() {
       endDate: (nextFilters.endDate as Date) || null,
     });
   };
-
-  const filteredBudgets = useMemo(() => {
-    return normalizedBudgets.filter((budget) => {
-      const budgetNumberMatch =
-        !filters.budgetNumber ||
-        filters.budgetNumber.trim() === '' ||
-        budget.number.toLowerCase().includes(filters.budgetNumber.toLowerCase());
-
-      const clientMatch =
-        !filters.clientId || filters.clientId.trim() === '' || budget.clientId === filters.clientId;
-
-      const responsibleMatch =
-        !filters.responsibleId ||
-        filters.responsibleId.trim() === '' ||
-        budget.responsibleId === filters.responsibleId;
-
-      const statusMatch = !filters.status || budget.status === filters.status;
-      const createdAt = new Date(budget.createdAt);
-      const startDateMatch = !filters.startDate || createdAt >= filters.startDate;
-      const endDateMatch = !filters.endDate || createdAt <= filters.endDate;
-
-      return (
-        budgetNumberMatch &&
-        clientMatch &&
-        responsibleMatch &&
-        statusMatch &&
-        startDateMatch &&
-        endDateMatch
-      );
-    });
-  }, [filters, normalizedBudgets]);
 
   const getStatusColor = (status: Budget['status']) => {
     switch (status) {
@@ -478,13 +372,19 @@ export default function BudgetsPage() {
           resultsLabel="orçamento(s) encontrado(s)"
         />
 
-        <DataTable
-          columns={columns}
-          data={filteredBudgets}
-          title="Orçamentos"
-          onRowClick={handleRowClick}
-          emptyMessage="Nenhum orçamento encontrado com os filtros aplicados."
-        />
+        {isLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={filteredBudgets}
+            title="Orçamentos"
+            onRowClick={handleRowClick}
+            emptyMessage="Nenhum orçamento encontrado com os filtros aplicados."
+          />
+        )}
 
         <FormModal
           open={isNewBudgetModalOpen}
