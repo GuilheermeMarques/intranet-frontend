@@ -4,6 +4,7 @@ import { DashboardLayout } from '@/components/DashboardLayout';
 import { DataTable } from '@/components/DataTable';
 import { ConfirmModal, FormModal } from '@/components/Modal';
 import { usePrioritiesQuery } from '@/features/tickets/hooks/usePrioritiesQuery';
+import { usePriorityMutations } from '@/features/tickets/hooks/usePriorityMutations';
 import { Priority } from '@/features/tickets/types';
 import {
   Add as AddIcon,
@@ -30,6 +31,7 @@ import { useEffect, useState } from 'react';
 
 export default function PrioritiesPage() {
   const { data: prioritiesData } = usePrioritiesQuery();
+  const { create, update, remove } = usePriorityMutations();
   const [priorities, setPriorities] = useState<Priority[]>([]);
   useEffect(() => {
     if (prioritiesData) setPriorities(prioritiesData);
@@ -78,32 +80,22 @@ export default function PrioritiesPage() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (editingPriority) {
-      // Editar prioridade existente
-      setPriorities((prev) =>
-        prev.map((p) => (p.id === editingPriority.id ? { ...p, ...formData } : p)),
-      );
+      await update.mutateAsync({ id: editingPriority.id, data: formData });
     } else {
-      // Criar nova prioridade
-      const newPriority: Priority = {
-        id: `priority-${Date.now()}`,
-        ...formData,
-      };
-      setPriorities((prev) => [...prev, newPriority]);
+      await create.mutateAsync(formData);
     }
     handleCloseModal();
   };
 
-  const handleDelete = (priority: Priority) => {
-    setPriorities((prev) => prev.filter((p) => p.id !== priority.id));
+  const handleDelete = async (priority: Priority) => {
+    await remove.mutateAsync(priority.id);
     setDeleteModal(null);
   };
 
-  const handleToggleActive = (priority: Priority) => {
-    setPriorities((prev) =>
-      prev.map((p) => (p.id === priority.id ? { ...p, isActive: !p.isActive } : p)),
-    );
+  const handleToggleActive = async (priority: Priority) => {
+    await update.mutateAsync({ id: priority.id, data: { isActive: !priority.isActive } });
   };
 
   const columns = [
