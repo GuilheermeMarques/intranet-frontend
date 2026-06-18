@@ -4,6 +4,14 @@ import type { Budget, BudgetFilters, BudgetOption, BudgetsData } from '../types'
 interface RawClient { id: string; name: string }
 interface RawRepresentative { id: string; name: string; status: string }
 
+export interface BudgetItemInput { productId: string; quantity: number; unitPrice?: number }
+export interface BudgetInput {
+  clientId: string
+  responsibleId: string
+  validityDate?: string
+  items: BudgetItemInput[]
+}
+
 export const budgetsApi = {
   async list(filters?: Partial<BudgetFilters>): Promise<BudgetsData> {
     const [budgetsRes, clientsRes, repsRes] = await Promise.all([
@@ -27,5 +35,10 @@ export const budgetsApi = {
       .map((r) => ({ value: r.id, label: r.name }))
 
     return { budgets, clients, responsibles, activeRepresentatives }
+  },
+
+  async create(data: BudgetInput): Promise<Budget> {
+    const { budget } = await httpClient.post<{ budget: Budget }>('/budgets', data)
+    return budget
   },
 }

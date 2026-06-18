@@ -3,10 +3,11 @@ import { httpClient } from '@/services/httpClient'
 
 jest.mock('@/services/httpClient', () => {
   const actual = jest.requireActual('@/services/httpClient')
-  return { ...actual, httpClient: { get: jest.fn() } }
+  return { ...actual, httpClient: { get: jest.fn(), post: jest.fn() } }
 })
 
 const mockGet = httpClient.get as jest.Mock
+const mockPost = httpClient.post as jest.Mock
 
 describe('budgetsApi', () => {
   beforeEach(() => {
@@ -46,5 +47,17 @@ describe('budgetsApi', () => {
   it('keeps only active representatives', async () => {
     const data = await budgetsApi.list()
     expect(data.activeRepresentatives).toEqual([{ value: 'r1', label: 'John' }])
+  })
+
+  it('creates a budget via POST /budgets and unwraps .budget', async () => {
+    mockPost.mockResolvedValueOnce({ budget: { id: 'b1', number: 'ORC-2025-001' } })
+    const input = {
+      clientId: 'c1',
+      responsibleId: 'r1',
+      items: [{ productId: 'p1', quantity: 2, unitPrice: 10 }],
+    }
+    const budget = await budgetsApi.create(input)
+    expect(mockPost).toHaveBeenCalledWith('/budgets', input)
+    expect(budget).toEqual({ id: 'b1', number: 'ORC-2025-001' })
   })
 })
