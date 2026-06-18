@@ -57,6 +57,7 @@ import { EditTicketController } from './controllers/edit-ticket.controller'
 import { DeleteTicketController } from './controllers/delete-ticket.controller'
 import { AddTicketMessageController } from './controllers/add-ticket-message.controller'
 import { UploadAttachmentController } from './controllers/upload-attachment.controller'
+import { GetDashboardSummaryController } from './controllers/get-dashboard-summary.controller'
 import { AuthenticateUseCase } from '@/domain/iam/application/use-cases/authenticate'
 import { RefreshTokenUseCase } from '@/domain/iam/application/use-cases/refresh-token'
 import { LogoutUseCase } from '@/domain/iam/application/use-cases/logout'
@@ -110,6 +111,7 @@ import { EditTicketUseCase } from '@/domain/support/application/use-cases/edit-t
 import { DeleteTicketUseCase } from '@/domain/support/application/use-cases/delete-ticket'
 import { AddTicketMessageUseCase } from '@/domain/support/application/use-cases/add-ticket-message'
 import { UploadAttachmentUseCase } from '@/domain/support/application/use-cases/upload-attachment'
+import { GetDashboardSummaryUseCase } from '@/domain/dashboard/application/use-cases/get-dashboard-summary'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, StorageModule],
@@ -167,6 +169,7 @@ import { UploadAttachmentUseCase } from '@/domain/support/application/use-cases/
     DeleteTicketController,
     AddTicketMessageController,
     UploadAttachmentController,
+    GetDashboardSummaryController,
   ],
   providers: [
     AuthenticateUseCase,
@@ -222,6 +225,7 @@ import { UploadAttachmentUseCase } from '@/domain/support/application/use-cases/
     DeleteTicketUseCase,
     AddTicketMessageUseCase,
     UploadAttachmentUseCase,
+    GetDashboardSummaryUseCase,
     { provide: APP_GUARD, useClass: PermissionsGuard },
   ],
 })
