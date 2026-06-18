@@ -32,6 +32,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
+import type { ReactNode } from 'react';
 
 type NewBudgetItem = {
   productId: string;
@@ -64,6 +65,27 @@ const buildEmptyItem = (): NewBudgetItem => ({
   unitPrice: 0,
   total: 0,
 });
+
+function DetailField({
+  label,
+  value,
+  fullWidth,
+}: {
+  label: string;
+  value: ReactNode;
+  fullWidth?: boolean;
+}) {
+  return (
+    <Grid item xs={12} sm={fullWidth ? 12 : 6}>
+      <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+        {label}
+      </Typography>
+      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+        {value}
+      </Typography>
+    </Grid>
+  );
+}
 
 export default function BudgetsPage() {
   const [filters, setFilters] = useState<BudgetFilters>({
@@ -583,79 +605,107 @@ export default function BudgetsPage() {
         >
           {selectedBudget && (
             <Box>
-              {/* Header: status chip, datas, responsável, total */}
-              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 2 }}>
-                <Chip
-                  label={getStatusLabel(selectedBudget.status)}
-                  color={getStatusColor(selectedBudget.status)}
-                />
-                <Typography variant="body2">
-                  Criado em {formatDate(selectedBudget.createdAt)}
-                </Typography>
-                {selectedBudget.validityDate && (
-                  <Typography variant="body2">
-                    Validade {formatDate(selectedBudget.validityDate)}
+              {/* HEADER: status + metadados + total */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: { xs: 'flex-start', sm: 'center' },
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  gap: 2,
+                  pb: 2,
+                  mb: 3,
+                  borderBottom: '1px solid',
+                  borderColor: 'divider',
+                }}
+              >
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Chip
+                    label={getStatusLabel(selectedBudget.status)}
+                    color={getStatusColor(selectedBudget.status)}
+                    size="small"
+                    sx={{ alignSelf: 'flex-start', fontWeight: 600 }}
+                  />
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Criado em {formatDate(selectedBudget.createdAt)}
+                    </Typography>
+                    {selectedBudget.validityDate && (
+                      <Typography variant="body2" color="text.secondary">
+                        Validade {formatDate(selectedBudget.validityDate)}
+                      </Typography>
+                    )}
+                    <Typography variant="body2" color="text.secondary">
+                      Responsável {selectedBudget.responsibleName}
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Box
+                  sx={{
+                    textAlign: { xs: 'left', sm: 'right' },
+                    bgcolor: 'action.hover',
+                    borderRadius: 2,
+                    px: 2,
+                    py: 1,
+                    minWidth: 160,
+                  }}
+                >
+                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                    Valor total
                   </Typography>
-                )}
-                <Typography variant="body2">
-                  Responsável: {selectedBudget.responsibleName}
-                </Typography>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, ml: 'auto' }}>
-                  Total: {formatCurrency(selectedBudget.total)}
-                </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 700, lineHeight: 1.2 }}>
+                    {formatCurrency(selectedBudget.total)}
+                  </Typography>
+                </Box>
               </Box>
 
-              {/* Cliente completo */}
-              <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>
+              {/* SEÇÃO CLIENTE */}
+              <Typography
+                variant="overline"
+                color="text.secondary"
+                sx={{ fontWeight: 700, letterSpacing: 0.5 }}
+              >
                 Cliente
               </Typography>
-              {clientLoading ? (
-                <CircularProgress size={20} />
-              ) : detailClient ? (
-                <Grid container spacing={1}>
-                  <Grid item xs={12} sm={6}>
-                    <Typography variant="body2">
-                      <strong>Nome:</strong> {detailClient.name}
-                    </Typography>
+              <Paper variant="outlined" sx={{ p: 2, mt: 1, mb: 3, borderRadius: 2 }}>
+                {clientLoading ? (
+                  <CircularProgress size={20} />
+                ) : detailClient ? (
+                  <Grid container spacing={2}>
+                    <DetailField label="Nome" value={detailClient.name} />
+                    <DetailField label="Documento" value={detailClient.document} />
+                    <DetailField label="E-mail" value={detailClient.email} />
+                    <DetailField label="Telefone" value={detailClient.phone} />
+                    <DetailField
+                      label="Endereço"
+                      fullWidth
+                      value={`${detailClient.street}, ${detailClient.number}${
+                        detailClient.complement ? ` - ${detailClient.complement}` : ''
+                      } — ${detailClient.neighborhood}, ${detailClient.city}/${detailClient.state} — ${
+                        detailClient.zipCode
+                      }`}
+                    />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Typography variant="body2">
-                      <strong>Documento:</strong> {detailClient.document}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Typography variant="body2">
-                      <strong>Email:</strong> {detailClient.email}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Typography variant="body2">
-                      <strong>Telefone:</strong> {detailClient.phone}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="body2">
-                      <strong>Endereço:</strong> {detailClient.street}, {detailClient.number}
-                      {detailClient.complement ? ` - ${detailClient.complement}` : ''} —{' '}
-                      {detailClient.neighborhood}, {detailClient.city}/{detailClient.state} —{' '}
-                      {detailClient.zipCode}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  Cliente: {selectedBudget.clientName} (detalhes indisponíveis)
-                </Typography>
-              )}
+                ) : (
+                  <Typography variant="body2" color="text.secondary">
+                    {selectedBudget.clientName} (detalhes indisponíveis)
+                  </Typography>
+                )}
+              </Paper>
 
-              {/* Itens / produtos */}
-              <Typography variant="subtitle2" sx={{ mt: 3, mb: 1 }}>
+              {/* SEÇÃO ITENS */}
+              <Typography
+                variant="overline"
+                color="text.secondary"
+                sx={{ fontWeight: 700, letterSpacing: 0.5 }}
+              >
                 Itens
               </Typography>
-              <TableContainer component={Paper} variant="outlined">
+              <TableContainer component={Paper} variant="outlined" sx={{ mt: 1, borderRadius: 2 }}>
                 <Table size="small">
                   <TableHead>
-                    <TableRow>
+                    <TableRow sx={{ '& th': { bgcolor: 'action.hover', fontWeight: 700 } }}>
                       <TableCell>Código</TableCell>
                       <TableCell>Produto</TableCell>
                       <TableCell align="right">Qtd.</TableCell>
@@ -665,7 +715,7 @@ export default function BudgetsPage() {
                   </TableHead>
                   <TableBody>
                     {selectedBudget.items.map((item) => (
-                      <TableRow key={item.id}>
+                      <TableRow key={item.id} sx={{ '&:nth-of-type(odd)': { bgcolor: 'action.hover' } }}>
                         <TableCell>{item.productCode ?? '-'}</TableCell>
                         <TableCell>{item.productName}</TableCell>
                         <TableCell align="right">{item.quantity}</TableCell>
@@ -673,6 +723,14 @@ export default function BudgetsPage() {
                         <TableCell align="right">{formatCurrency(item.total)}</TableCell>
                       </TableRow>
                     ))}
+                    <TableRow>
+                      <TableCell colSpan={4} align="right" sx={{ fontWeight: 600, border: 0 }}>
+                        Total
+                      </TableCell>
+                      <TableCell align="right" sx={{ fontWeight: 700, border: 0 }}>
+                        {formatCurrency(selectedBudget.total)}
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>
