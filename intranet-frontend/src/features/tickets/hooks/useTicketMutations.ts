@@ -13,5 +13,9 @@ export function useTicketMutations() {
     mutationFn: ({ ticketId, data }: { ticketId: string; data: MessageInput }) => ticketsApi.addMessage(ticketId, data),
     onSuccess: invalidate,
   })
-  return { create, updateStatus, addMessage }
+  const uploadAttachment = useMutation({
+    mutationFn: ({ ticketId, file }: { ticketId: string; file: File }) => ticketsApi.uploadAttachment(ticketId, file),
+    onSuccess: invalidate,
+  })
+  return { create, updateStatus, addMessage, uploadAttachment }
 }

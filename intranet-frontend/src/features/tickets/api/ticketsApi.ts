@@ -1,5 +1,5 @@
 import { httpClient } from '@/services/httpClient'
-import type { Ticket, Message } from '../types'
+import type { Ticket, Message, Attachment } from '../types'
 
 const statusConfig = {
   todo: { label: 'ToDo', color: '#ff9800' },
@@ -46,5 +46,19 @@ export const ticketsApi = {
   async addMessage(ticketId: string, data: MessageInput): Promise<Message> {
     const { message } = await httpClient.post<{ message: Message }>(`/tickets/${ticketId}/messages`, data)
     return message
+  },
+  async uploadAttachment(ticketId: string, file: File): Promise<Attachment> {
+    const formData = new FormData()
+    formData.append('file', file)
+    const res = await fetch(`/api/backend/tickets/${ticketId}/attachments`, {
+      method: 'POST',
+      body: formData,
+    })
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}))
+      throw new Error(error.message ?? 'Falha no upload do anexo.')
+    }
+    const { attachment } = await res.json()
+    return attachment as Attachment
   },
 }
