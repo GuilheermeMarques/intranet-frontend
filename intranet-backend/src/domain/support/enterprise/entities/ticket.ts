@@ -2,6 +2,7 @@ import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Optional } from '@/core/types/optional'
 import { Message } from './message'
+import { Attachment } from './attachment'
 
 export type TicketStatus = 'todo' | 'inProgress' | 'inReview' | 'done'
 
@@ -15,6 +16,7 @@ export interface TicketProps {
   category: string
   tags: string[]
   messages: Message[]
+  attachments: Attachment[]
   createdAt: Date
   updatedAt?: Date | null
 }
@@ -46,6 +48,9 @@ export class Ticket extends Entity<TicketProps> {
   }
   get messages() {
     return this.props.messages
+  }
+  get attachments() {
+    return this.props.attachments
   }
   get createdAt() {
     return this.props.createdAt
@@ -90,7 +95,7 @@ export class Ticket extends Entity<TicketProps> {
   static create(
     props: Optional<
       TicketProps,
-      'status' | 'tags' | 'messages' | 'createdAt'
+      'status' | 'tags' | 'messages' | 'attachments' | 'createdAt'
     >,
     id?: UniqueEntityID,
   ) {
@@ -100,6 +105,7 @@ export class Ticket extends Entity<TicketProps> {
         status: props.status ?? 'todo',
         tags: props.tags ?? [],
         messages: props.messages ?? [],
+        attachments: props.attachments ?? [],
         createdAt: props.createdAt ?? new Date(),
       },
       id,

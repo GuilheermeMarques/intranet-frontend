@@ -55,4 +55,17 @@ describe('ticketsApi', () => {
     expect(mockPost).toHaveBeenCalledWith('/tickets/7/messages', data)
     expect(result).toEqual({ id: 'm1', content: 'hi' })
   })
+
+  it('uploadAttachment() POSTs FormData to /api/backend/tickets/:id/attachments and unwraps .attachment', async () => {
+    const originalFetch = global.fetch
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ attachment: { id: 'a1', name: 'f.txt' } }) })
+    const file = new File(['data'], 'f.txt', { type: 'text/plain' })
+    const result = await ticketsApi.uploadAttachment('42', file)
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/backend/tickets/42/attachments',
+      expect.objectContaining({ method: 'POST', body: expect.any(FormData) }),
+    )
+    expect(result).toEqual({ id: 'a1', name: 'f.txt' })
+    global.fetch = originalFetch
+  })
 })

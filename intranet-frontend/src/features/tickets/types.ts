@@ -35,6 +35,7 @@ export interface Ticket {
   category: string;
   tags: string[];
   messages: Message[];
+  attachments?: Attachment[];
 }
 
 export interface Priority {

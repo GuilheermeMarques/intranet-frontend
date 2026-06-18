@@ -1,5 +1,6 @@
 import { Ticket } from '@/domain/support/enterprise/entities/ticket'
 import { MessagePresenter } from './message-presenter'
+import { AttachmentPresenter } from '../presenters/attachment-presenter'
 
 export class TicketPresenter {
   static toHTTP(ticket: Ticket) {
@@ -16,6 +17,7 @@ export class TicketPresenter {
       category: ticket.category,
       tags: ticket.tags,
       messages: ticket.messages.map(MessagePresenter.toHTTP),
+      attachments: ticket.attachments.map(AttachmentPresenter.toHTTP),
     }
   }
 }
