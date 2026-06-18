@@ -1,9 +1,10 @@
 'use client';
 
 import { DashboardLayout } from '@/components/DashboardLayout';
-import inventoryData from '@/mocks/inventory.json';
-import productsData from '@/mocks/products.json';
 import { Product } from '@/features/products/types';
+import { useProductsQuery } from '@/features/products/hooks/useProductsQuery';
+import { useInventoryLookupsQuery } from '@/features/inventory/hooks/useInventoryLookupsQuery';
+import { useInventoryMutations } from '@/features/inventory/hooks/useInventoryMutations';
 import { ArrowBack, Save } from '@mui/icons-material';
 import {
   Autocomplete,
@@ -48,7 +49,10 @@ export default function NewInventoryMovementPage() {
     notes: '',
   });
 
-  const productOptions = productsData.products as Product[];
+  const { data: productOptions = [] } = useProductsQuery({ code: '', name: '', supplier: '' });
+  const { data: lookups } = useInventoryLookupsQuery();
+  const reasons = lookups?.reasons ?? [];
+  const { create } = useInventoryMutations();
 
   const handleProductChange = (event: React.SyntheticEvent, newValue: Product | null) => {
     setSelectedProduct(newValue);
@@ -74,10 +78,8 @@ export default function NewInventoryMovementPage() {
     }));
   };
 
-  const handleSubmit = () => {
-    // Aqui você implementaria a lógica para salvar a nova movimentação
-    console.log('Nova movimentação:', formData);
-    alert('Movimentação registrada com sucesso!');
+  const handleSubmit = async () => {
+    await create.mutateAsync(formData);
     router.push('/inventory');
   };
 
@@ -230,7 +232,7 @@ export default function NewInventoryMovementPage() {
                   label="Motivo"
                   onChange={(e) => handleInputChange('reason', e.target.value)}
                 >
-                  {(inventoryData.reasons as string[]).map((reason) => (
+                  {reasons.map((reason) => (
                     <MenuItem key={reason} value={reason}>
                       {reason}
                     </MenuItem>

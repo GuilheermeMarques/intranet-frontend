@@ -1,6 +1,16 @@
 import { httpClient } from '@/services/httpClient'
 import type { InventoryFilters, InventoryData, InventoryMovement } from '../types'
 
+export interface MovementInput {
+  productCode: string
+  description: string
+  quantity: number
+  type: 'inbound' | 'outbound'
+  reason?: string
+  handledBy?: string
+  notes?: string
+}
+
 export const inventoryApi = {
   async list(filters?: Partial<InventoryFilters>): Promise<InventoryData> {
     const [movementsRes, lookups] = await Promise.all([
@@ -8,5 +18,12 @@ export const inventoryApi = {
       httpClient.get<{ types: string[]; reasons: string[] }>('/inventory/lookups'),
     ])
     return { movements: movementsRes.movements, types: lookups.types, reasons: lookups.reasons }
+  },
+  async create(data: MovementInput): Promise<InventoryMovement> {
+    const { movement } = await httpClient.post<{ movement: InventoryMovement }>('/inventory/movements', data)
+    return movement
+  },
+  async lookups(): Promise<{ types: string[]; reasons: string[] }> {
+    return httpClient.get<{ types: string[]; reasons: string[] }>('/inventory/lookups')
   },
 }
