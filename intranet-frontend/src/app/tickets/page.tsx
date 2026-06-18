@@ -6,7 +6,8 @@ import { FormModal, Modal } from '@/components/Modal';
 import { usePrioritiesQuery } from '@/features/tickets/hooks/usePrioritiesQuery';
 import { useTagsQuery } from '@/features/tickets/hooks/useTagsQuery';
 import { useTicketsQuery } from '@/features/tickets/hooks/useTicketsQuery';
-import { Attachment, Message, Priority, Tag, Ticket } from '@/features/tickets/types';
+import { useTicketMutations } from '@/features/tickets/hooks/useTicketMutations';
+import { Attachment, Priority, Tag, Ticket } from '@/features/tickets/types';
 import {
   closestCorners,
   DndContext,
@@ -244,6 +245,7 @@ export default function TicketsPage() {
   const { data: priorities = [] } = usePrioritiesQuery();
   const { data: tags = [] } = useTagsQuery();
   const { data: ticketsResult } = useTicketsQuery();
+  const { create, updateStatus, addMessage } = useTicketMutations();
 
   const [tickets, setTickets] = useState<Ticket[]>([]);
   useEffect(() => {
@@ -354,6 +356,7 @@ export default function TicketsPage() {
       setTickets((prev) =>
         prev.map((ticket) => (ticket.id === activeId ? { ...ticket, status: newStatus } : ticket)),
       );
+      updateStatus.mutate({ id: activeId, status: newStatus });
     } else {
       // Movendo sobre outro ticket
       const overTicket = tickets.find((ticket) => ticket.id === overId);
@@ -367,6 +370,7 @@ export default function TicketsPage() {
             ticket.id === activeId ? { ...ticket, status: overTicket.status } : ticket,
           ),
         );
+        updateStatus.mutate({ id: activeId, status: overTicket.status });
       } else {
         // Se estão no mesmo status, reordenar
         const oldIndex = tickets.findIndex((ticket) => ticket.id === activeId);
@@ -390,6 +394,8 @@ export default function TicketsPage() {
     if (selectedTicket?.id === ticketId) {
       setSelectedTicket((prev) => (prev ? { ...prev, status: newStatus } : null));
     }
+
+    updateStatus.mutate({ id: ticketId, status: newStatus });
   };
 
   const handleCloseModal = () => {
@@ -436,52 +442,18 @@ export default function TicketsPage() {
     }));
   };
 
-  const handleCreateTicket = () => {
-    if (
-      !newTicketForm.title.trim() ||
-      !newTicketForm.description.trim() ||
-      !newTicketForm.priority
-    ) {
+  const handleCreateTicket = async () => {
+    if (!newTicketForm.title.trim() || !newTicketForm.description.trim() || !newTicketForm.priority)
       return;
-    }
-
-    // Criar anexos simulados
-    const attachments: Attachment[] = newTicketFiles.map((file, index) => ({
-      id: Date.now().toString() + index,
-      name: file.name,
-      url: URL.createObjectURL(file), // Em produção, seria upload real
-      type: getFileType(file),
-      size: file.size,
-      uploadedBy: currentUser,
-      uploadedAt: new Date().toISOString(),
-    }));
-
-    const newTicket: Ticket = {
-      id: Date.now().toString(),
+    await create.mutateAsync({
       title: newTicketForm.title,
       description: newTicketForm.description,
-      status: 'todo',
-      priority: newTicketForm.priority || priorities.find((p) => p.level === 3)?.id || '',
+      priorityId: newTicketForm.priority,
       assignee: newTicketForm.assignee || 'Não atribuído',
       reporter: currentUser,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
       category: newTicketForm.category || 'Geral',
       tags: newTicketForm.tags,
-      messages: [
-        {
-          id: Date.now().toString(),
-          author: currentUser,
-          content: newTicketForm.description,
-          timestamp: new Date().toISOString(),
-          mentions: [],
-          type: 'comment',
-          attachments: attachments.length > 0 ? attachments : undefined,
-        },
-      ],
-    };
-
-    setTickets((prev) => [newTicket, ...prev]);
+    });
     handleCloseNewTicketModal();
   };
 
@@ -508,48 +480,18 @@ export default function TicketsPage() {
     return 'other';
   };
 
-  const handleSendMessage = () => {
-    if ((!newMessage.trim() && selectedFiles.length === 0) || !selectedTicket) return;
-
-    // Extrair menções do texto (@nome)
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || !selectedTicket) return;
     const mentionRegex = /@(\w+)/g;
     const mentions: string[] = [];
     let match;
-    while ((match = mentionRegex.exec(newMessage)) !== null) {
-      mentions.push(match[1]);
-    }
+    while ((match = mentionRegex.exec(newMessage)) !== null) mentions.push(match[1]);
 
-    // Criar anexos simulados
-    const attachments: Attachment[] = selectedFiles.map((file, index) => ({
-      id: Date.now().toString() + index,
-      name: file.name,
-      url: URL.createObjectURL(file), // Em produção, seria upload real
-      type: getFileType(file),
-      size: file.size,
-      uploadedBy: currentUser,
-      uploadedAt: new Date().toISOString(),
-    }));
-
-    const message: Message = {
-      id: Date.now().toString(),
-      author: currentUser,
-      content: newMessage,
-      timestamp: new Date().toISOString(),
-      mentions,
-      type: 'comment',
-      attachments: attachments.length > 0 ? attachments : undefined,
-    };
-
-    setTickets((prev) =>
-      prev.map((ticket) =>
-        ticket.id === selectedTicket.id
-          ? { ...ticket, messages: [...ticket.messages, message] }
-          : ticket,
-      ),
-    );
-
+    const message = await addMessage.mutateAsync({
+      ticketId: selectedTicket.id,
+      data: { author: currentUser, content: newMessage, type: 'comment', mentions },
+    });
     setSelectedTicket((prev) => (prev ? { ...prev, messages: [...prev.messages, message] } : null));
-
     setNewMessage('');
     setSelectedFiles([]);
   };
@@ -979,6 +921,7 @@ export default function TicketsPage() {
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
+                            {/* TODO(F10-attachments): wire POST /tickets/:id/attachments (multipart) */}
                             <input
                               type="file"
                               multiple

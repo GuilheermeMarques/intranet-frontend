@@ -1,5 +1,5 @@
 import { httpClient } from '@/services/httpClient'
-import type { Ticket } from '../types'
+import type { Ticket, Message } from '../types'
 
 const statusConfig = {
   todo: { label: 'ToDo', color: '#ff9800' },
@@ -13,9 +13,38 @@ export interface TicketsData {
   statusConfig: typeof statusConfig
 }
 
+export interface TicketInput {
+  title: string
+  description: string
+  priorityId: string
+  assignee: string
+  reporter: string
+  category: string
+  tags: string[]
+}
+
+export interface MessageInput {
+  author: string
+  content: string
+  type?: string
+  mentions?: string[]
+}
+
 export const ticketsApi = {
   async list(): Promise<TicketsData> {
     const { tickets } = await httpClient.get<{ tickets: Ticket[] }>('/tickets')
     return { tickets, statusConfig }
+  },
+  async create(data: TicketInput): Promise<Ticket> {
+    const { ticket } = await httpClient.post<{ ticket: Ticket }>('/tickets', data)
+    return ticket
+  },
+  async updateStatus(id: string, status: string): Promise<Ticket> {
+    const { ticket } = await httpClient.patch<{ ticket: Ticket }>(`/tickets/${id}`, { status })
+    return ticket
+  },
+  async addMessage(ticketId: string, data: MessageInput): Promise<Message> {
+    const { message } = await httpClient.post<{ message: Message }>(`/tickets/${ticketId}/messages`, data)
+    return message
   },
 }
