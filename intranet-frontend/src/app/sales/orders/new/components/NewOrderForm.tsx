@@ -2,8 +2,9 @@
 'use client';
 
 import { DashboardLayout } from '@/components/DashboardLayout';
-import clientsData from '@/mocks/clients.json';
-import productsData from '@/mocks/products.json';
+import { useClientsQuery } from '@/features/clients/hooks/useClientsQuery';
+import { useProductsQuery } from '@/features/products/hooks/useProductsQuery';
+import { useOrderMutations } from '@/features/orders/hooks/useOrderMutations';
 import { Client } from '@/features/clients/types';
 import { Product } from '@/features/products/types';
 import { Add as AddIcon, ArrowBack, Delete as DeleteIcon, Search } from '@mui/icons-material';
@@ -67,6 +68,10 @@ const filterProducts = createFilterOptions<Product>();
 
 export function NewOrderForm() {
   const router = useRouter();
+  const { create } = useOrderMutations();
+  const { data: clientsData2 } = useClientsQuery({ code: '', name: '', city: '', startDate: null, endDate: null });
+  const clients = useMemo(() => clientsData2?.clients ?? [], [clientsData2]);
+  const { data: products = [] } = useProductsQuery({ code: '', name: '', supplier: '' });
   const [activeTab, setActiveTab] = useState(0);
   const [searchClientCode, setSearchClientCode] = useState('');
   const [searchClientName, setSearchClientName] = useState('');
@@ -78,19 +83,19 @@ export function NewOrderForm() {
   const [shippingCost, setShippingCost] = useState<number | null>(null);
 
   const clientOptions = useMemo(() => {
-    return (clientsData.clients as Client[]).map((client) => client.name);
-  }, []);
+    return clients.map((client) => client.name);
+  }, [clients]);
 
   const productOptions = useMemo(() => {
-    return productsData.products as Product[];
-  }, []);
+    return products;
+  }, [products]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
   };
 
   const handleSearchClient = () => {
-    const foundClient = (clientsData.clients as Client[]).find(
+    const foundClient = clients.find(
       (client) =>
         (searchClientCode && client.code.toLowerCase() === searchClientCode.toLowerCase()) ||
         (searchClientName && client.name.toLowerCase() === searchClientName.toLowerCase()),
@@ -101,13 +106,27 @@ export function NewOrderForm() {
   const handleClientNameChange = (event: React.SyntheticEvent, value: string | null) => {
     setSearchClientName(value || '');
     if (value) {
-      const foundClient = (clientsData.clients as Client[]).find(
+      const foundClient = clients.find(
         (client) => client.name.toLowerCase() === value.toLowerCase(),
       );
       setSelectedClient(foundClient || null);
     } else {
       setSelectedClient(null);
     }
+  };
+
+  const handleCreateOrder = async () => {
+    if (!selectedClient || orderItems.length === 0) return;
+    await create.mutateAsync({
+      clientId: String(selectedClient.id),
+      items: orderItems.map((item) => ({
+        productId: String(item.productId),
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+      })),
+      shippingCost: shippingCost ?? 0,
+    });
+    router.push('/sales/orders');
   };
 
   const handleAddProduct = () => {
@@ -448,6 +467,16 @@ export function NewOrderForm() {
               <Typography variant="h6" fontWeight={600}>
                 Total dos Produtos: {formatCurrency(totalProductsValue)}
               </Typography>
+            </Box>
+
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+              <Button
+                variant="contained"
+                disabled={!selectedClient || orderItems.length === 0 || create.isPending}
+                onClick={handleCreateOrder}
+              >
+                Criar pedido
+              </Button>
             </Box>
           </Paper>
         </TabPanel>

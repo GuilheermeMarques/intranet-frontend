@@ -2,10 +2,9 @@
 
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { FormModal } from '@/components/Modal';
-import clientsData from '@/mocks/clients.json';
-import ordersData from '@/mocks/orders.json';
-import { Client } from '@/features/clients/types';
-import { Order } from '@/features/orders/types';
+import { useOrderByIdQuery } from '@/features/orders/hooks/useOrderByIdQuery';
+import { useOrderMutations } from '@/features/orders/hooks/useOrderMutations';
+import { useClientByCodeQuery } from '@/features/clients/hooks/useClientByCodeQuery';
 import { ArrowBack, Assignment, Email, LocationOn, Person, Phone } from '@mui/icons-material';
 import {
   Alert,
@@ -14,6 +13,7 @@ import {
   Card,
   CardContent,
   Chip,
+  CircularProgress,
   Divider,
   FormControl,
   Grid,
@@ -34,7 +34,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -69,14 +69,9 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
   const [newStatus, setNewStatus] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
 
-  const order = useMemo(() => {
-    return (ordersData.orders as Order[]).find((o) => o.id === orderId);
-  }, [orderId]);
-
-  const client = useMemo(() => {
-    if (!order?.clientCode) return null;
-    return (clientsData.clients as Client[]).find((c) => c.code === order.clientCode);
-  }, [order?.clientCode]);
+  const { data: order, isLoading } = useOrderByIdQuery(orderId);
+  const { data: client } = useClientByCodeQuery(order?.clientCode ?? '');
+  const { updateStatus } = useOrderMutations();
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -88,9 +83,8 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
     setStatusModalOpen(true);
   };
 
-  const handleStatusUpdate = () => {
-    // Aqui você implementaria a lógica para atualizar o status
-    console.log('Status atualizado:', { status: newStatus, notes });
+  const handleStatusUpdate = async () => {
+    await updateStatus.mutateAsync({ id: orderId, status: newStatus });
     setStatusModalOpen(false);
     setNewStatus('');
     setNotes('');
@@ -142,6 +136,16 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
       minute: '2-digit',
     });
   };
+
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+          <CircularProgress />
+        </Box>
+      </DashboardLayout>
+    );
+  }
 
   if (!order) {
     return (
