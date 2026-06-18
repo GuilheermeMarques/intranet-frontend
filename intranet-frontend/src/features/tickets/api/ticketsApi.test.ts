@@ -1,11 +1,21 @@
-import { ticketsApi } from './ticketsApi';
+import { ticketsApi } from './ticketsApi'
+import { httpClient } from '@/services/httpClient'
+
+jest.mock('@/services/httpClient', () => {
+  const actual = jest.requireActual('@/services/httpClient')
+  return { ...actual, httpClient: { get: jest.fn() } }
+})
+
+const mockGet = httpClient.get as jest.Mock
 
 describe('ticketsApi', () => {
-  it('returns all tickets plus statusConfig', async () => {
-    const result = await ticketsApi.list();
-    expect(result.tickets.length).toBeGreaterThan(0);
-    expect(result.tickets[0]).toHaveProperty('priority');
-    expect(result.tickets[0]).toHaveProperty('tags');
-    expect(result.statusConfig).toBeDefined();
-  });
-});
+  beforeEach(() => mockGet.mockReset())
+
+  it('list() unwraps tickets and attaches local statusConfig', async () => {
+    mockGet.mockResolvedValue({ tickets: [{ id: '1' }] })
+    const result = await ticketsApi.list()
+    expect(mockGet).toHaveBeenCalledWith('/tickets')
+    expect(result.tickets).toEqual([{ id: '1' }])
+    expect(result.statusConfig.todo).toBeDefined()
+  })
+})
