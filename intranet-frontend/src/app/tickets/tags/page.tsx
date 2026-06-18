@@ -4,6 +4,7 @@ import { DashboardLayout } from '@/components/DashboardLayout';
 import { DataTable } from '@/components/DataTable';
 import { ConfirmModal, FormModal } from '@/components/Modal';
 import { useTagsQuery } from '@/features/tickets/hooks/useTagsQuery';
+import { useTagMutations } from '@/features/tickets/hooks/useTagMutations';
 import { Tag } from '@/features/tickets/types';
 import {
   Add as AddIcon,
@@ -30,6 +31,7 @@ import { useEffect, useState } from 'react';
 
 export default function TagsPage() {
   const { data: tagsData } = useTagsQuery();
+  const { create, update, remove } = useTagMutations();
   const [tags, setTags] = useState<Tag[]>([]);
 
   useEffect(() => {
@@ -82,28 +84,22 @@ export default function TagsPage() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (editingTag) {
-      // Editar tag existente
-      setTags((prev) => prev.map((t) => (t.id === editingTag.id ? { ...t, ...formData } : t)));
+      await update.mutateAsync({ id: editingTag.id, data: formData });
     } else {
-      // Criar nova tag
-      const newTag: Tag = {
-        id: `tag-${Date.now()}`,
-        ...formData,
-      };
-      setTags((prev) => [...prev, newTag]);
+      await create.mutateAsync(formData);
     }
     handleCloseModal();
   };
 
-  const handleDelete = (tag: Tag) => {
-    setTags((prev) => prev.filter((t) => t.id !== tag.id));
+  const handleDelete = async (tag: Tag) => {
+    await remove.mutateAsync(tag.id);
     setDeleteModal(null);
   };
 
-  const handleToggleActive = (tag: Tag) => {
-    setTags((prev) => prev.map((t) => (t.id === tag.id ? { ...t, isActive: !t.isActive } : t)));
+  const handleToggleActive = async (tag: Tag) => {
+    await update.mutateAsync({ id: tag.id, data: { isActive: !tag.isActive } });
   };
 
   const columns = [

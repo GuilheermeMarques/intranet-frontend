@@ -50,10 +50,14 @@ async function handler(request: NextRequest, context: { params: Promise<{ path: 
     }
   }
 
-  const responseBody = await res.arrayBuffer()
+  // 204/304 responses must not carry a body (Next throws otherwise).
+  const hasNoBody = res.status === 204 || res.status === 304
+  const responseBody = hasNoBody ? null : await res.arrayBuffer()
   const response = new NextResponse(responseBody, {
     status: res.status,
-    headers: { 'content-type': res.headers.get('content-type') ?? 'application/json' },
+    headers: hasNoBody
+      ? undefined
+      : { 'content-type': res.headers.get('content-type') ?? 'application/json' },
   })
 
   if (refreshed) {
