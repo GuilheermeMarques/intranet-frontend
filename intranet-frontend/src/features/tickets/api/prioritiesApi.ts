@@ -1,12 +1,9 @@
-import prioritiesMock from '@/mocks/priorities.json';
-import type { Priority } from '../types';
-
-const priorities = prioritiesMock.priorities as Priority[];
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import { httpClient } from '@/services/httpClient'
+import type { Priority } from '../types'
 
 export const prioritiesApi = {
   async list(): Promise<Priority[]> {
-    await delay(0);
-    return [...priorities];
+    const { priorities } = await httpClient.get<{ priorities: Priority[] }>('/ticket-priorities')
+    return priorities
   },
-};
+}

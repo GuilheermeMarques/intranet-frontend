@@ -1,36 +1,33 @@
-import { productsApi } from './productsApi';
+import { productsApi } from './productsApi'
+import { httpClient, ApiError } from '@/services/httpClient'
+
+jest.mock('@/services/httpClient', () => {
+  const actual = jest.requireActual('@/services/httpClient')
+  return { ...actual, httpClient: { get: jest.fn() } }
+})
+
+const mockGet = httpClient.get as jest.Mock
 
 describe('productsApi', () => {
-  it('returns all products when no filters are given', async () => {
-    const result = await productsApi.list();
-    expect(result.length).toBeGreaterThan(0);
-    expect(result[0]).toHaveProperty('code');
-    expect(result[0]).toHaveProperty('name');
-  });
+  beforeEach(() => mockGet.mockReset())
 
-  it('filters by code (case-insensitive, partial)', async () => {
-    const result = await productsApi.list({ code: 'prod001' });
-    expect(result.every((p) => p.code.toLowerCase().includes('prod001'))).toBe(true);
-  });
+  it('list() calls GET /products with filters and returns Product[]', async () => {
+    mockGet.mockResolvedValue({ products: [{ id: 1, code: 'PROD001' }] })
+    const result = await productsApi.list({ name: 'wid' })
+    expect(mockGet).toHaveBeenCalledWith('/products', { name: 'wid' })
+    expect(result).toHaveLength(1)
+    expect(result[0]).toHaveProperty('code')
+  })
 
-  it('filters by name (case-insensitive, partial)', async () => {
-    const all = await productsApi.list();
-    const term = all[0].name.slice(0, 3).toLowerCase();
-    const result = await productsApi.list({ name: term });
-    expect(result.every((p) => p.name.toLowerCase().includes(term))).toBe(true);
-  });
+  it('getById() unwraps {product}', async () => {
+    mockGet.mockResolvedValue({ product: { id: 1, code: 'PROD001' } })
+    const p = await productsApi.getById(1)
+    expect(mockGet).toHaveBeenCalledWith('/products/1')
+    expect(String(p?.id)).toBe('1')
+  })
 
-  it('filters by supplier (case-insensitive, partial)', async () => {
-    const all = await productsApi.list();
-    const term = all[0].supplier.slice(0, 3).toLowerCase();
-    const result = await productsApi.list({ supplier: term });
-    expect(result.every((p) => p.supplier.toLowerCase().includes(term))).toBe(true);
-  });
-
-  it('returns a single product by id (coercing types)', async () => {
-    const all = await productsApi.list();
-    const id = all[0].id;
-    const product = await productsApi.getById(id);
-    expect(String(product?.id)).toBe(String(id));
-  });
-});
+  it('getById() returns null on 404', async () => {
+    mockGet.mockRejectedValue(new ApiError(404, 'not found'))
+    expect(await productsApi.getById('X')).toBeNull()
+  })
+})
