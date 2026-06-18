@@ -11,7 +11,7 @@ const mockGet = httpClient.get as jest.Mock
 describe('budgetsApi', () => {
   beforeEach(() => {
     mockGet.mockReset()
-    mockGet.mockImplementation((p) => {
+    mockGet.mockImplementation((p: string) => {
       if (p === '/budgets') {
         return Promise.resolve({ budgets: [{ responsibleId: 'r1', responsibleName: 'John' }] })
       }
@@ -28,8 +28,8 @@ describe('budgetsApi', () => {
   })
 
   it('passes budgets through and forwards filters to GET /budgets', async () => {
-    const data = await budgetsApi.list({ status: 'open' })
-    expect(mockGet).toHaveBeenCalledWith('/budgets', { status: 'open' })
+    const data = await budgetsApi.list({ budgetNumber: 'X' })
+    expect(mockGet).toHaveBeenCalledWith('/budgets', { budgetNumber: 'X' })
     expect(data.budgets).toEqual([{ responsibleId: 'r1', responsibleName: 'John' }])
   })
 

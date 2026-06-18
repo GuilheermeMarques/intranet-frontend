@@ -12,7 +12,7 @@ describe('inventoryApi', () => {
   beforeEach(() => mockGet.mockReset())
 
   it('list() assembles movements + types + reasons from both endpoints', async () => {
-    mockGet.mockImplementation((p) =>
+    mockGet.mockImplementation((p: string) =>
       p === '/inventory/lookups'
         ? Promise.resolve({ types: ['inbound', 'outbound'], reasons: ['x'] })
         : Promise.resolve({ movements: [{ id: '1' }] }),
