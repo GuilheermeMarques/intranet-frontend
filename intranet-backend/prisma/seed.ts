@@ -240,6 +240,26 @@ async function main() {
     await prisma.representative.createMany({ data: REPRESENTATIVES })
     console.log(`Seeded ${REPRESENTATIVES.length} sample representatives`)
   }
+
+  const PRIORITIES: {
+    name: string
+    color: string
+    level: number
+    description: string | null
+    isActive: boolean
+  }[] = [
+    { name: 'Crítica', color: '#dc2626', level: 1, description: 'Requer atenção imediata', isActive: true },
+    { name: 'Alta', color: '#ea580c', level: 2, description: 'Resolver o quanto antes', isActive: true },
+    { name: 'Média', color: '#ca8a04', level: 3, description: 'Prioridade padrão', isActive: true },
+    { name: 'Baixa', color: '#2563eb', level: 4, description: 'Pode aguardar', isActive: true },
+    { name: 'Planejada', color: '#6b7280', level: 5, description: 'Backlog futuro', isActive: false },
+  ]
+
+  const prioritiesCount = await prisma.ticketPriority.count()
+  if (prioritiesCount === 0) {
+    await prisma.ticketPriority.createMany({ data: PRIORITIES })
+    console.log(`Seeded ${PRIORITIES.length} ticket priorities`)
+  }
 }
 
 main()

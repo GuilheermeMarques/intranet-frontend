@@ -40,6 +40,10 @@ import { GetBudgetByIdController } from './controllers/get-budget-by-id.controll
 import { CreateBudgetController } from './controllers/create-budget.controller'
 import { EditBudgetController } from './controllers/edit-budget.controller'
 import { DeleteBudgetController } from './controllers/delete-budget.controller'
+import { FetchPrioritiesController } from './controllers/fetch-priorities.controller'
+import { CreatePriorityController } from './controllers/create-priority.controller'
+import { EditPriorityController } from './controllers/edit-priority.controller'
+import { DeletePriorityController } from './controllers/delete-priority.controller'
 import { AuthenticateUseCase } from '@/domain/iam/application/use-cases/authenticate'
 import { RefreshTokenUseCase } from '@/domain/iam/application/use-cases/refresh-token'
 import { LogoutUseCase } from '@/domain/iam/application/use-cases/logout'
@@ -77,6 +81,10 @@ import { GetBudgetByIdUseCase } from '@/domain/sales/application/use-cases/get-b
 import { CreateBudgetUseCase } from '@/domain/sales/application/use-cases/create-budget'
 import { EditBudgetUseCase } from '@/domain/sales/application/use-cases/edit-budget'
 import { DeleteBudgetUseCase } from '@/domain/sales/application/use-cases/delete-budget'
+import { FetchPrioritiesUseCase } from '@/domain/support/application/use-cases/fetch-priorities'
+import { CreatePriorityUseCase } from '@/domain/support/application/use-cases/create-priority'
+import { EditPriorityUseCase } from '@/domain/support/application/use-cases/edit-priority'
+import { DeletePriorityUseCase } from '@/domain/support/application/use-cases/delete-priority'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -118,6 +126,10 @@ import { DeleteBudgetUseCase } from '@/domain/sales/application/use-cases/delete
     CreateBudgetController,
     EditBudgetController,
     DeleteBudgetController,
+    FetchPrioritiesController,
+    CreatePriorityController,
+    EditPriorityController,
+    DeletePriorityController,
   ],
   providers: [
     AuthenticateUseCase,
@@ -157,6 +169,10 @@ import { DeleteBudgetUseCase } from '@/domain/sales/application/use-cases/delete
     CreateBudgetUseCase,
     EditBudgetUseCase,
     DeleteBudgetUseCase,
+    FetchPrioritiesUseCase,
+    CreatePriorityUseCase,
+    EditPriorityUseCase,
+    DeletePriorityUseCase,
     { provide: APP_GUARD, useClass: PermissionsGuard },
   ],
 })
