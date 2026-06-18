@@ -2,9 +2,10 @@
 
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Column, DataTable } from '@/components/DataTable';
-import clientsData from '@/mocks/clients.json';
+// TODO(F-later): client purchase history has no backend endpoint yet
 import purchasesData from '@/mocks/purchases.json';
 import { Client } from '@/features/clients/types';
+import { useClientByCodeQuery } from '@/features/clients/hooks/useClientByCodeQuery';
 import { Purchase } from '@/types/purchase';
 import { ArrowBack, Edit, Email, Instagram, Phone, Save } from '@mui/icons-material';
 import {
@@ -13,6 +14,7 @@ import {
   Card,
   CardContent,
   Chip,
+  CircularProgress,
   Grid,
   IconButton,
   Paper,
@@ -55,10 +57,9 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedClient, setEditedClient] = useState<Client | null>(null);
 
-  // Encontrar o cliente pelo código
-  const client = useMemo(() => {
-    return (clientsData.clients as Client[]).find((c) => c.code === clientId);
-  }, [clientId]);
+  // Carregar o cliente pelo código via API
+  const { data: currentClientData, isLoading } = useClientByCodeQuery(clientId);
+  const client = currentClientData ?? undefined;
 
   // Encontrar as compras do cliente
   const clientPurchases = useMemo(() => {
@@ -152,6 +153,16 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
       },
     },
   ];
+
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+          <CircularProgress />
+        </Box>
+      </DashboardLayout>
+    );
+  }
 
   if (!client) {
     return (
