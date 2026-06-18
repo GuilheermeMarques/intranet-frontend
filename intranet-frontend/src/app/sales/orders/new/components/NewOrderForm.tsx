@@ -70,7 +70,7 @@ export function NewOrderForm() {
   const router = useRouter();
   const { create } = useOrderMutations();
   const { data: clientsData2 } = useClientsQuery({ code: '', name: '', city: '', startDate: null, endDate: null });
-  const clients = clientsData2?.clients ?? [];
+  const clients = useMemo(() => clientsData2?.clients ?? [], [clientsData2]);
   const { data: products = [] } = useProductsQuery({ code: '', name: '', supplier: '' });
   const [activeTab, setActiveTab] = useState(0);
   const [searchClientCode, setSearchClientCode] = useState('');
