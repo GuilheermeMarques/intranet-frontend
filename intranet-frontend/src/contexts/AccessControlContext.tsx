@@ -1,7 +1,8 @@
 'use client';
 
-import accessControlData from '@/mocks/access-control.json';
 import { useMeQuery } from '@/features/auth/hooks/useMeQuery';
+import { useUsersQuery } from '@/features/permissions/hooks/useUsersQuery';
+import { useSetUserPermissionsMutation } from '@/features/permissions/hooks/useSetUserPermissionsMutation';
 import {
   MANAGE_PERMISSIONS_KEY,
   administrativePermissionDefinitions,
@@ -16,11 +17,8 @@ import type {
   AdministrativePermissionDefinition,
   MenuPermissionItem,
 } from '@/types/accessControl';
+import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-
-const USERS_STORAGE_KEY = 'intranet-access-control-users';
-const SESSION_USER_STORAGE_KEY = 'intranet-access-control-session-user';
-const MANAGED_USER_STORAGE_KEY = 'intranet-access-control-managed-user';
 
 interface AccessControlContextValue {
   administrativePermissions: AdministrativePermissionDefinition[];
@@ -43,62 +41,8 @@ interface AccessControlContextValue {
 
 const AccessControlContext = createContext<AccessControlContextValue | undefined>(undefined);
 
-const cloneMockUsers = () =>
-  (accessControlData.users as AccessControlUser[]).map((user) => ({
-    ...user,
-    permissions: [...user.permissions],
-  }));
-
 export function AccessControlProvider({ children }: { children: React.ReactNode }) {
-  const [users, setUsers] = useState<AccessControlUser[]>(() => cloneMockUsers());
-  const [sessionUserId, setSessionUserId] = useState<string | null>(
-    () => cloneMockUsers()[0]?.id ?? null,
-  );
-  const [managedUserId, setManagedUserId] = useState<string | null>(
-    () => cloneMockUsers()[0]?.id ?? null,
-  );
-  const [isReady, setIsReady] = useState(false);
-
-  useEffect(() => {
-    const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
-    const storedSessionUserId = localStorage.getItem(SESSION_USER_STORAGE_KEY);
-    const storedManagedUserId = localStorage.getItem(MANAGED_USER_STORAGE_KEY);
-
-    if (storedUsers) {
-      try {
-        setUsers(JSON.parse(storedUsers) as AccessControlUser[]);
-      } catch {
-        setUsers(cloneMockUsers());
-      }
-    }
-
-    if (storedSessionUserId) {
-      setSessionUserId(storedSessionUserId);
-    }
-
-    if (storedManagedUserId) {
-      setManagedUserId(storedManagedUserId);
-    }
-
-    setIsReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isReady) {
-      return;
-    }
-
-    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
-
-    if (sessionUserId) {
-      localStorage.setItem(SESSION_USER_STORAGE_KEY, sessionUserId);
-    }
-
-    if (managedUserId) {
-      localStorage.setItem(MANAGED_USER_STORAGE_KEY, managedUserId);
-    }
-  }, [isReady, managedUserId, sessionUserId, users]);
-
+  const queryClient = useQueryClient();
   const { data: me } = useMeQuery();
 
   const currentUser = useMemo<AccessControlUser | null>(
@@ -119,9 +63,26 @@ export function AccessControlProvider({ children }: { children: React.ReactNode 
     [me],
   );
 
+  const canManagePermissions = hasPermission(
+    currentUser?.permissions ?? [],
+    MANAGE_PERMISSIONS_KEY,
+  );
+
+  const { data: usersData } = useUsersQuery({ enabled: canManagePermissions });
+  const users = useMemo(() => usersData ?? [], [usersData]);
+
+  const [managedUserId, setManagedUserId] = useState<string | null>(null);
+  useEffect(() => {
+    if (!managedUserId && currentUser) {
+      setManagedUserId(currentUser.id);
+    }
+  }, [managedUserId, currentUser]);
+
+  const setPermissionsMutation = useSetUserPermissionsMutation();
+
   const managedUser = useMemo(
-    () => users.find((user) => user.id === managedUserId) ?? users[0] ?? null,
-    [managedUserId, users],
+    () => users.find((user) => user.id === managedUserId) ?? users[0] ?? currentUser ?? null,
+    [managedUserId, users, currentUser],
   );
 
   const getVisibleMenuItemsForUser = (permissions: string[]) =>
@@ -130,11 +91,6 @@ export function AccessControlProvider({ children }: { children: React.ReactNode 
   const visibleMenuItems = useMemo(
     () => getVisibleMenuItemsForUser(currentUser?.permissions ?? []),
     [currentUser],
-  );
-
-  const canManagePermissions = hasPermission(
-    currentUser?.permissions ?? [],
-    MANAGE_PERMISSIONS_KEY,
   );
 
   const selectManagedUser = (userId: string) => {
@@ -146,28 +102,28 @@ export function AccessControlProvider({ children }: { children: React.ReactNode 
       return;
     }
 
-    setUsers((currentUsers) =>
-      currentUsers.map((user) =>
-        user.id === userId
-          ? {
-              ...user,
-              permissions:
-                user.id === currentUser?.id &&
-                permissionKey === MANAGE_PERMISSIONS_KEY &&
-                enabled === false
-                  ? user.permissions
-                  : applyPermissionToggle(user.permissions, permissionKey, enabled),
-            }
-          : user,
-      ),
-    );
+    const user =
+      users.find((u) => u.id === userId) ??
+      (currentUser?.id === userId ? currentUser : undefined);
+
+    if (!user) {
+      return;
+    }
+
+    if (
+      userId === currentUser?.id &&
+      permissionKey === MANAGE_PERMISSIONS_KEY &&
+      enabled === false
+    ) {
+      return;
+    }
+
+    const permissions = applyPermissionToggle(user.permissions, permissionKey, enabled);
+    setPermissionsMutation.mutate({ userId, permissions });
   };
 
   const resetMockData = () => {
-    const resetUsers = cloneMockUsers();
-    setUsers(resetUsers);
-    setSessionUserId(resetUsers[0]?.id ?? null);
-    setManagedUserId(resetUsers[0]?.id ?? null);
+    queryClient.invalidateQueries({ queryKey: ['users'] });
   };
 
   return (
@@ -177,11 +133,11 @@ export function AccessControlProvider({ children }: { children: React.ReactNode 
         allPermissionKeys,
         canManagePermissions,
         currentUser,
-        isReady: isReady && Boolean(me),
+        isReady: Boolean(me),
         managedUser,
         managedUserId,
         menuItems: permissionMenuItems,
-        sessionUserId,
+        sessionUserId: currentUser?.id ?? null,
         users,
         visibleMenuItems,
         getVisibleMenuItemsForUser,
