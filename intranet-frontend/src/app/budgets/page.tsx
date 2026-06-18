@@ -4,9 +4,10 @@ import { DashboardLayout } from '@/components/DashboardLayout';
 import { Column, DataTable } from '@/components/DataTable';
 import { FilterField, FilterPanel } from '@/components/FilterPanel';
 import { FormModal } from '@/components/Modal';
+import { useBudgetMutations } from '@/features/budgets/hooks/useBudgetMutations';
 import { useBudgetsQuery } from '@/features/budgets/hooks/useBudgetsQuery';
 import { Budget, BudgetFilters } from '@/features/budgets/types';
-import productsData from '@/mocks/products.json';
+import { useProductsQuery } from '@/features/products/hooks/useProductsQuery';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {
   Box,
@@ -81,6 +82,9 @@ export default function BudgetsPage() {
   const responsibles = data?.responsibles ?? [];
   const activeRepresentatives = data?.activeRepresentatives ?? [];
 
+  const { data: products = [] } = useProductsQuery({ code: '', name: '', supplier: '' });
+  const { create } = useBudgetMutations();
+
   const handleOpenNewBudgetModal = () => {
     setIsNewBudgetModalOpen(true);
   };
@@ -126,7 +130,7 @@ export default function BudgetsPage() {
       };
 
       if (field === 'productId') {
-        const selectedProduct = productsData.products.find((product) => String(product.id) === value);
+        const selectedProduct = products.find((product) => String(product.id) === value);
 
         if (selectedProduct) {
           updatedItem.productCode = selectedProduct.code;
@@ -148,47 +152,25 @@ export default function BudgetsPage() {
     });
   };
 
-  const handleCreateBudget = () => {
+  const handleCreateBudget = async () => {
     if (!newBudget.clientId || !newBudget.responsibleId || newBudget.items.length === 0) {
       alert('Por favor, preencha todos os campos obrigatórios e adicione pelo menos um item.');
       return;
     }
-
-    const hasInvalidItems = newBudget.items.some((item) => !item.productId);
-    if (hasInvalidItems) {
+    if (newBudget.items.some((item) => !item.productId)) {
       alert('Por favor, selecione um produto para todos os itens.');
       return;
     }
-
-    const selectedClient = clients.find((client) => client.value === newBudget.clientId);
-    const selectedRepresentative = activeRepresentatives.find(
-      (representative) => representative.value === newBudget.responsibleId,
-    );
-    const nextNumber = `ORC-2025-${String(filteredBudgets.length + 1).padStart(3, '0')}`;
-
-    const budgetToCreate: Budget = {
-      id: String(filteredBudgets.length + 1),
-      number: nextNumber,
+    await create.mutateAsync({
       clientId: newBudget.clientId,
-      clientName: selectedClient?.label ?? '',
       responsibleId: newBudget.responsibleId,
-      responsibleName: selectedRepresentative?.label ?? '',
-      createdAt: new Date().toISOString().split('T')[0],
-      validityDate: newBudget.validityDate,
-      status: 'pending',
-      total: newBudget.items.reduce((sum, item) => sum + item.total, 0),
-      items: newBudget.items.map((item, index) => ({
-        id: String(index + 1),
+      validityDate: newBudget.validityDate || undefined,
+      items: newBudget.items.map((item) => ({
         productId: item.productId,
-        productCode: item.productCode,
-        productName: item.productName,
         quantity: item.quantity,
         unitPrice: item.unitPrice,
-        total: item.total,
       })),
-    };
-
-    console.log('Novo orçamento criado:', budgetToCreate);
+    });
     handleCloseNewBudgetModal();
   };
 
@@ -500,7 +482,7 @@ export default function BudgetsPage() {
                                   <MenuItem value="" disabled>
                                     Selecione um produto
                                   </MenuItem>
-                                  {productsData.products.map((product) => (
+                                  {products.map((product) => (
                                     <MenuItem key={product.id} value={String(product.id)}>
                                       {product.code} - {product.name}
                                     </MenuItem>
