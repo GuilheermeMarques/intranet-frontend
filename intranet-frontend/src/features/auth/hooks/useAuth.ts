@@ -1,78 +1,35 @@
-import { signIn, signOut, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
+import { useCallback } from 'react'
 
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-}
-
-export const useAuth = () => {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
-  const user = session?.user as User | undefined;
+export function useAuth() {
+  const router = useRouter()
+  const queryClient = useQueryClient()
 
   const login = useCallback(
     async (email: string, password: string) => {
-      try {
-        const result = await signIn('credentials', {
-          email,
-          password,
-          redirect: false,
-        });
-
-        if (result?.error) {
-          throw new Error(result.error);
-        }
-
-        if (result?.ok) {
-          router.push('/home');
-        }
-
-        return result;
-      } catch (error) {
-        console.error('Erro no login:', error);
-        throw error;
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+      if (!res.ok) {
+        const error = await res.json().catch(() => ({}))
+        throw new Error(error.message ?? 'Não foi possível realizar o login.')
       }
+      await queryClient.invalidateQueries({ queryKey: ['me'] })
+      router.push('/home')
+      router.refresh()
     },
-    [router],
-  );
+    [router, queryClient],
+  )
 
   const logout = useCallback(async () => {
-    await signOut({ redirect: false });
-    router.push('/login');
-  }, [router]);
+    await fetch('/api/auth/logout', { method: 'POST' })
+    queryClient.clear()
+    router.push('/login')
+    router.refresh()
+  }, [router, queryClient])
 
-  const isAuthenticated = status === 'authenticated';
-  const isLoading = status === 'loading';
-
-  const hasRole = useCallback(
-    (requiredRole: string | string[]) => {
-      if (!user?.role) return false;
-
-      if (Array.isArray(requiredRole)) {
-        return requiredRole.includes(user.role);
-      }
-
-      return user.role === requiredRole;
-    },
-    [user?.role],
-  );
-
-  const isAdmin = hasRole('admin');
-  const isUser = hasRole('user');
-
-  return {
-    user,
-    isAuthenticated,
-    isLoading,
-    login,
-    logout,
-    hasRole,
-    isAdmin,
-    isUser,
-  };
-};
+  return { login, logout }
+}

@@ -1,6 +1,7 @@
 'use client';
 
 import accessControlData from '@/mocks/access-control.json';
+import { useMeQuery } from '@/features/auth/hooks/useMeQuery';
 import {
   MANAGE_PERMISSIONS_KEY,
   administrativePermissionDefinitions,
@@ -98,14 +99,29 @@ export function AccessControlProvider({ children }: { children: React.ReactNode 
     }
   }, [isReady, managedUserId, sessionUserId, users]);
 
-  const currentUser = useMemo(
-    () => users.find((user) => user.id === sessionUserId) ?? users[0] ?? null,
-    [sessionUserId, users],
+  const { data: me } = useMeQuery();
+
+  const currentUser = useMemo<AccessControlUser | null>(
+    () =>
+      me
+        ? {
+            id: me.id,
+            name: me.name,
+            email: me.email,
+            jobTitle: me.jobTitle ?? '',
+            department: me.department ?? '',
+            status: 'active',
+            lastLogin: '',
+            avatar: me.avatar ?? '',
+            permissions: me.permissions,
+          }
+        : null,
+    [me],
   );
 
   const managedUser = useMemo(
-    () => users.find((user) => user.id === managedUserId) ?? currentUser ?? users[0] ?? null,
-    [currentUser, managedUserId, users],
+    () => users.find((user) => user.id === managedUserId) ?? users[0] ?? null,
+    [managedUserId, users],
   );
 
   const getVisibleMenuItemsForUser = (permissions: string[]) =>
@@ -161,7 +177,7 @@ export function AccessControlProvider({ children }: { children: React.ReactNode 
         allPermissionKeys,
         canManagePermissions,
         currentUser,
-        isReady,
+        isReady: isReady && Boolean(me),
         managedUser,
         managedUserId,
         menuItems: permissionMenuItems,
