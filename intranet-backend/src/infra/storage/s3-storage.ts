@@ -32,7 +32,14 @@ export class S3Storage implements Uploader {
     try {
       await this.client.send(new HeadBucketCommand({ Bucket }))
     } catch {
-      await this.client.send(new CreateBucketCommand({ Bucket }))
+      // Best-effort: try to create it (convenient for local MinIO). On providers
+      // like Cloudflare R2 the token often can't create buckets — assume it already
+      // exists (pre-created in the dashboard) and proceed instead of failing the upload.
+      try {
+        await this.client.send(new CreateBucketCommand({ Bucket }))
+      } catch {
+        // ignore — bucket likely exists or the token lacks bucket-admin perms
+      }
     }
     this.bucketReady = true
   }
