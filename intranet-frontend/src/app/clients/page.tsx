@@ -5,6 +5,7 @@ import { Column, DataTable } from '@/components/DataTable';
 import { FilterField, FilterPanel } from '@/components/FilterPanel';
 import { FormModal } from '@/components/Modal';
 import { useClientsQuery } from '@/features/clients/hooks/useClientsQuery';
+import { useClientMutations } from '@/features/clients/hooks/useClientMutations';
 import { ClientFilters } from '@/features/clients/types';
 import { Add, LocationOn, Search, Visibility } from '@mui/icons-material';
 import {
@@ -50,6 +51,7 @@ export default function ClientsPage() {
   });
 
   const { data, isLoading } = useClientsQuery(filters);
+  const { create } = useClientMutations();
   const filteredClients = data?.clients ?? [];
   const cities = data?.cities ?? [];
 
@@ -185,11 +187,23 @@ export default function ClientsPage() {
     });
   };
 
-  const handleSubmitNewClient = () => {
-    // Aqui você implementaria a lógica para salvar o novo cliente
-    // Por enquanto, apenas fechamos o modal
-    console.log('Novo cliente:', newClient);
-    handleCloseModal();
+  const handleSubmitNewClient = async () => {
+    await create.mutateAsync(newClient);
+    setIsModalOpen(false);
+    setNewClient({
+      name: '',
+      document: '',
+      zipCode: '',
+      street: '',
+      city: '',
+      state: '',
+      neighborhood: '',
+      number: '',
+      complement: '',
+      email: '',
+      phone: '',
+      instagram: '',
+    });
   };
 
   const handleInputChange = (field: keyof NewClientForm, value: string) => {

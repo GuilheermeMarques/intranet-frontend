@@ -3,13 +3,17 @@ import { httpClient, ApiError } from '@/services/httpClient'
 
 jest.mock('@/services/httpClient', () => {
   const actual = jest.requireActual('@/services/httpClient')
-  return { ...actual, httpClient: { get: jest.fn() } }
+  return { ...actual, httpClient: { get: jest.fn(), post: jest.fn() } }
 })
 
 const mockGet = httpClient.get as jest.Mock
+const mockPost = httpClient.post as jest.Mock
 
 describe('clientsApi', () => {
-  beforeEach(() => mockGet.mockReset())
+  beforeEach(() => {
+    mockGet.mockReset()
+    mockPost.mockReset()
+  })
 
   it('list() calls GET /clients with filters and returns ClientsData', async () => {
     mockGet.mockResolvedValue({ clients: [{ code: 'CLI001' }], cities: ['SP'] })
@@ -29,5 +33,26 @@ describe('clientsApi', () => {
   it('getByCode() returns null on 404', async () => {
     mockGet.mockRejectedValue(new ApiError(404, 'not found'))
     expect(await clientsApi.getByCode('X')).toBeNull()
+  })
+
+  it('create() POSTs /clients and unwraps {client}', async () => {
+    const input = {
+      name: 'João',
+      document: '111',
+      zipCode: '00000-000',
+      street: 'Rua A',
+      city: 'SP',
+      state: 'SP',
+      neighborhood: 'Centro',
+      number: '10',
+      complement: '',
+      email: 'j@e.com',
+      phone: '999',
+      instagram: '@j',
+    }
+    mockPost.mockResolvedValue({ client: { code: 'CLI002', ...input } })
+    const c = await clientsApi.create(input)
+    expect(mockPost).toHaveBeenCalledWith('/clients', input)
+    expect(c.code).toBe('CLI002')
   })
 })
