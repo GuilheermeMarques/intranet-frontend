@@ -53,11 +53,7 @@ export default function LoginPage() {
       await login(data.email, data.password);
     } catch (error) {
       const message =
-        error instanceof Error && error.message === 'CredentialsSignin'
-          ? 'Email ou senha inválidos.'
-          : error instanceof Error
-            ? error.message
-            : 'Não foi possível realizar o login.';
+        error instanceof Error ? error.message : 'Não foi possível realizar o login.';
 
       setSubmitError(message);
     }

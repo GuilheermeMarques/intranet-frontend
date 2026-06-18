@@ -1,7 +1,6 @@
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AccessControlProvider } from '@/contexts/AccessControlContext';
 import { QueryProvider } from '@/app/providers/QueryProvider';
-import { SessionProvider } from '@/app/providers/SessionProvider';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
@@ -29,13 +28,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <SessionProvider>
-          <QueryProvider>
-            <AccessControlProvider>
-              <ThemeProvider>{children}</ThemeProvider>
-            </AccessControlProvider>
-          </QueryProvider>
-        </SessionProvider>
+        <QueryProvider>
+          <AccessControlProvider>
+            <ThemeProvider>{children}</ThemeProvider>
+          </AccessControlProvider>
+        </QueryProvider>
       </body>
     </html>
   );
