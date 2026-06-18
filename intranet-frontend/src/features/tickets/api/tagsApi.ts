@@ -1,12 +1,9 @@
-import tagsMock from '@/mocks/tags.json';
-import type { Tag } from '../types';
-
-const tags = tagsMock.tags as Tag[];
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import { httpClient } from '@/services/httpClient'
+import type { Tag } from '../types'
 
 export const tagsApi = {
   async list(): Promise<Tag[]> {
-    await delay(0);
-    return [...tags];
+    const { tags } = await httpClient.get<{ tags: Tag[] }>('/ticket-tags')
+    return tags
   },
-};
+}
