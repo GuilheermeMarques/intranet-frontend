@@ -264,6 +264,7 @@ model Ticket {
   updatedAt   DateTime? @updatedAt @map("updated_at")
 
   messages TicketMessage[]
+  attachments TicketAttachment[]
 
   @@index([status, updatedAt])
   @@map("tickets")
@@ -281,4 +282,20 @@ model TicketMessage {
   ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
 
   @@map("ticket_messages")
+}
+
+model TicketAttachment {
+  id         String   @id @default(uuid())
+  ticketId   String   @map("ticket_id")
+  messageId  String?  @map("message_id")
+  name       String
+  url        String
+  type       String
+  size       Int
+  uploadedBy String   @map("uploaded_by")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@map("ticket_attachments")
 }

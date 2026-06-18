@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { APP_GUARD } from '@nestjs/core'
 import { DatabaseModule } from '../database/database.module'
 import { CryptographyModule } from '../cryptography/cryptography.module'
+import { StorageModule } from '../storage/storage.module'
 import { PermissionsGuard } from '../auth/permissions.guard'
 import { HealthController } from './controllers/health.controller'
 import { AuthenticateController } from './controllers/authenticate.controller'
@@ -55,6 +56,7 @@ import { GetTicketByIdController } from './controllers/get-ticket-by-id.controll
 import { EditTicketController } from './controllers/edit-ticket.controller'
 import { DeleteTicketController } from './controllers/delete-ticket.controller'
 import { AddTicketMessageController } from './controllers/add-ticket-message.controller'
+import { UploadAttachmentController } from './controllers/upload-attachment.controller'
 import { AuthenticateUseCase } from '@/domain/iam/application/use-cases/authenticate'
 import { RefreshTokenUseCase } from '@/domain/iam/application/use-cases/refresh-token'
 import { LogoutUseCase } from '@/domain/iam/application/use-cases/logout'
@@ -107,9 +109,10 @@ import { GetTicketByIdUseCase } from '@/domain/support/application/use-cases/get
 import { EditTicketUseCase } from '@/domain/support/application/use-cases/edit-ticket'
 import { DeleteTicketUseCase } from '@/domain/support/application/use-cases/delete-ticket'
 import { AddTicketMessageUseCase } from '@/domain/support/application/use-cases/add-ticket-message'
+import { UploadAttachmentUseCase } from '@/domain/support/application/use-cases/upload-attachment'
 
 @Module({
-  imports: [DatabaseModule, CryptographyModule],
+  imports: [DatabaseModule, CryptographyModule, StorageModule],
   controllers: [
     HealthController,
     AuthenticateController,
@@ -163,6 +166,7 @@ import { AddTicketMessageUseCase } from '@/domain/support/application/use-cases/
     EditTicketController,
     DeleteTicketController,
     AddTicketMessageController,
+    UploadAttachmentController,
   ],
   providers: [
     AuthenticateUseCase,
@@ -217,6 +221,7 @@ import { AddTicketMessageUseCase } from '@/domain/support/application/use-cases/
     EditTicketUseCase,
     DeleteTicketUseCase,
     AddTicketMessageUseCase,
+    UploadAttachmentUseCase,
     { provide: APP_GUARD, useClass: PermissionsGuard },
   ],
 })
