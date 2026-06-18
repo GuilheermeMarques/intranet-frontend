@@ -20,6 +20,14 @@ import { OrdersRepository } from '@/domain/sales/application/repositories/orders
 import { PrismaOrdersRepository } from './prisma/repositories/prisma-orders-repository'
 import { BudgetsRepository } from '@/domain/sales/application/repositories/budgets-repository'
 import { PrismaBudgetsRepository } from './prisma/repositories/prisma-budgets-repository'
+import { PrioritiesRepository } from '@/domain/support/application/repositories/priorities-repository'
+import { PrismaPrioritiesRepository } from './prisma/repositories/prisma-priorities-repository'
+import { TagsRepository } from '@/domain/support/application/repositories/tags-repository'
+import { PrismaTagsRepository } from './prisma/repositories/prisma-tags-repository'
+import { TicketsRepository } from '@/domain/support/application/repositories/tickets-repository'
+import { PrismaTicketsRepository } from './prisma/repositories/prisma-tickets-repository'
+import { TicketMessagesRepository } from '@/domain/support/application/repositories/ticket-messages-repository'
+import { PrismaTicketMessagesRepository } from './prisma/repositories/prisma-ticket-messages-repository'
 
 @Module({
   providers: [
@@ -40,6 +48,13 @@ import { PrismaBudgetsRepository } from './prisma/repositories/prisma-budgets-re
     },
     { provide: OrdersRepository, useClass: PrismaOrdersRepository },
     { provide: BudgetsRepository, useClass: PrismaBudgetsRepository },
+    { provide: PrioritiesRepository, useClass: PrismaPrioritiesRepository },
+    { provide: TagsRepository, useClass: PrismaTagsRepository },
+    { provide: TicketsRepository, useClass: PrismaTicketsRepository },
+    {
+      provide: TicketMessagesRepository,
+      useClass: PrismaTicketMessagesRepository,
+    },
   ],
   exports: [
     PrismaService,
@@ -53,6 +68,10 @@ import { PrismaBudgetsRepository } from './prisma/repositories/prisma-budgets-re
     RepresentativesRepository,
     OrdersRepository,
     BudgetsRepository,
+    PrioritiesRepository,
+    TagsRepository,
+    TicketsRepository,
+    TicketMessagesRepository,
   ],
 })
 export class DatabaseModule {}
