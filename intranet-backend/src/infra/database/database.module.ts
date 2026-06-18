@@ -24,6 +24,10 @@ import { PrioritiesRepository } from '@/domain/support/application/repositories/
 import { PrismaPrioritiesRepository } from './prisma/repositories/prisma-priorities-repository'
 import { TagsRepository } from '@/domain/support/application/repositories/tags-repository'
 import { PrismaTagsRepository } from './prisma/repositories/prisma-tags-repository'
+import { TicketsRepository } from '@/domain/support/application/repositories/tickets-repository'
+import { PrismaTicketsRepository } from './prisma/repositories/prisma-tickets-repository'
+import { TicketMessagesRepository } from '@/domain/support/application/repositories/ticket-messages-repository'
+import { PrismaTicketMessagesRepository } from './prisma/repositories/prisma-ticket-messages-repository'
 
 @Module({
   providers: [
@@ -46,6 +50,11 @@ import { PrismaTagsRepository } from './prisma/repositories/prisma-tags-reposito
     { provide: BudgetsRepository, useClass: PrismaBudgetsRepository },
     { provide: PrioritiesRepository, useClass: PrismaPrioritiesRepository },
     { provide: TagsRepository, useClass: PrismaTagsRepository },
+    { provide: TicketsRepository, useClass: PrismaTicketsRepository },
+    {
+      provide: TicketMessagesRepository,
+      useClass: PrismaTicketMessagesRepository,
+    },
   ],
   exports: [
     PrismaService,
@@ -61,6 +70,8 @@ import { PrismaTagsRepository } from './prisma/repositories/prisma-tags-reposito
     BudgetsRepository,
     PrioritiesRepository,
     TagsRepository,
+    TicketsRepository,
+    TicketMessagesRepository,
   ],
 })
 export class DatabaseModule {}

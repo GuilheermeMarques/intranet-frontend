@@ -48,6 +48,13 @@ import { FetchTagsController } from './controllers/fetch-tags.controller'
 import { CreateTagController } from './controllers/create-tag.controller'
 import { EditTagController } from './controllers/edit-tag.controller'
 import { DeleteTagController } from './controllers/delete-tag.controller'
+import { FetchTicketsController } from './controllers/fetch-tickets.controller'
+import { GetTicketLookupsController } from './controllers/get-ticket-lookups.controller'
+import { CreateTicketController } from './controllers/create-ticket.controller'
+import { GetTicketByIdController } from './controllers/get-ticket-by-id.controller'
+import { EditTicketController } from './controllers/edit-ticket.controller'
+import { DeleteTicketController } from './controllers/delete-ticket.controller'
+import { AddTicketMessageController } from './controllers/add-ticket-message.controller'
 import { AuthenticateUseCase } from '@/domain/iam/application/use-cases/authenticate'
 import { RefreshTokenUseCase } from '@/domain/iam/application/use-cases/refresh-token'
 import { LogoutUseCase } from '@/domain/iam/application/use-cases/logout'
@@ -93,6 +100,13 @@ import { FetchTagsUseCase } from '@/domain/support/application/use-cases/fetch-t
 import { CreateTagUseCase } from '@/domain/support/application/use-cases/create-tag'
 import { EditTagUseCase } from '@/domain/support/application/use-cases/edit-tag'
 import { DeleteTagUseCase } from '@/domain/support/application/use-cases/delete-tag'
+import { FetchTicketsUseCase } from '@/domain/support/application/use-cases/fetch-tickets'
+import { FetchTicketLookupsUseCase } from '@/domain/support/application/use-cases/fetch-ticket-lookups'
+import { CreateTicketUseCase } from '@/domain/support/application/use-cases/create-ticket'
+import { GetTicketByIdUseCase } from '@/domain/support/application/use-cases/get-ticket-by-id'
+import { EditTicketUseCase } from '@/domain/support/application/use-cases/edit-ticket'
+import { DeleteTicketUseCase } from '@/domain/support/application/use-cases/delete-ticket'
+import { AddTicketMessageUseCase } from '@/domain/support/application/use-cases/add-ticket-message'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -142,6 +156,13 @@ import { DeleteTagUseCase } from '@/domain/support/application/use-cases/delete-
     CreateTagController,
     EditTagController,
     DeleteTagController,
+    FetchTicketsController,
+    GetTicketLookupsController,
+    CreateTicketController,
+    GetTicketByIdController,
+    EditTicketController,
+    DeleteTicketController,
+    AddTicketMessageController,
   ],
   providers: [
     AuthenticateUseCase,
@@ -189,6 +210,13 @@ import { DeleteTagUseCase } from '@/domain/support/application/use-cases/delete-
     CreateTagUseCase,
     EditTagUseCase,
     DeleteTagUseCase,
+    FetchTicketsUseCase,
+    FetchTicketLookupsUseCase,
+    CreateTicketUseCase,
+    GetTicketByIdUseCase,
+    EditTicketUseCase,
+    DeleteTicketUseCase,
+    AddTicketMessageUseCase,
     { provide: APP_GUARD, useClass: PermissionsGuard },
   ],
 })
