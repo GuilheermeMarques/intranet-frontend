@@ -31,6 +31,16 @@ export const clientsApi = {
     }
   },
 
+  async getById(id: string): Promise<Client | null> {
+    try {
+      const { client } = await httpClient.get<{ client: Client }>(`/clients/${id}`)
+      return client
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 404) return null
+      throw error
+    }
+  },
+
   async create(data: ClientInput): Promise<Client> {
     const { client } = await httpClient.post<{ client: Client }>('/clients', data)
     return client

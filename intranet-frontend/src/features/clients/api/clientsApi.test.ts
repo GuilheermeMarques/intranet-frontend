@@ -35,6 +35,18 @@ describe('clientsApi', () => {
     expect(await clientsApi.getByCode('X')).toBeNull()
   })
 
+  it('getById() unwraps {client} and GETs /clients/:id', async () => {
+    mockGet.mockResolvedValue({ client: { id: 'abc', code: 'CLI001' } })
+    const c = await clientsApi.getById('abc')
+    expect(mockGet).toHaveBeenCalledWith('/clients/abc')
+    expect(c?.code).toBe('CLI001')
+  })
+
+  it('getById() returns null on 404', async () => {
+    mockGet.mockRejectedValue(new ApiError(404, 'not found'))
+    expect(await clientsApi.getById('X')).toBeNull()
+  })
+
   it('create() POSTs /clients and unwraps {client}', async () => {
     const input = {
       name: 'João',
