@@ -245,7 +245,7 @@ export default function TicketsPage() {
   const { data: priorities = [] } = usePrioritiesQuery();
   const { data: tags = [] } = useTagsQuery();
   const { data: ticketsResult } = useTicketsQuery();
-  const { create, updateStatus, addMessage } = useTicketMutations();
+  const { create, updateStatus, addMessage, uploadAttachment } = useTicketMutations();
 
   const [tickets, setTickets] = useState<Ticket[]>([]);
   useEffect(() => {
@@ -445,7 +445,7 @@ export default function TicketsPage() {
   const handleCreateTicket = async () => {
     if (!newTicketForm.title.trim() || !newTicketForm.description.trim() || !newTicketForm.priority)
       return;
-    await create.mutateAsync({
+    const ticket = await create.mutateAsync({
       title: newTicketForm.title,
       description: newTicketForm.description,
       priorityId: newTicketForm.priority,
@@ -454,6 +454,11 @@ export default function TicketsPage() {
       category: newTicketForm.category || 'Geral',
       tags: newTicketForm.tags,
     });
+    if (newTicketFiles.length) {
+      await Promise.all(
+        newTicketFiles.map((file) => uploadAttachment.mutateAsync({ ticketId: ticket.id, file })),
+      );
+    }
     handleCloseNewTicketModal();
   };
 
@@ -493,6 +498,13 @@ export default function TicketsPage() {
     });
     setSelectedTicket((prev) => (prev ? { ...prev, messages: [...prev.messages, message] } : null));
     setNewMessage('');
+    if (selectedFiles.length) {
+      await Promise.all(
+        selectedFiles.map((file) =>
+          uploadAttachment.mutateAsync({ ticketId: selectedTicket.id, file }),
+        ),
+      );
+    }
     setSelectedFiles([]);
   };
 
@@ -903,6 +915,39 @@ export default function TicketsPage() {
                     </List>
                   </Box>
 
+                  {/* Anexos do chamado */}
+                  <Divider sx={{ my: 3 }} />
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    Anexos
+                  </Typography>
+                  {(selectedTicket.attachments ?? []).length > 0 ? (
+                    <List dense>
+                      {(selectedTicket.attachments ?? []).map((attachment) => (
+                        <ListItem key={attachment.id} sx={{ px: 0 }}>
+                          <ListItemAvatar>
+                            <Avatar sx={{ width: 32, height: 32 }}>
+                              {attachment.type === 'image' ? (
+                                <ImageIcon fontSize="small" />
+                              ) : attachment.type === 'document' ? (
+                                <DescriptionIcon fontSize="small" />
+                              ) : (
+                                <AttachFileIcon fontSize="small" />
+                              )}
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={attachment.name}
+                            secondary={formatFileSize(attachment.size)}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  ) : (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      Nenhum anexo neste chamado.
+                    </Typography>
+                  )}
+
                   {/* Input para nova mensagem */}
                   <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
                     <TextField
@@ -921,7 +966,6 @@ export default function TicketsPage() {
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
-                            {/* TODO(F10-attachments): wire POST /tickets/:id/attachments (multipart) */}
                             <input
                               type="file"
                               multiple
