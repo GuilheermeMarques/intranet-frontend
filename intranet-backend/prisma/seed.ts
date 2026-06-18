@@ -260,6 +260,31 @@ async function main() {
     await prisma.ticketPriority.createMany({ data: PRIORITIES })
     console.log(`Seeded ${PRIORITIES.length} ticket priorities`)
   }
+
+  const TAGS: {
+    name: string
+    color: string
+    description: string | null
+    category: string | null
+    isActive: boolean
+  }[] = [
+    { name: 'Bug', color: '#dc2626', description: 'Defeito reportado', category: 'tipo', isActive: true },
+    { name: 'Feature', color: '#2563eb', description: 'Nova funcionalidade', category: 'tipo', isActive: true },
+    { name: 'Melhoria', color: '#16a34a', description: 'Aprimoramento', category: 'tipo', isActive: true },
+    { name: 'Documentação', color: '#7c3aed', description: 'Documentos e guias', category: 'tipo', isActive: true },
+    { name: 'Urgente', color: '#ea580c', description: 'Atenção prioritária', category: 'status', isActive: true },
+    { name: 'Bloqueado', color: '#b91c1c', description: 'Aguardando dependência', category: 'status', isActive: true },
+    { name: 'Backend', color: '#0891b2', description: 'Área de backend', category: 'área', isActive: true },
+    { name: 'Frontend', color: '#db2777', description: 'Área de frontend', category: 'área', isActive: true },
+    { name: 'Infraestrutura', color: '#4b5563', description: 'Servidores e deploy', category: 'área', isActive: true },
+    { name: 'Suporte', color: '#ca8a04', description: 'Atendimento ao cliente', category: 'área', isActive: false },
+  ]
+
+  const tagsCount = await prisma.ticketTag.count()
+  if (tagsCount === 0) {
+    await prisma.ticketTag.createMany({ data: TAGS })
+    console.log(`Seeded ${TAGS.length} ticket tags`)
+  }
 }
 
 main()

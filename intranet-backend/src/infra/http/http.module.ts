@@ -44,6 +44,10 @@ import { FetchPrioritiesController } from './controllers/fetch-priorities.contro
 import { CreatePriorityController } from './controllers/create-priority.controller'
 import { EditPriorityController } from './controllers/edit-priority.controller'
 import { DeletePriorityController } from './controllers/delete-priority.controller'
+import { FetchTagsController } from './controllers/fetch-tags.controller'
+import { CreateTagController } from './controllers/create-tag.controller'
+import { EditTagController } from './controllers/edit-tag.controller'
+import { DeleteTagController } from './controllers/delete-tag.controller'
 import { AuthenticateUseCase } from '@/domain/iam/application/use-cases/authenticate'
 import { RefreshTokenUseCase } from '@/domain/iam/application/use-cases/refresh-token'
 import { LogoutUseCase } from '@/domain/iam/application/use-cases/logout'
@@ -85,6 +89,10 @@ import { FetchPrioritiesUseCase } from '@/domain/support/application/use-cases/f
 import { CreatePriorityUseCase } from '@/domain/support/application/use-cases/create-priority'
 import { EditPriorityUseCase } from '@/domain/support/application/use-cases/edit-priority'
 import { DeletePriorityUseCase } from '@/domain/support/application/use-cases/delete-priority'
+import { FetchTagsUseCase } from '@/domain/support/application/use-cases/fetch-tags'
+import { CreateTagUseCase } from '@/domain/support/application/use-cases/create-tag'
+import { EditTagUseCase } from '@/domain/support/application/use-cases/edit-tag'
+import { DeleteTagUseCase } from '@/domain/support/application/use-cases/delete-tag'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -130,6 +138,10 @@ import { DeletePriorityUseCase } from '@/domain/support/application/use-cases/de
     CreatePriorityController,
     EditPriorityController,
     DeletePriorityController,
+    FetchTagsController,
+    CreateTagController,
+    EditTagController,
+    DeleteTagController,
   ],
   providers: [
     AuthenticateUseCase,
@@ -173,6 +185,10 @@ import { DeletePriorityUseCase } from '@/domain/support/application/use-cases/de
     CreatePriorityUseCase,
     EditPriorityUseCase,
     DeletePriorityUseCase,
+    FetchTagsUseCase,
+    CreateTagUseCase,
+    EditTagUseCase,
+    DeleteTagUseCase,
     { provide: APP_GUARD, useClass: PermissionsGuard },
   ],
 })

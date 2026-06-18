@@ -237,3 +237,15 @@ model TicketPriority {
 
   @@map("ticket_priorities")
 }
+
+model TicketTag {
+  id          String   @id @default(uuid())
+  name        String
+  color       String
+  description String?
+  category    String?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("ticket_tags")
+}
