@@ -3,10 +3,11 @@
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Column, DataTable } from '@/components/DataTable';
 import { FilterField, FilterPanel } from '@/components/FilterPanel';
-import { FormModal } from '@/components/Modal';
+import { FormModal, Modal } from '@/components/Modal';
 import { useBudgetMutations } from '@/features/budgets/hooks/useBudgetMutations';
 import { useBudgetsQuery } from '@/features/budgets/hooks/useBudgetsQuery';
 import { Budget, BudgetFilters } from '@/features/budgets/types';
+import { useClientByIdQuery } from '@/features/clients/hooks/useClientByIdQuery';
 import { useProductsQuery } from '@/features/products/hooks/useProductsQuery';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {
@@ -75,8 +76,12 @@ export default function BudgetsPage() {
   });
   const [isNewBudgetModalOpen, setIsNewBudgetModalOpen] = useState(false);
   const [newBudget, setNewBudget] = useState<NewBudgetForm>(buildInitialBudget);
+  const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
 
   const { data, isLoading } = useBudgetsQuery(filters);
+  const { data: detailClient, isLoading: clientLoading } = useClientByIdQuery(
+    selectedBudget?.clientId ?? '',
+  );
   const filteredBudgets = data?.budgets ?? [];
   const clients = data?.clients ?? [];
   const responsibles = data?.responsibles ?? [];
@@ -323,9 +328,7 @@ export default function BudgetsPage() {
     },
   ];
 
-  const handleRowClick = (budget: Budget) => {
-    console.log('Orcamento selecionado:', budget);
-  };
+  const handleRowClick = (budget: Budget) => setSelectedBudget(budget);
 
   return (
     <DashboardLayout>
@@ -570,6 +573,112 @@ export default function BudgetsPage() {
             </Grid>
           </Box>
         </FormModal>
+
+        <Modal
+          open={!!selectedBudget}
+          onClose={() => setSelectedBudget(null)}
+          title={selectedBudget ? `Orçamento ${selectedBudget.number}` : ''}
+          maxWidth="md"
+          actions={[{ label: 'Fechar', onClick: () => setSelectedBudget(null) }]}
+        >
+          {selectedBudget && (
+            <Box>
+              {/* Header: status chip, datas, responsável, total */}
+              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 2 }}>
+                <Chip
+                  label={getStatusLabel(selectedBudget.status)}
+                  color={getStatusColor(selectedBudget.status)}
+                />
+                <Typography variant="body2">
+                  Criado em {formatDate(selectedBudget.createdAt)}
+                </Typography>
+                {selectedBudget.validityDate && (
+                  <Typography variant="body2">
+                    Validade {formatDate(selectedBudget.validityDate)}
+                  </Typography>
+                )}
+                <Typography variant="body2">
+                  Responsável: {selectedBudget.responsibleName}
+                </Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, ml: 'auto' }}>
+                  Total: {formatCurrency(selectedBudget.total)}
+                </Typography>
+              </Box>
+
+              {/* Cliente completo */}
+              <Typography variant="subtitle2" sx={{ mt: 2, mb: 1 }}>
+                Cliente
+              </Typography>
+              {clientLoading ? (
+                <CircularProgress size={20} />
+              ) : detailClient ? (
+                <Grid container spacing={1}>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="body2">
+                      <strong>Nome:</strong> {detailClient.name}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="body2">
+                      <strong>Documento:</strong> {detailClient.document}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="body2">
+                      <strong>Email:</strong> {detailClient.email}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="body2">
+                      <strong>Telefone:</strong> {detailClient.phone}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="body2">
+                      <strong>Endereço:</strong> {detailClient.street}, {detailClient.number}
+                      {detailClient.complement ? ` - ${detailClient.complement}` : ''} —{' '}
+                      {detailClient.neighborhood}, {detailClient.city}/{detailClient.state} —{' '}
+                      {detailClient.zipCode}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              ) : (
+                <Typography variant="body2" color="text.secondary">
+                  Cliente: {selectedBudget.clientName} (detalhes indisponíveis)
+                </Typography>
+              )}
+
+              {/* Itens / produtos */}
+              <Typography variant="subtitle2" sx={{ mt: 3, mb: 1 }}>
+                Itens
+              </Typography>
+              <TableContainer component={Paper} variant="outlined">
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Código</TableCell>
+                      <TableCell>Produto</TableCell>
+                      <TableCell align="right">Qtd.</TableCell>
+                      <TableCell align="right">Preço unit.</TableCell>
+                      <TableCell align="right">Total</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {selectedBudget.items.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell>{item.productCode ?? '-'}</TableCell>
+                        <TableCell>{item.productName}</TableCell>
+                        <TableCell align="right">{item.quantity}</TableCell>
+                        <TableCell align="right">{formatCurrency(item.unitPrice)}</TableCell>
+                        <TableCell align="right">{formatCurrency(item.total)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+          )}
+        </Modal>
       </Box>
     </DashboardLayout>
   );
