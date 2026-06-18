@@ -2,9 +2,14 @@ import { Ticket as PrismaTicket, Prisma } from '@prisma/client'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Ticket, TicketStatus } from '@/domain/support/enterprise/entities/ticket'
 import { Message } from '@/domain/support/enterprise/entities/message'
+import { Attachment } from '@/domain/support/enterprise/entities/attachment'
 
 export class PrismaTicketMapper {
-  static toDomain(raw: PrismaTicket, messages: Message[]): Ticket {
+  static toDomain(
+    raw: PrismaTicket,
+    messages: Message[],
+    attachments: Attachment[] = [],
+  ): Ticket {
     return Ticket.create(
       {
         title: raw.title,
@@ -16,6 +21,7 @@ export class PrismaTicketMapper {
         category: raw.category,
         tags: raw.tags,
         messages,
+        attachments,
         createdAt: raw.createdAt,
         updatedAt: raw.updatedAt,
       },

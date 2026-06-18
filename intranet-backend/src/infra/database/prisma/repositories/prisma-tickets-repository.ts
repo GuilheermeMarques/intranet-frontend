@@ -8,6 +8,7 @@ import {
 import { Ticket } from '@/domain/support/enterprise/entities/ticket'
 import { PrismaTicketMapper } from '../mappers/prisma-ticket-mapper'
 import { PrismaTicketMessageMapper } from '../mappers/prisma-ticket-message-mapper'
+import { PrismaAttachmentMapper } from '../mappers/prisma-attachment-mapper'
 
 @Injectable()
 export class PrismaTicketsRepository implements TicketsRepository {
@@ -27,7 +28,10 @@ export class PrismaTicketsRepository implements TicketsRepository {
 
     const rows = await this.prisma.ticket.findMany({
       where,
-      include: { messages: true },
+      include: {
+        messages: true,
+        attachments: { orderBy: { createdAt: 'asc' } },
+      },
       orderBy: { updatedAt: 'desc' },
     })
 
@@ -35,6 +39,7 @@ export class PrismaTicketsRepository implements TicketsRepository {
       PrismaTicketMapper.toDomain(
         row,
         row.messages.map(PrismaTicketMessageMapper.toDomain),
+        row.attachments.map(PrismaAttachmentMapper.toDomain),
       ),
     )
   }
@@ -42,12 +47,16 @@ export class PrismaTicketsRepository implements TicketsRepository {
   async findById(id: string): Promise<Ticket | null> {
     const row = await this.prisma.ticket.findUnique({
       where: { id },
-      include: { messages: { orderBy: { createdAt: 'asc' } } },
+      include: {
+        messages: { orderBy: { createdAt: 'asc' } },
+        attachments: { orderBy: { createdAt: 'asc' } },
+      },
     })
     if (!row) return null
     return PrismaTicketMapper.toDomain(
       row,
       row.messages.map(PrismaTicketMessageMapper.toDomain),
+      row.attachments.map(PrismaAttachmentMapper.toDomain),
     )
   }
 
