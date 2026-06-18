@@ -1,32 +1,18 @@
-import ordersMock from '@/mocks/orders.json';
-import type { Order, OrderFilters } from '../types';
-
-const orders = ordersMock.orders as Order[];
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import { httpClient, ApiError } from '@/services/httpClient'
+import type { Order, OrderFilters } from '../types'
 
 export const ordersApi = {
   async list(filters?: Partial<OrderFilters>): Promise<Order[]> {
-    await delay(0);
-    let result = [...orders];
-
-    if (filters?.orderCode?.trim()) {
-      const term = filters.orderCode.toLowerCase();
-      result = result.filter((o) => o.id.toLowerCase().includes(term));
-    }
-    if (filters?.clientName?.trim()) {
-      const term = filters.clientName.toLowerCase();
-      result = result.filter((o) => o.clientName.toLowerCase().includes(term));
-    }
-    if (filters?.status?.trim()) {
-      result = result.filter((o) => o.status === filters.status);
-    }
-
-    return result;
+    const { orders } = await httpClient.get<{ orders: Order[] }>('/orders', filters as Record<string, unknown> | undefined)
+    return orders
   },
-
   async getById(id: string): Promise<Order | null> {
-    await delay(0);
-    return orders.find((o) => o.id === id) ?? null;
+    try {
+      const { order } = await httpClient.get<{ order: Order }>(`/orders/${id}`)
+      return order
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 404) return null
+      throw error
+    }
   },
-};
+}
