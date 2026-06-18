@@ -33,6 +33,9 @@ describe('Authenticate (E2E)', () => {
       .send({ email: 'admin@empresa.com', password: 'admin123' })
 
     expect(response.statusCode).toBe(201)
-    expect(response.body).toEqual({ accessToken: expect.any(String) })
+    expect(response.body).toEqual({
+      accessToken: expect.any(String),
+      refreshToken: expect.any(String),
+    })
   })
 })
