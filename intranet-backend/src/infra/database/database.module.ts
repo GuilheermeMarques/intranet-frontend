@@ -28,6 +28,8 @@ import { TicketsRepository } from '@/domain/support/application/repositories/tic
 import { PrismaTicketsRepository } from './prisma/repositories/prisma-tickets-repository'
 import { TicketMessagesRepository } from '@/domain/support/application/repositories/ticket-messages-repository'
 import { PrismaTicketMessagesRepository } from './prisma/repositories/prisma-ticket-messages-repository'
+import { AttachmentsRepository } from '@/domain/support/application/repositories/attachments-repository'
+import { PrismaAttachmentsRepository } from './prisma/repositories/prisma-attachments-repository'
 
 @Module({
   providers: [
@@ -55,6 +57,7 @@ import { PrismaTicketMessagesRepository } from './prisma/repositories/prisma-tic
       provide: TicketMessagesRepository,
       useClass: PrismaTicketMessagesRepository,
     },
+    { provide: AttachmentsRepository, useClass: PrismaAttachmentsRepository },
   ],
   exports: [
     PrismaService,
@@ -72,6 +75,7 @@ import { PrismaTicketMessagesRepository } from './prisma/repositories/prisma-tic
     TagsRepository,
     TicketsRepository,
     TicketMessagesRepository,
+    AttachmentsRepository,
   ],
 })
 export class DatabaseModule {}
