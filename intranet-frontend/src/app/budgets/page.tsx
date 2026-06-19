@@ -9,6 +9,7 @@ import { useBudgetsQuery } from '@/features/budgets/hooks/useBudgetsQuery';
 import { Budget, BudgetFilters } from '@/features/budgets/types';
 import { useClientByIdQuery } from '@/features/clients/hooks/useClientByIdQuery';
 import { useProductsQuery } from '@/features/products/hooks/useProductsQuery';
+import { formatDate } from '@/shared/utils/formatDate';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {
   Box,
@@ -247,10 +248,6 @@ export default function BudgetsPage() {
       style: 'currency',
       currency: 'BRL',
     }).format(value);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
   const filterFields: FilterField[] = [

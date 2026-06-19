@@ -5,6 +5,7 @@ import { Column, DataTable } from '@/components/DataTable';
 import { FilterField, FilterPanel } from '@/components/FilterPanel';
 import { useOrdersQuery } from '@/features/orders/hooks/useOrdersQuery';
 import { OrderFilters, OrderItem } from '@/features/orders/types';
+import { formatDate } from '@/shared/utils/formatDate';
 import { Visibility } from '@mui/icons-material';
 import { Box, Button, Chip, CircularProgress, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -64,10 +65,6 @@ export default function OrdersPage() {
       style: 'currency',
       currency: 'BRL',
     }).format(value);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
   const columns: Column[] = [

@@ -8,6 +8,7 @@ import { useTagsQuery } from '@/features/tickets/hooks/useTagsQuery';
 import { useTicketsQuery } from '@/features/tickets/hooks/useTicketsQuery';
 import { useTicketMutations } from '@/features/tickets/hooks/useTicketMutations';
 import { Attachment, Priority, Tag, Ticket } from '@/features/tickets/types';
+import { formatDateTime as formatDate } from '@/shared/utils/formatDate';
 import {
   closestCorners,
   DndContext,
@@ -105,16 +106,6 @@ const SortableTicketCard = ({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
   };
 
   return (
@@ -506,16 +497,6 @@ export default function TicketsPage() {
       );
     }
     setSelectedFiles([]);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
   };
 
   const formatMessageContent = (content: string, mentions: string[]) => {

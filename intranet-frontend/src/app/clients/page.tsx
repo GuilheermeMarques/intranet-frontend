@@ -7,6 +7,7 @@ import { FormModal } from '@/components/Modal';
 import { useClientsQuery } from '@/features/clients/hooks/useClientsQuery';
 import { useClientMutations } from '@/features/clients/hooks/useClientMutations';
 import { ClientFilters } from '@/features/clients/types';
+import { formatDate } from '@/shared/utils/formatDate';
 import { Add, LocationOn, Search, Visibility } from '@mui/icons-material';
 import {
   Box,
@@ -159,10 +160,6 @@ export default function ClientsPage() {
       startDate: null,
       endDate: null,
     });
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
   const handleOpenModal = () => {

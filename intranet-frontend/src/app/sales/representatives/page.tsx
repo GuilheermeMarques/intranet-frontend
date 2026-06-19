@@ -5,6 +5,7 @@ import { Column, DataTable } from '@/components/DataTable';
 import { FilterField, FilterPanel } from '@/components/FilterPanel';
 import { useRepresentativesQuery } from '@/features/representatives/hooks/useRepresentativesQuery';
 import { RepresentativeFilters } from '@/features/representatives/types';
+import { formatDateTime as formatDate } from '@/shared/utils/formatDate';
 import { Avatar, Box, Button, Chip, CircularProgress, Typography } from '@mui/material';
 import { useState } from 'react';
 
@@ -57,17 +58,6 @@ export default function RepresentativesPage() {
       style: 'currency',
       currency: 'BRL',
     }).format(value);
-  };
-
-  // Formatar data
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
   };
 
   // Calcular percentual de meta
