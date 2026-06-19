@@ -11,6 +11,7 @@ import { Add as AddIcon, ArrowBack, Delete as DeleteIcon, Search } from '@mui/ic
 import {
   Autocomplete,
   Box,
+  Chip,
   Button,
   createFilterOptions,
   Grid,
@@ -65,6 +66,12 @@ interface OrderItem {
 
 const filterClients = createFilterOptions<string>();
 const filterProducts = createFilterOptions<Product>();
+
+function getStockColor(quantity: number): 'error' | 'warning' | 'success' {
+  if (quantity <= 0) return 'error';
+  if (quantity <= 5) return 'warning';
+  return 'success';
+}
 
 export function NewOrderForm() {
   const router = useRouter();
@@ -379,7 +386,19 @@ export function NewOrderForm() {
             </Grid>
 
             {selectedProduct && (
-              <Box sx={{ mt: 2, p: 2, bgcolor: 'action.hover', borderRadius: '4px' }}>
+              <Box
+                sx={{
+                  mt: 2,
+                  p: 2,
+                  bgcolor: 'action.hover',
+                  borderRadius: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: 1,
+                }}
+              >
                 <Typography variant="body2" color="text.secondary">
                   Produto Selecionado:{' '}
                   <Typography component="span" fontWeight={500}>
@@ -387,6 +406,12 @@ export function NewOrderForm() {
                   </Typography>{' '}
                   (R$ {selectedProduct.price.toFixed(2)})
                 </Typography>
+                <Chip
+                  size="small"
+                  variant="outlined"
+                  label={`Estoque: ${selectedProduct.stockQuantity} un.`}
+                  color={getStockColor(selectedProduct.stockQuantity)}
+                />
               </Box>
             )}
 
