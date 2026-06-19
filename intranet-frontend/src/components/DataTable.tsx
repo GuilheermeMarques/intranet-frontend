@@ -219,21 +219,23 @@ export function DataTable<T = Record<string, unknown>>({
               Mostrando {startIndex + 1} a {Math.min(endIndex, data.length)} de {data.length} itens
             </Typography>
 
-            <Stack direction="row" spacing={2} alignItems="center">
-              <Typography variant="body2" color="text.secondary">
-                Página {currentPage} de {totalPages}
-              </Typography>
+            {totalPages > 1 && (
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Typography variant="body2" color="text.secondary">
+                  Página {currentPage} de {totalPages}
+                </Typography>
 
-              <Pagination
-                count={totalPages}
-                page={currentPage}
-                onChange={handlePageChange}
-                color="primary"
-                size="small"
-                showFirstButton
-                showLastButton
-              />
-            </Stack>
+                <Pagination
+                  count={totalPages}
+                  page={currentPage}
+                  onChange={handlePageChange}
+                  color="primary"
+                  size="small"
+                  showFirstButton
+                  showLastButton
+                />
+              </Stack>
+            )}
           </Box>
         )}
       </CardContent>
