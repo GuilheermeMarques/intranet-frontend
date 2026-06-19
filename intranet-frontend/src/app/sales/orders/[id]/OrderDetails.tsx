@@ -493,7 +493,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                 Itens do Pedido
               </Typography>
               <TableContainer>
-                <Table size="small">
+                <Table size="small" sx={{ minWidth: 650 }}>
                   <TableHead>
                     <TableRow>
                       <TableCell>Produto</TableCell>

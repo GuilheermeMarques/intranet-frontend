@@ -419,7 +419,7 @@ export function NewOrderForm() {
               </Box>
             ) : (
               <TableContainer>
-                <Table>
+                <Table sx={{ minWidth: 650 }}>
                   <TableHead>
                     <TableRow>
                       <TableCell>Código</TableCell>
@@ -553,7 +553,7 @@ export function NewOrderForm() {
             </Typography>
             {orderItems.length > 0 ? (
               <TableContainer>
-                <Table size="small">
+                <Table size="small" sx={{ minWidth: 650 }}>
                   <TableHead>
                     <TableRow>
                       <TableCell>Produto</TableCell>

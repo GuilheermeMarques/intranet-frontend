@@ -479,7 +479,7 @@ export default function BudgetsPage() {
                   </Paper>
                 ) : (
                   <TableContainer component={Paper}>
-                    <Table>
+                    <Table sx={{ minWidth: 650 }}>
                       <TableHead>
                         <TableRow>
                           <TableCell>Produto</TableCell>
@@ -700,7 +700,7 @@ export default function BudgetsPage() {
                 Itens
               </Typography>
               <TableContainer component={Paper} variant="outlined" sx={{ mt: 1, borderRadius: 2 }}>
-                <Table size="small">
+                <Table size="small" sx={{ minWidth: 650 }}>
                   <TableHead>
                     <TableRow sx={{ '& th': { bgcolor: 'action.hover', fontWeight: 700 } }}>
                       <TableCell>Código</TableCell>
