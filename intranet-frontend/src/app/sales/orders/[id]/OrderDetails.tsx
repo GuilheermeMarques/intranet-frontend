@@ -161,7 +161,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
             </IconButton>
             <Box>
               <Typography variant="h4" fontWeight={600}>
-                Pedido {currentOrder.id}
+                Pedido {currentOrder.orderCode}
               </Typography>
               <Typography variant="body1" color="text.secondary">
                 {currentOrder.clientName}
@@ -221,7 +221,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                       Código do Pedido:
                     </Typography>
                     <Typography variant="body1" fontWeight={500}>
-                      {currentOrder.id}
+                      {currentOrder.orderCode}
                     </Typography>
                   </Box>
 
@@ -561,7 +561,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
           onClose={() => setStatusModalOpen(false)}
           onSubmit={handleStatusUpdate}
           title="Alterar Status do Pedido"
-          subtitle={`Pedido ${order.id} - ${order.clientName}`}
+          subtitle={`Pedido ${order.orderCode} - ${order.clientName}`}
           submitLabel="Atualizar Status"
           maxWidth="sm"
         >
