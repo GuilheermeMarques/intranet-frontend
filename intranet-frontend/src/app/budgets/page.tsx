@@ -9,6 +9,7 @@ import { useBudgetsQuery } from '@/features/budgets/hooks/useBudgetsQuery';
 import { Budget, BudgetFilters } from '@/features/budgets/types';
 import { useClientByIdQuery } from '@/features/clients/hooks/useClientByIdQuery';
 import { useProductsQuery } from '@/features/products/hooks/useProductsQuery';
+import { formatDate } from '@/shared/utils/formatDate';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {
   Box,
@@ -249,10 +250,6 @@ export default function BudgetsPage() {
     }).format(value);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR');
-  };
-
   const filterFields: FilterField[] = [
     {
       id: 'budgetNumber',
@@ -482,7 +479,7 @@ export default function BudgetsPage() {
                   </Paper>
                 ) : (
                   <TableContainer component={Paper}>
-                    <Table>
+                    <Table sx={{ minWidth: 650 }}>
                       <TableHead>
                         <TableRow>
                           <TableCell>Produto</TableCell>
@@ -703,7 +700,7 @@ export default function BudgetsPage() {
                 Itens
               </Typography>
               <TableContainer component={Paper} variant="outlined" sx={{ mt: 1, borderRadius: 2 }}>
-                <Table size="small">
+                <Table size="small" sx={{ minWidth: 650 }}>
                   <TableHead>
                     <TableRow sx={{ '& th': { bgcolor: 'action.hover', fontWeight: 700 } }}>
                       <TableCell>Código</TableCell>

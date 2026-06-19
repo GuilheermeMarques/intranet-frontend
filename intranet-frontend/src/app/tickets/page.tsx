@@ -8,6 +8,7 @@ import { useTagsQuery } from '@/features/tickets/hooks/useTagsQuery';
 import { useTicketsQuery } from '@/features/tickets/hooks/useTicketsQuery';
 import { useTicketMutations } from '@/features/tickets/hooks/useTicketMutations';
 import { Attachment, Priority, Tag, Ticket } from '@/features/tickets/types';
+import { formatDateTime as formatDate } from '@/shared/utils/formatDate';
 import {
   closestCorners,
   DndContext,
@@ -61,6 +62,7 @@ import {
   Stack,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 
@@ -105,16 +107,6 @@ const SortableTicketCard = ({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
   };
 
   return (
@@ -237,6 +229,7 @@ const DroppableColumn = ({ status, children }: { status: string; children: React
 };
 
 export default function TicketsPage() {
+  const theme = useTheme();
   // Calcular datas padrão (hoje - 1 mês)
   const today = new Date();
   const oneMonthAgo = new Date();
@@ -506,16 +499,6 @@ export default function TicketsPage() {
       );
     }
     setSelectedFiles([]);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
   };
 
   const formatMessageContent = (content: string, mentions: string[]) => {
@@ -840,7 +823,7 @@ export default function TicketsPage() {
                                     <span
                                       style={{
                                         fontSize: '0.75rem',
-                                        color: 'rgba(0, 0, 0, 0.6)',
+                                        color: theme.palette.text.secondary,
                                         marginBottom: '8px',
                                         display: 'block',
                                       }}
@@ -858,9 +841,9 @@ export default function TicketsPage() {
                                             gap: '8px',
                                             maxWidth: '200px',
                                             cursor: 'pointer',
-                                            backgroundColor: '#f5f5f5',
+                                            backgroundColor: theme.palette.action.hover,
                                             borderRadius: '4px',
-                                            border: '1px solid #e0e0e0',
+                                            border: `1px solid ${theme.palette.divider}`,
                                           }}
                                           onClick={() => window.open(attachment.url, '_blank')}
                                         >
@@ -886,7 +869,7 @@ export default function TicketsPage() {
                                             <span
                                               style={{
                                                 fontSize: '0.75rem',
-                                                color: 'rgba(0, 0, 0, 0.6)',
+                                                color: theme.palette.text.secondary,
                                                 display: 'block',
                                               }}
                                             >

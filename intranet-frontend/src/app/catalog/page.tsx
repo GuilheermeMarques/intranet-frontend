@@ -4,6 +4,7 @@ import { DashboardLayout } from '@/components/DashboardLayout';
 import { Column, DataTable } from '@/components/DataTable';
 import { useProductsQuery } from '@/features/products/hooks/useProductsQuery';
 import { Product, ProductFilters } from '@/features/products/types';
+import { formatDate } from '@/shared/utils/formatDate';
 import { Search } from '@mui/icons-material';
 import {
   Box,
@@ -105,10 +106,6 @@ export default function CatalogPage() {
       style: 'currency',
       currency: 'BRL',
     }).format(value);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
   return (

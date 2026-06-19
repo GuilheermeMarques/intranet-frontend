@@ -123,6 +123,8 @@ export function DataTable<T = Record<string, unknown>>({
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 1,
             mb: 2,
           }}
         >
@@ -208,6 +210,8 @@ export function DataTable<T = Record<string, unknown>>({
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: 1,
               mt: 3,
             }}
           >

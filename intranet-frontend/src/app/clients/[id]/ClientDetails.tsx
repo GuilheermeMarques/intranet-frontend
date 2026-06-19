@@ -7,6 +7,7 @@ import purchasesData from '@/mocks/purchases.json';
 import { Client } from '@/features/clients/types';
 import { useClientByCodeQuery } from '@/features/clients/hooks/useClientByCodeQuery';
 import { Purchase } from '@/types/purchase';
+import { formatDate } from '@/shared/utils/formatDate';
 import { ArrowBack, Edit, Email, Instagram, Phone, Save } from '@mui/icons-material';
 import {
   Box,
@@ -103,10 +104,6 @@ export function ClientDetails({ clientId }: ClientDetailsProps) {
       style: 'currency',
       currency: 'BRL',
     }).format(value);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
   // Colunas para a tabela de histórico de compras

@@ -5,6 +5,7 @@ import { FormModal } from '@/components/Modal';
 import { useOrderByIdQuery } from '@/features/orders/hooks/useOrderByIdQuery';
 import { useOrderMutations } from '@/features/orders/hooks/useOrderMutations';
 import { useClientByCodeQuery } from '@/features/clients/hooks/useClientByCodeQuery';
+import { formatDateTime as formatDate } from '@/shared/utils/formatDate';
 import { ArrowBack, Assignment, Email, LocationOn, Person, Phone } from '@mui/icons-material';
 import {
   Alert,
@@ -125,16 +126,6 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
       style: 'currency',
       currency: 'BRL',
     }).format(value);
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
   };
 
   if (isLoading) {
@@ -502,7 +493,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                 Itens do Pedido
               </Typography>
               <TableContainer>
-                <Table size="small">
+                <Table size="small" sx={{ minWidth: 650 }}>
                   <TableHead>
                     <TableRow>
                       <TableCell>Produto</TableCell>
