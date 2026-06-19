@@ -69,7 +69,7 @@ export default function OrdersPage() {
 
   const columns: Column[] = [
     {
-      id: 'id',
+      id: 'orderCode',
       label: 'Código do Pedido',
       sortable: true,
       render: (value) => (

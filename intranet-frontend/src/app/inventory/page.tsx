@@ -74,22 +74,22 @@ export default function InventoryPage() {
       render: (value) => formatDate(value as string),
     },
     {
-      id: 'motivo',
+      id: 'reason',
       label: 'Motivo',
       sortable: true,
       render: (value) => (
         <Typography variant="body2" color="text.secondary">
-          {value as string}
+          {(value as string) || '-'}
         </Typography>
       ),
     },
     {
-      id: 'responsavel',
+      id: 'handledBy',
       label: 'Responsável',
       sortable: true,
       render: (value) => (
         <Typography variant="body2" fontWeight={500}>
-          {value as string}
+          {(value as string) || '-'}
         </Typography>
       ),
     },
